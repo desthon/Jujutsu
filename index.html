@@ -1241,9 +1241,9 @@ function statCapFor(run, k) {
   const base = statCap(run.tier, run.cons, k);
   const bonus = run.capBonus || 0;
   if (run.lvl < 90) return base + bonus;
-  if (run.lvl >= 100) return Math.max(base, Math.min(140, Math.round(110 + (run.lvl - 100) * 1.5)) + bonus);
+  if (run.lvl >= 100) return Math.max(base, Math.min(140, Math.round(110 + (run.lvl - 100) * 1.5))) + bonus;
   const late = 80 + (run.lvl - 90) * 1.4;
-  return Math.max(base, Math.min(140, Math.round(late)) + bonus);
+  return Math.max(base, Math.min(140, Math.round(late))) + bonus;
 }
 
 function makeRun(opts = {}) {
