@@ -404,6 +404,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
       <p class="diff-note" id="diff-note">难度只改变宿傩的强度与积分倍率，不改变剧情与觉醒概率。</p>
       <div class="home-actions">
         <button id="btn-start" class="btn primary big">开始模拟</button>
+        <button id="btn-endless" class="btn ghost big">无尽回廊 · 连战宿傩</button>
         <button id="btn-trial" class="btn ghost big">试炼场 · 直接挑战宿傩</button>
       </div>
       <div class="home-meta" id="home-meta"></div>
@@ -481,7 +482,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
   <section id="view-duel" class="view">
     <header class="bar">
       <button class="btn small ghost" id="btn-retreat">撤退</button>
-      <div class="bar-title">人外魔境 · 新宿决战</div>
+      <div class="bar-title" id="duel-title">人外魔境 · 新宿决战</div>
       <div class="bar-right">
         <span class="diff-badge" id="duel-diff">标准</span>
         <button class="btn small ghost m-only" id="m-duel-log" type="button">战报</button>
@@ -511,7 +512,8 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
         <div class="vow-list" id="vow-list"></div>
       </div>
       <div class="move-panel">
-        <div class="mini-label">出招表</div>
+        <div class="mini-label">出招表 <span id="endless-wave-tag" class="muted" hidden></span></div>
+        <div id="endless-weak-wrap" hidden><button class="btn blood small" id="btn-endless-weak" type="button">弱点重创 · 30%</button></div>
         <div class="move-list" id="move-list"></div>
       </div>
     </div>
@@ -645,6 +647,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
         <p>宿傩共有 20 处可被看破的弱点，每局最多看破 5 处；看破 3 处后，可在开战前发动一次「弱点重创」，扣除宿傩当前形态 30% 生命，之后仍需正面打完。每处弱点提供 10% 伤害加成。</p>
         <p>事件池新增「天赋重估」与「六维突破」：前者提高生得天赋，后者提高六维上限；天赋越高，六维突破成功率越高。天与咒缚在事件中的强度按体术、体质与战斗智商重新计算，不再因无咒力被误判。</p>
         <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。可抉择事件会暂停并弹出选项，选择后默认恢复自动推进。</p>
+        <p><b>无尽回廊</b>：固定 Lv.100 构筑，连续挑战不断变强的宿傩。每击败一波，下一波生命 +16%、攻击 +12%、防御 +7%；每波开始恢复全部生命与咒力，三处弱点保留并可在开局手动重创一次。失败或主动离开时记录到达波次，首页显示最高纪录。</p>
       </div>
 
       <div class="about-sec">
@@ -3080,12 +3083,15 @@ function settle(run, mode) {
   run.mode = mode || run.mode || 'points';
   run.slain = run.mode === 'slain';
   const early = mode === 'retreat' || mode === 'forfeit';
-  const exp = run.slain ? 1000 : Math.round(run.lvl * (early ? 0.1 : 0.5));
+  const exp = run.endless ? 0 : (run.slain ? 1000 : Math.round(run.lvl * (early ? 0.1 : 0.5)));
   return {
     exp,
-    points: early ? 0 : calcPoints(run),
+    points: run.endless ? 0 : (early ? 0 : calcPoints(run)),
     mode: run.mode,
     level: run.lvl,
+    wave: run.endlessWave || 0,
+    endless: !!run.endless,
+    endlessOutcome: run.endlessOutcome || '',
     bench: benchOf(run.lvl),
     stats: run.stats,
     weak: run.weak.length,
@@ -3151,12 +3157,12 @@ function loadMeta() {
   try {
     const m = JSON.parse(localStorage.getItem('jjk_meta_v1') || 'null');
     if (m && typeof m === 'object') {
-      const out = Object.assign({ exp: 0, lv: 0, points: 0, runs: 0, wins: 0, best: 0, difficulty: 'normal' }, m);
+      const out = Object.assign({ exp: 0, lv: 0, points: 0, runs: 0, wins: 0, best: 0, endlessBest: 0, difficulty: 'normal' }, m);
       if (!J.DIFFICULTIES[out.difficulty]) out.difficulty = 'normal';
       return out;
     }
   } catch (e) { /* ignore */ }
-  return { exp: 0, lv: 0, points: 0, runs: 0, wins: 0, best: 0, difficulty: 'normal' };
+  return { exp: 0, lv: 0, points: 0, runs: 0, wins: 0, best: 0, endlessBest: 0, difficulty: 'normal' };
 }
 function saveMeta() {
   try { localStorage.setItem('jjk_meta_v1', JSON.stringify(G.meta)); } catch (e) { /* ignore */ }
@@ -3314,7 +3320,7 @@ function setDuelLog(open) {
 function renderHome() {
   const m = G.meta;
   $('#home-meta').textContent =
-    `术师等级 Lv.${m.lv} · 保底 ${m.points}/100 · 已模拟 ${m.runs} 次 · 斩杀 ${m.wins} 次 · 最高 Lv.${m.best}`;
+    `术师等级 Lv.${m.lv} · 保底 ${m.points}/100 · 已模拟 ${m.runs} 次 · 斩杀 ${m.wins} 次 · 最高 Lv.${m.best}${m.endlessBest ? ` · 无尽最高 第 ${m.endlessBest} 波` : ''}`;
   renderDiffPicker();
   const bgv = document.querySelector('.home-bg video');
   if (bgv && bgv.paused) { const p = bgv.play(); if (p && p.catch) p.catch(() => {}); }
@@ -3374,6 +3380,67 @@ function startTrial() {
   enterDuel();
 }
 
+function startEndless() {
+  stopAuto();
+  closeModal();
+  leaveBossMusic();
+  const r = J.makeRun({ tier: 7, playerLv: 0, guardMin: 7, difficulty: G.meta.difficulty || 'normal' });
+  r.lvl = 100;
+  r.age = 28;
+  r.points = 0;
+  r.actions = 0;
+  r.xp = 0;
+  for (const k of J.STATS) r.stats[k] = Math.max(r.stats[k], 112);
+  if (r.cons === 'heavenly') {
+    r.stats.ce = 0; r.stats.ctrl = 0; r.stats.eff = 0;
+    r.stats.vit = Math.max(r.stats.vit, 124);
+    r.stats.tai = Math.max(r.stats.tai, 124);
+  }
+  r.flags.rct = r.cons !== 'heavenly';
+  r.flags.domain = !!J.TECHS[r.tech].domain;
+  r.flags.simpleDomain = true;
+  r.flags.fallingBlossom = true;
+  r.flags.hollowWicker = true;
+  r.weak = J.WEAK_POINTS.slice(0, 3);
+  r.phase = 'duel';
+  r.trial = false;
+  r.endless = true;
+  r.endlessWave = 1;
+  r.mode = null;
+  r.log.push({ text: '【无尽回廊】固定 Lv.100 构筑，迎战一波强过一波的宿傩。每波开始恢复全部生命与咒力。', cls: 'gold' });
+  r.log.push({ text: '已标记 3 处弱点，每波可发动一次弱点重创。击败一波后可选择继续或带着战绩离开。', cls: 'gold' });
+  G.run = r;
+  G.duelFromSim = false;
+  enterEndlessWave();
+}
+
+function enterEndlessWave() {
+  closeModal();
+  stopAuto();
+  const r = G.run;
+  if (!r || !r.endless) return;
+  const wave = r.endlessWave || 1;
+  G.duel = J.startDuel(r);
+  const d = G.duel, s = d.suku;
+  const hpScale = 1 + (wave - 1) * 0.16;
+  const atkScale = 1 + (wave - 1) * 0.12;
+  const defScale = 1 + (wave - 1) * 0.07;
+  s.totalMax = Math.round(s.totalMax * hpScale);
+  s.stage2Max = Math.round(s.stage2Max * hpScale);
+  s.maxHp = Math.round(s.maxHp * hpScale);
+  s.hp = s.maxHp;
+  s.atk = Math.round(s.atk * atkScale);
+  s.stage2Atk = Math.round(s.stage2Atk * atkScale);
+  s.def = Math.round(s.def * defScale);
+  s.stage2Def = Math.round(s.stage2Def * defScale);
+  d.endlessWave = wave;
+  pushDuel(d, `【第 ${wave} 波】宿傩的残影重新凝聚。生命 ×${hpScale.toFixed(2)}，攻击 ×${atkScale.toFixed(2)}。`, 'gold');
+  enterBossMusic();
+  setDuelLog(false);
+  renderDuel();
+  show('duel');
+}
+
 /* ---------------- 生涯界面 ---------------- */
 
 
@@ -3395,8 +3462,9 @@ function openTrait(id) {
 }
 
 function quickRestart() {
-  startRun();
-  toast('已快速重开');
+  const endless = !!(G.run && G.run.endless);
+  if (endless) { startEndless(); toast('无尽回廊已重开'); }
+  else { startRun(); toast('已快速重开'); }
 }
 
 function renderGame() {
@@ -3638,6 +3706,15 @@ function weakStrike() {
   show('duel');
 }
 
+function endlessWeakStrike() {
+  const d = G.duel;
+  if (!d || !d.endlessWave || d.over || d.busy || d.weakStrikeUsed) return;
+  J.applyWeakStrike(d);
+  if (!d.over && d.suku.forceIntent) J.rollIntent(d);
+  renderDuel();
+  if (d.over) setTimeout(endDuel, 700);
+}
+
 /* ---------------- 战斗 ---------------- */
 
 function enterDuel() {
@@ -3661,7 +3738,7 @@ function renderDuel() {
   const sp = Math.max(0, s.hp / s.maxHp * 100);
   $('#suku-hp').style.width = sp + '%';
   $('#suku-hp-text').textContent = `${J.money(Math.max(0, s.hp))} / ${J.money(s.maxHp)}`;
-  $('#suku-phase').textContent = SUKU_PHASE_LABEL(s);
+  $('#suku-phase').textContent = (d.endlessWave ? `第 ${d.endlessWave} 波 · ` : '') + SUKU_PHASE_LABEL(s);
   $('#suku-line').innerHTML =
     `<span>攻击 <b>${Math.round(s.atk * (1 - s.atkDebuff))}</b></span>` +
     `<span>防御 <b>${Math.round(s.def)}</b></span>` +
@@ -3704,7 +3781,12 @@ function renderDuel() {
     (p.spirits ? `<span class="purple">咒灵 ${p.spirits}</span>` : '');
 
   $('#duel-traits').innerHTML = traitChipsHTML(r);
-  $('#duel-turn').textContent = `回合 ${d.turn}`;
+  $('#duel-turn').textContent = (d.endlessWave ? `第 ${d.endlessWave} 波 · ` : '') + `回合 ${d.turn}`;
+  const dtitle = $('#duel-title');
+  if (dtitle) dtitle.textContent = d.endlessWave ? `无尽回廊 · 第 ${d.endlessWave} 波` : '人外魔境 · 新宿决战';
+  const eTag = $('#endless-wave-tag'), eWrap = $('#endless-weak-wrap');
+  if (eTag) { eTag.hidden = !d.endlessWave; eTag.textContent = d.endlessWave ? `第 ${d.endlessWave} 波` : ''; }
+  if (eWrap) eWrap.hidden = !d.endlessWave || d.weakStrikeUsed;
 
   const ml = $('#move-list');
   ml.innerHTML = '';
@@ -3797,6 +3879,30 @@ function endDuel() {
   const d = G.duel;
   if (!d || d._ended) return;
   d._ended = true;
+  if (G.run && G.run.endless) {
+    const wave = G.run.endlessWave || d.endlessWave || 1;
+    G.meta.endlessBest = Math.max(G.meta.endlessBest || 0, wave);
+    saveMeta();
+    if (d.result === 'win') {
+      G.run.log.push({ text: `无尽回廊：第 ${wave} 波突破。`, cls: 'big' });
+      openModal(`无尽回廊 · 第 ${wave} 波突破`,
+        `<p>十影与原身都已倒下。下一波的宿傩会更强。</p>
+         <p class="dim" style="margin-top:10px">每波开始恢复全部生命与咒力；三处弱点会保留，每波可手动重创一次。</p>`,
+        [
+          { label: `进入第 ${wave + 1} 波`, cls: 'primary', fn: () => { G.run.endlessWave = wave + 1; enterEndlessWave(); } },
+          { label: '带着战绩离开', cls: 'ghost', fn: () => { G.run.endlessOutcome = 'clear'; finishRun('endless'); } }
+        ]);
+    } else if (d.result === 'retreat') {
+      G.run.log.push({ text: `无尽回廊：第 ${wave} 波主动离开。`, cls: 'sys' });
+      G.run.endlessOutcome = 'retreat';
+      finishRun('endless');
+    } else {
+      G.run.log.push({ text: `无尽回廊：第 ${wave} 波倒下。`, cls: 'big' });
+      G.run.endlessOutcome = 'dead';
+      finishRun('endless');
+    }
+    return;
+  }
   if (d.result === 'win') {
     G.run.slain = true;
     G.run.log.push({ text: '宿傩战：胜。十影与原身都已倒下，你从新宿的废墟里走了出来。', cls: 'big' });
@@ -3833,6 +3939,11 @@ const ENDINGS = {
     title: '你转身离开',
     desc: '活下去也是一种选择。只是下一次，你未必还有机会。'
   },
+  endless: {
+    kicker: 'ENDLESS CORRIDOR',
+    title: '无尽回廊',
+    desc: '宿傩的残影没有尽头。你停下的地方，就是下一次挑战的起点。'
+  },
 };
 
 function finishRun(mode) {
@@ -3845,7 +3956,11 @@ function finishRun(mode) {
   r._settled = true;
   const res = J.settle(r, mode);
 
-  if (!r.trial) {
+  if (r.endless) {
+    const m = G.meta;
+    m.endlessBest = Math.max(m.endlessBest || 0, res.wave || 0);
+    saveMeta();
+  } else if (!r.trial) {
     const m = G.meta;
     m.exp += res.exp;
     while (m.exp >= 50 * (m.lv + 1)) {
@@ -3979,8 +4094,8 @@ function drawShareCanvas(res) {
   ctx.fillStyle = '#c1121f';
   canvasSpacedText(ctx, ending.kicker, M, 150, 7);
 
-  const badge = res.mode === 'slain' ? '宿傩讨伐' : res.mode === 'dead' ? '战死' : res.mode === 'retreat' ? '撤退' : '时间耗尽';
-  const badgeColor = res.mode === 'slain' ? GOLD : res.mode === 'dead' ? '#e05a64' : MUT;
+  const badge = res.endless ? `第 ${res.wave} 波` : res.mode === 'slain' ? '宿傩讨伐' : res.mode === 'dead' ? '战死' : res.mode === 'retreat' ? '撤退' : '时间耗尽';
+  const badgeColor = res.endless || res.mode === 'slain' ? GOLD : res.mode === 'dead' ? '#e05a64' : MUT;
   ctx.font = `700 20px ${sans}`;
   const bw = ctx.measureText(badge).width + 36;
   canvasRoundRect(ctx, W - M - bw, 120, bw, 42, 21);
@@ -4007,12 +4122,12 @@ function drawShareCanvas(res) {
   const total = J.STATS.reduce((a, k) => a + (stats[k] || 0), 0);
   const cells = [
     ['难度', res.difficultyName || '标准', GOLD],
-    ['最终等级', 'Lv.' + res.level, INK],
+    [res.endless ? '无尽波次' : '最终等级', res.endless ? '第 ' + res.wave + ' 波' : 'Lv.' + res.level, INK],
     ['评级', res.bench.grade, GOLD],
     ['年龄', res.age.toFixed(1) + ' 岁', INK],
     ['弱点', res.weak + ' / 5', INK],
-    ['获得经验', '+' + res.exp, INK],
-    ['保底积分', '+' + res.points, GOLD],
+    [res.endless ? '每波回复' : '获得经验', res.endless ? '全满' : '+' + res.exp, INK],
+    [res.endless ? '最高纪录' : '保底积分', res.endless ? '第 ' + (G.meta.endlessBest || res.wave) + ' 波' : '+' + res.points, GOLD],
     ['六维总和', String(Math.round(total)), INK],
     ['术师等级', 'Lv.' + G.meta.lv, INK]
   ];
@@ -4169,19 +4284,25 @@ function shareResult() {
 function renderSettle(res) {
   G.lastResult = res;
   const e = ENDINGS[res.mode] || ENDINGS.points;
-  $('#settle-kicker').textContent = (G.run && G.run.trial) ? 'TRIAL MODE · 不计入记录' : e.kicker;
-  $('#settle-title').textContent = e.title;
-  $('#settle-desc').textContent = e.desc;
+  $('#settle-kicker').textContent = res.endless ? 'ENDLESS · 无尽回廊' : ((G.run && G.run.trial) ? 'TRIAL MODE · 不计入记录' : e.kicker);
+  $('#settle-title').textContent = res.endless ? `止步第 ${res.wave} 波` : e.title;
+  $('#settle-desc').textContent = res.endless
+    ? (res.endlessOutcome === 'clear'
+      ? `你在第 ${res.wave} 波结束后主动离开。最高纪录已保存，下一次可以继续冲击更深的波次。`
+      : res.endlessOutcome === 'retreat'
+        ? `你从第 ${res.wave} 波转身离开。最高纪录已保存。`
+        : `你在第 ${res.wave} 波倒下。下一波的宿傩会更强，下一次也许能走得更远。`)
+    : e.desc;
   const stats = res.stats;
   const total = J.STATS.reduce((a, k) => a + stats[k], 0);
   $('#settle-grid').innerHTML = `
     <div class="settle-cell"><div class="k">难度</div><div class="v" style="font-size:16px;color:var(--gold)">${res.difficultyName || '标准'}</div></div>
-    <div class="settle-cell"><div class="k">最终等级</div><div class="v">Lv.${res.level}</div></div>
+    <div class="settle-cell"><div class="k">${res.endless ? '无尽波次' : '最终等级'}</div><div class="v">${res.endless ? '第 ' + res.wave + ' 波' : 'Lv.' + res.level}</div></div>
     <div class="settle-cell"><div class="k">评级</div><div class="v" style="font-size:17px">${res.bench.grade}</div></div>
     <div class="settle-cell"><div class="k">年龄</div><div class="v">${res.age.toFixed(1)}<small>岁</small></div></div>
     <div class="settle-cell"><div class="k">弱点</div><div class="v">${res.weak}<small>/5</small></div></div>
-    <div class="settle-cell"><div class="k">获得经验</div><div class="v">${res.exp}</div></div>
-    <div class="settle-cell"><div class="k">保底积分</div><div class="v">+${res.points}</div></div>
+    <div class="settle-cell"><div class="k">${res.endless ? '无尽纪录' : '获得经验'}</div><div class="v">${res.endless ? '第 ' + res.wave + ' 波' : res.exp}</div></div>
+    <div class="settle-cell"><div class="k">${res.endless ? '最高纪录' : '保底积分'}</div><div class="v">${res.endless ? '第 ' + (G.meta.endlessBest || res.wave) + ' 波' : '+' + res.points}</div></div>
     <div class="settle-cell"><div class="k">六维总和</div><div class="v">${Math.round(total)}</div></div>
     <div class="settle-cell"><div class="k">术师等级</div><div class="v">Lv.${G.meta.lv}</div></div>
   `;
@@ -4200,6 +4321,7 @@ function renderSettle(res) {
 
 function bind() {
   $('#btn-start').onclick = startRun;
+  $('#btn-endless').onclick = startEndless;
   $('#btn-trial').onclick = startTrial;
   $('#btn-about').onclick = () => show('about');
   $$('[data-nav]').forEach(b => b.onclick = () => {
@@ -4237,6 +4359,16 @@ function bind() {
 
   $('#btn-retreat').onclick = () => {
     if (!G.duel || G.duel.over) return;
+    if (G.run && G.run.endless) {
+      openModal('结束无尽', `<p>当前到达第 ${G.run.endlessWave || 1} 波。结束后会记录本次最高波次。</p>`, [
+        { label: '继续战斗', cls: 'ghost' },
+        { label: '确认结束', cls: 'primary', fn: () => {
+          J.retreatDuel(G.duel);
+          endDuel();
+        }}
+      ]);
+      return;
+    }
     openModal('撤退', '<p>离开宿傩的战场，按提前结算处理。</p>', [
       { label: '继续战斗', cls: 'ghost' },
       { label: '确认撤退', cls: 'primary', fn: () => {
@@ -4246,6 +4378,8 @@ function bind() {
     ]);
   };
 
+  const ews = $('#btn-endless-weak');
+  if (ews) ews.onclick = endlessWeakStrike;
   $('#move-list').addEventListener('click', e => {
     const b = e.target.closest('[data-move]');
     if (b && !b.disabled) doMove(b.dataset.move);
@@ -4262,7 +4396,10 @@ function bind() {
     if (b && !b.disabled) doVow(b.dataset.vow);
   });
 
-  $('#btn-again').onclick = startRun;
+  $('#btn-again').onclick = () => {
+    if (G.lastResult && G.lastResult.endless) startEndless();
+    else startRun();
+  };
   const shareBtn = $('#btn-share');
   if (shareBtn) shareBtn.onclick = shareResult;
   $('#music-toggle').onclick = toggleMusic;
@@ -4277,7 +4414,7 @@ bind();
 renderHome();
 
 if (typeof window !== 'undefined') {
-  window.__JJK_UI = { G, MUSIC, MUSIC_NAMES, toggleMusic, startRun, startTrial, advance, enterDuel, doMove, doVow, finishRun, openDuelPrep, renderGame, renderDuel, startAuto, stopAuto, openTrait, quickRestart, closeModal, setDifficulty, setMobileTab, setDuelLog, renderDiffPicker, weakStrike, shareResult, openChoiceEvent, chooseEvent };
+  window.__JJK_UI = { G, MUSIC, MUSIC_NAMES, toggleMusic, startRun, startTrial, startEndless, enterEndlessWave, endDuel, advance, enterDuel, doMove, doVow, finishRun, openDuelPrep, renderGame, renderDuel, startAuto, stopAuto, openTrait, quickRestart, closeModal, setDifficulty, setMobileTab, setDuelLog, renderDiffPicker, weakStrike, shareResult, openChoiceEvent, chooseEvent };
 }
 
 </script>
