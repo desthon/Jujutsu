@@ -649,7 +649,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
         <p>宿傩共有 20 处可被看破的弱点，每局最多看破 5 处；看破 3 处后，可在开战前发动一次「弱点重创」，扣除宿傩当前形态 30% 生命，之后仍需正面打完。每处弱点提供 10% 伤害加成。</p>
         <p>事件池新增「天赋重估」与「六维突破」：前者提高生得天赋，后者提高六维上限；天赋越高，六维突破成功率越高。天与咒缚在事件中的强度按体术、体质与战斗智商重新计算，不再因无咒力被误判。</p>
         <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。可抉择事件会暂停并弹出选项，选择后默认恢复自动推进。</p>
-        <p><b>无尽回廊</b>：击败宿傩后，在结算页选择进入。当前等级、六维、词条、觉醒、弱点与生命体系全部保留，不会清零；每击败一波，下一波生命 +16%、攻击 +12%、防御 +7%，同时获得等级、六维、弱点或词条等轮回馈赠，继续叠加。每波开始恢复全部生命与咒力。失败或主动离开时记录到达波次，首页显示最高纪录。</p>
+        <p><b>无尽回廊</b>：击败宿傩后，在结算页选择进入。每次轮回不会直接开战，而是像重开一局一样从满行动点开始：年龄与事件重新展开，等级、六维、词条、觉醒、术式、弱点、精炼全部保留。修炼结束后再挑战宿傩。宿傩每次轮回都会获得极大加成：首轮生命 ×1.55、攻击 ×1.30、防御 ×1.18，之后每一轮继续乘算；玩家每次胜利也会获得等级、六维、弱点或词条等轮回馈赠。失败或主动离开时记录到达的轮回次数，首页显示最高纪录。</p>
       </div>
 
       <div class="about-sec">
@@ -3410,7 +3410,7 @@ function setDuelLog(open) {
 function renderHome() {
   const m = G.meta;
   $('#home-meta').textContent =
-    `术师等级 Lv.${m.lv} · 保底 ${m.points}/100 · 已模拟 ${m.runs} 次 · 斩杀 ${m.wins} 次 · 最高 Lv.${m.best}${m.endlessBest ? ` · 无尽最高 第 ${m.endlessBest} 波` : ''}`;
+    `术师等级 Lv.${m.lv} · 保底 ${m.points}/100 · 已模拟 ${m.runs} 次 · 斩杀 ${m.wins} 次 · 最高 Lv.${m.best}${m.endlessBest ? ` · 无尽最高 第 ${m.endlessBest} 次轮回` : ''}`;
   renderDiffPicker();
   const bgv = document.querySelector('.home-bg video');
   if (bgv && bgv.paused) { const p = bgv.play(); if (p && p.catch) p.catch(() => {}); }
@@ -3477,20 +3477,16 @@ function startEndlessFromRun() {
   closeModal();
   leaveBossMusic();
   r.endless = true;
+  r.trial = false;
   r.endlessWave = 1;
   r.endlessWins = 0;
   r.endlessOutcome = '';
-  r.phase = 'duel';
-  r.mode = null;
-  r.slain = false;
-  r._settled = false;
   while ((r.weak || []).length < 3) {
     if (!J.addWeak(r)) break;
   }
-  r.log.push({ text: '【无尽回廊】你从宿傩的尸骸上站起来，轮回的门在背后打开。等级、六维、词条、觉醒与弱点全部保留，每一波结束后还会继续叠加。', cls: 'gold' });
-  r.log.push({ text: '宿傩会一波强过一波；每波开始恢复全部生命与咒力，数据不清零。', cls: 'gold' });
-  G.duelFromSim = false;
-  enterEndlessWave();
+  r.log.push({ text: '【无尽回廊】你从宿傩的尸骸上站起来，轮回的门在背后打开。等级、六维、词条、觉醒、术式与弱点全部保留。', cls: 'gold' });
+  r.log.push({ text: '这里不会立刻开战。你会像重开一局一样，从满行动点开始新的轮回；宿傩则在每次轮回中获得极大加成。', cls: 'gold' });
+  beginEndlessCycle(1);
 }
 
 function restartEndless() {
@@ -3499,15 +3495,11 @@ function restartEndless() {
   stopAuto();
   closeModal();
   leaveBossMusic();
-  r.phase = 'duel';
-  r.mode = null;
-  r.slain = false;
-  r._settled = false;
   r.endlessWave = 1;
   r.endlessWins = 0;
   r.endlessOutcome = '';
-  r.log.push({ text: '【无尽回廊】轮回重新收紧。你的数据没有清零，只是再次从第一波开始。', cls: 'gold' });
-  enterEndlessWave();
+  r.log.push({ text: '【无尽回廊】轮回重新收紧。你的数据没有清零，只是再次从第一次轮回开始。', cls: 'gold' });
+  beginEndlessCycle(1);
 }
 
 function endlessWaveReward(run, wave) {
@@ -3526,37 +3518,71 @@ function endlessWaveReward(run, wave) {
   const grew = J.STATS.filter(k => Math.round(run.stats[k]) > beforeStats[k])
     .map(k => `${J.STAT_NAMES[k]} +${Math.round(run.stats[k]) - beforeStats[k]}`);
   const lvlText = run.lvl > beforeLvl ? `Lv.${beforeLvl} → Lv.${run.lvl}` : `Lv.${run.lvl}`;
-  run.log.push({ text: `【轮回馈赠】第 ${wave} 波后：${lvlText}${grew.length ? '，' + grew.join('，') : ''}${wave % 2 === 0 ? '，新增一处弱点' : ''}${wave % 3 === 0 ? '，获得新词条' : ''}。`, cls: 'gold' });
+  run.log.push({ text: `【轮回馈赠】第 ${wave} 次轮回后：${lvlText}${grew.length ? '，' + grew.join('，') : ''}${wave % 2 === 0 ? '，新增一处弱点' : ''}${wave % 3 === 0 ? '，获得新词条' : ''}。`, cls: 'gold' });
   return { beforeLvl, afterLvl: run.lvl, grew };
 }
 
-function enterEndlessWave() {
-  closeModal();
-  stopAuto();
+function endlessActionPoints(run) {
+  return 85 + (run.tier || 1) * 12 + 24;
+}
+
+function endlessSukuScale(wave) {
+  const n = Math.max(1, wave || 1);
+  return {
+    hp: 1.55 * Math.pow(1.32, n - 1),
+    atk: 1.30 * Math.pow(1.24, n - 1),
+    def: 1.18 * Math.pow(1.15, n - 1)
+  };
+}
+
+function applyEndlessSukuScale(d) {
+  if (!d || !d.run || !d.run.endless || d._endlessScaled) return d;
+  const wave = d.run.endlessWave || 1;
+  const sc = endlessSukuScale(wave);
+  const s = d.suku;
+  s.totalMax = Math.round(s.totalMax * sc.hp);
+  s.stage2Max = Math.round(s.stage2Max * sc.hp);
+  s.maxHp = Math.round(s.maxHp * sc.hp);
+  s.hp = s.maxHp;
+  s.atk = Math.round(s.atk * sc.atk);
+  s.stage2Atk = Math.round(s.stage2Atk * sc.atk);
+  s.def = Math.round(s.def * sc.def);
+  s.stage2Def = Math.round(s.stage2Def * sc.def);
+  d.endlessWave = wave;
+  d.endlessScales = sc;
+  d._endlessScaled = true;
+  pushDuel(d, `【第 ${wave} 次轮回】宿傩获得极大加成：生命 ×${sc.hp.toFixed(2)}，攻击 ×${sc.atk.toFixed(2)}，防御 ×${sc.def.toFixed(2)}。`, 'gold');
+  return d;
+}
+
+function beginEndlessCycle(wave = 1) {
   const r = G.run;
   if (!r || !r.endless) return;
-  r.phase = 'duel';
+  stopAuto();
+  closeModal();
+  leaveBossMusic();
+  r.endlessWave = Math.max(1, wave || 1);
+  r.endlessOutcome = '';
+  r.phase = 'sim';
+  r.mode = null;
+  r.dead = false;
+  r.slain = false;
   r._settled = false;
-  const wave = r.endlessWave || 1;
-  G.duel = J.startDuel(r);
-  const d = G.duel, s = d.suku;
-  const hpScale = 1 + (wave - 1) * 0.16;
-  const atkScale = 1 + (wave - 1) * 0.12;
-  const defScale = 1 + (wave - 1) * 0.07;
-  s.totalMax = Math.round(s.totalMax * hpScale);
-  s.stage2Max = Math.round(s.stage2Max * hpScale);
-  s.maxHp = Math.round(s.maxHp * hpScale);
-  s.hp = s.maxHp;
-  s.atk = Math.round(s.atk * atkScale);
-  s.stage2Atk = Math.round(s.stage2Atk * atkScale);
-  s.def = Math.round(s.def * defScale);
-  s.stage2Def = Math.round(s.stage2Def * defScale);
-  d.endlessWave = wave;
-  pushDuel(d, `【第 ${wave} 波】宿傩的残影重新凝聚。生命 ×${hpScale.toFixed(2)}，攻击 ×${atkScale.toFixed(2)}。`, 'gold');
-  enterBossMusic();
-  setDuelLog(false);
-  renderDuel();
-  show('duel');
+  r.age = 6;
+  r.points = endlessActionPoints(r);
+  r.actions = 0;
+  r.pendingEvent = null;
+  r.eventCounts = {};
+  r.plotDone = [];
+  G.duel = null;
+  G.duelFromSim = false;
+  const sc = endlessSukuScale(r.endlessWave);
+  r.log.push({ text: `【第 ${r.endlessWave} 次轮回】像重开一局一样，从满行动点重新开始。等级、六维、词条、觉醒、术式、弱点与精炼全部保留；这一轮的宿傩生命 ×${sc.hp.toFixed(2)}、攻击 ×${sc.atk.toFixed(2)}、防御 ×${sc.def.toFixed(2)}。`, cls: 'gold' });
+  setMobileTab('status');
+  renderGame();
+  show('game');
+  setTimeout(scrollLog, 60);
+  startAuto();
 }
 
 /* ---------------- 生涯界面 ---------------- */
@@ -3581,7 +3607,7 @@ function openTrait(id) {
 
 function quickRestart() {
   const endless = !!(G.run && G.run.endless);
-  if (endless) { restartEndless(); toast('无尽回廊已重开，数据保留'); }
+  if (endless) { restartEndless(); toast('无尽轮回已重开，数据保留'); }
   else { startRun(); toast('已快速重开'); }
 }
 
@@ -3589,7 +3615,7 @@ function renderGame() {
   const r = G.run;
   if (!r) return;
   const b = J.benchOf(r.lvl);
-  $('#game-title').textContent = `${r.techName}${r.tech2 ? ' / ' + r.tech2Name : ''} · ${r.consName}`;
+  $('#game-title').textContent = `${r.techName}${r.tech2 ? ' / ' + r.tech2Name : ''} · ${r.consName}${r.endless ? ` · 第 ${r.endlessWave || 1} 次轮回` : ''}`;
   $('#id-tier').textContent = r.tierName;
   const gd = $('#game-diff');
   if (gd) gd.textContent = r.difficultyName || '标准';
@@ -3794,10 +3820,14 @@ function openDuelPrep(fromSim) {
     ? `已看破 ${r.weak.length} 处弱点，对宿傩伤害 +${Math.round(J.weakBonus(r) * 100)}%。${r.weak.length >= 3 ? '可发动一次弱点重创。' : ''}`
     : '尚未看破任何弱点。';
   const weakNames = r.weak.length ? `<p class="dim">${r.weak.map(w => w.name).join(' · ')}</p>` : '';
+  const endlessNote = r.endless ? (() => {
+    const sc = endlessSukuScale(r.endlessWave || 1);
+    return `<p class="gold" style="margin-top:10px">第 ${r.endlessWave || 1} 次轮回的宿傩：生命 ×${sc.hp.toFixed(2)}，攻击 ×${sc.atk.toFixed(2)}，防御 ×${sc.def.toFixed(2)}。</p>`;
+  })() : '';
   const body = `
     <p>Lv.${r.lvl} · ${b.grade}（对标 ${b.who}）</p>
     <p>生命 <b>${d.maxHp}</b> · 攻击 <b>${d.atk}</b> · 防御 <b>${d.def}</b> · 咒力 <b>${d.maxCe}</b></p>
-    <p>${weakTxt}</p>${weakNames}
+    <p>${weakTxt}</p>${weakNames}${endlessNote}
     <p class="dim" style="margin-top:10px">宿傩会提前暴露下一招，且分为十影宿傩、原身宿傩两个独立阶段。防御、闪避、反转术式与束缚，都是你的出招。</p>
   `;
   const actions = [
@@ -3818,6 +3848,7 @@ function weakStrike() {
   stopAuto();
   if (!G.run) return;
   G.duel = J.startDuel(G.run);
+  if (G.run.endless) applyEndlessSukuScale(G.duel);
   J.applyWeakStrike(G.duel);
   enterBossMusic();
   setDuelLog(false);
@@ -3841,6 +3872,7 @@ function enterDuel() {
   stopAuto();
   if (!G.run) return;
   G.duel = J.startDuel(G.run);
+  if (G.run.endless) applyEndlessSukuScale(G.duel);
   enterBossMusic();
   setDuelLog(false);
   renderDuel();
@@ -3857,7 +3889,7 @@ function renderDuel() {
   const sp = Math.max(0, s.hp / s.maxHp * 100);
   $('#suku-hp').style.width = sp + '%';
   $('#suku-hp-text').textContent = `${J.money(Math.max(0, s.hp))} / ${J.money(s.maxHp)}`;
-  $('#suku-phase').textContent = (d.endlessWave ? `第 ${d.endlessWave} 波 · ` : '') + SUKU_PHASE_LABEL(s);
+  $('#suku-phase').textContent = (d.endlessWave ? `第 ${d.endlessWave} 次轮回 · ` : '') + SUKU_PHASE_LABEL(s);
   $('#suku-line').innerHTML =
     `<span>攻击 <b>${Math.round(s.atk * (1 - s.atkDebuff))}</b></span>` +
     `<span>防御 <b>${Math.round(s.def)}</b></span>` +
@@ -3900,11 +3932,11 @@ function renderDuel() {
     (p.spirits ? `<span class="purple">咒灵 ${p.spirits}</span>` : '');
 
   $('#duel-traits').innerHTML = traitChipsHTML(r);
-  $('#duel-turn').textContent = (d.endlessWave ? `第 ${d.endlessWave} 波 · ` : '') + `回合 ${d.turn}`;
+  $('#duel-turn').textContent = (d.endlessWave ? `第 ${d.endlessWave} 次轮回 · ` : '') + `回合 ${d.turn}`;
   const dtitle = $('#duel-title');
-  if (dtitle) dtitle.textContent = d.endlessWave ? `无尽回廊 · 第 ${d.endlessWave} 波` : '人外魔境 · 新宿决战';
+  if (dtitle) dtitle.textContent = d.endlessWave ? `无尽轮回 · 第 ${d.endlessWave} 次` : '人外魔境 · 新宿决战';
   const eTag = $('#endless-wave-tag'), eWrap = $('#endless-weak-wrap');
-  if (eTag) { eTag.hidden = !d.endlessWave; eTag.textContent = d.endlessWave ? `第 ${d.endlessWave} 波` : ''; }
+  if (eTag) { eTag.hidden = !d.endlessWave; eTag.textContent = d.endlessWave ? `第 ${d.endlessWave} 次轮回` : ''; }
   if (eWrap) eWrap.hidden = !d.endlessWave || d.weakStrikeUsed || (r.weak || []).length < 3;
 
   const ml = $('#move-list');
@@ -4004,21 +4036,24 @@ function endDuel() {
     saveMeta();
     if (d.result === 'win') {
       const reward = endlessWaveReward(G.run, wave);
-      G.run.log.push({ text: `无尽回廊：第 ${wave} 波突破。`, cls: 'big' });
-      openModal(`无尽回廊 · 第 ${wave} 波突破`,
-        `<p>十影与原身都已倒下。轮回没有结束，下一波的宿傩会更强。</p>
-         <p class="dim" style="margin-top:10px">本轮馈赠：${reward.afterLvl > reward.beforeLvl ? `Lv.${reward.beforeLvl} → Lv.${reward.afterLvl}` : `Lv.${reward.afterLvl}`}${reward.grew.length ? '；' + reward.grew.join('，') : ''}。已有数据全部保留，每波开始恢复生命与咒力。</p>
-         <p class="dim" style="margin-top:8px">三处弱点保留，每波可手动重创一次。</p>`,
+      const nextWave = wave + 1;
+      const nextSc = endlessSukuScale(nextWave);
+      G.run.log.push({ text: `无尽轮回：第 ${wave} 次宿傩战突破。`, cls: 'big' });
+      openModal(`无尽轮回 · 第 ${wave} 次突破`,
+        `<p>十影与原身都已倒下。轮回没有结束，下一次的宿傩会获得更夸张的加成。</p>
+         <p class="dim" style="margin-top:10px">本轮馈赠：${reward.afterLvl > reward.beforeLvl ? `Lv.${reward.beforeLvl} → Lv.${reward.afterLvl}` : `Lv.${reward.afterLvl}`}${reward.grew.length ? '；' + reward.grew.join('，') : ''}。已有数据全部保留。</p>
+         <p class="dim" style="margin-top:8px">下一次不会直接开战：会像重开一局一样，从满行动点开始新的轮回，先修炼、遇事件，再挑战宿傩。下一次宿傩生命 ×${nextSc.hp.toFixed(2)}、攻击 ×${nextSc.atk.toFixed(2)}、防御 ×${nextSc.def.toFixed(2)}。</p>
+         <p class="dim" style="margin-top:8px">三处弱点保留，每场可手动重创一次。</p>`,
         [
-          { label: `进入第 ${wave + 1} 波`, cls: 'primary', fn: () => { G.run.endlessWave = wave + 1; enterEndlessWave(); } },
+          { label: `进入第 ${nextWave} 次轮回`, cls: 'primary', fn: () => beginEndlessCycle(nextWave) },
           { label: '带着战绩离开', cls: 'ghost', fn: () => { G.run.endlessOutcome = 'clear'; finishRun('endless'); } }
         ]);
     } else if (d.result === 'retreat') {
-      G.run.log.push({ text: `无尽回廊：第 ${wave} 波主动离开。`, cls: 'sys' });
+      G.run.log.push({ text: `无尽轮回：第 ${wave} 次主动离开。`, cls: 'sys' });
       G.run.endlessOutcome = 'retreat';
       finishRun('endless');
     } else {
-      G.run.log.push({ text: `无尽回廊：第 ${wave} 波倒下。`, cls: 'big' });
+      G.run.log.push({ text: `无尽轮回：第 ${wave} 次倒下。`, cls: 'big' });
       G.run.endlessOutcome = 'dead';
       finishRun('endless');
     }
@@ -4061,9 +4096,9 @@ const ENDINGS = {
     desc: '活下去也是一种选择。只是下一次，你未必还有机会。'
   },
   endless: {
-    kicker: 'ENDLESS CORRIDOR',
-    title: '无尽回廊',
-    desc: '宿傩的残影没有尽头。你停下的地方，就是下一次挑战的起点。'
+    kicker: 'ENDLESS REINCARNATION',
+    title: '无尽轮回',
+    desc: '你停下的地方，就是下一次轮回的起点。宿傩会记得你，也会一次比一次更强。'
   },
 };
 
@@ -4075,6 +4110,9 @@ function finishRun(mode) {
   if (!r) return;
   if (r.phase === 'over' && r._settled) return;
   r._settled = true;
+  if (r.endless && !r.endlessOutcome) {
+    r.endlessOutcome = (mode === 'retreat' || mode === 'forfeit') ? 'retreat' : 'dead';
+  }
   const res = J.settle(r, mode);
 
   if (r.endless) {
@@ -4215,7 +4253,7 @@ function drawShareCanvas(res) {
   ctx.fillStyle = '#c1121f';
   canvasSpacedText(ctx, ending.kicker, M, 150, 7);
 
-  const badge = res.endless ? `第 ${res.wave} 波` : res.mode === 'slain' ? '宿傩讨伐' : res.mode === 'dead' ? '战死' : res.mode === 'retreat' ? '撤退' : '时间耗尽';
+  const badge = res.endless ? `第 ${res.wave} 次轮回` : res.mode === 'slain' ? '宿傩讨伐' : res.mode === 'dead' ? '战死' : res.mode === 'retreat' ? '撤退' : '时间耗尽';
   const badgeColor = res.endless || res.mode === 'slain' ? GOLD : res.mode === 'dead' ? '#e05a64' : MUT;
   ctx.font = `700 20px ${sans}`;
   const bw = ctx.measureText(badge).width + 36;
@@ -4243,12 +4281,12 @@ function drawShareCanvas(res) {
   const total = J.STATS.reduce((a, k) => a + (stats[k] || 0), 0);
   const cells = [
     ['难度', res.difficultyName || '标准', GOLD],
-    [res.endless ? '无尽波次' : '最终等级', res.endless ? '第 ' + res.wave + ' 波' : 'Lv.' + res.level, INK],
+    [res.endless ? '无尽轮回' : '最终等级', res.endless ? '第 ' + res.wave + ' 次' : 'Lv.' + res.level, INK],
     ['评级', res.bench.grade, GOLD],
     ['年龄', res.age.toFixed(1) + ' 岁', INK],
     ['弱点', res.weak + ' / 5', INK],
-    [res.endless ? '每波回复' : '获得经验', res.endless ? '全满' : '+' + res.exp, INK],
-    [res.endless ? '最高纪录' : '保底积分', res.endless ? '第 ' + (G.meta.endlessBest || res.wave) + ' 波' : '+' + res.points, GOLD],
+    [res.endless ? '每轮回开始' : '获得经验', res.endless ? '满行动点' : '+' + res.exp, INK],
+    [res.endless ? '最高纪录' : '保底积分', res.endless ? '第 ' + (G.meta.endlessBest || res.wave) + ' 次' : '+' + res.points, GOLD],
     ['六维总和', String(Math.round(total)), INK],
     ['术师等级', 'Lv.' + G.meta.lv, INK]
   ];
@@ -4405,29 +4443,29 @@ function shareResult() {
 function renderSettle(res) {
   G.lastResult = res;
   const e = ENDINGS[res.mode] || ENDINGS.points;
-  $('#settle-kicker').textContent = res.endless ? 'ENDLESS · 无尽回廊' : ((G.run && G.run.trial) ? 'TRIAL MODE · 不计入记录' : e.kicker);
-  $('#settle-title').textContent = res.endless ? `止步第 ${res.wave} 波` : e.title;
+  $('#settle-kicker').textContent = res.endless ? 'ENDLESS · 无尽轮回' : ((G.run && G.run.trial) ? 'TRIAL MODE · 不计入记录' : e.kicker);
+  $('#settle-title').textContent = res.endless ? `止步第 ${res.wave} 次轮回` : e.title;
   const er = $('#btn-endless-run');
   if (er) er.hidden = !(res.mode === 'slain' && !res.endless && G.run);
   const again = $('#btn-again');
   if (again) again.textContent = res.endless ? '再入轮回' : '再来一局';
   $('#settle-desc').textContent = res.endless
     ? (res.endlessOutcome === 'clear'
-      ? `你在第 ${res.wave} 波结束后主动离开。最高纪录已保存，下一次可以继续冲击更深的波次。`
+      ? `你在第 ${res.wave} 次轮回结束后主动离开。最高纪录已保存，下一次可以继续冲击更深的轮回。`
       : res.endlessOutcome === 'retreat'
-        ? `你从第 ${res.wave} 波转身离开。最高纪录已保存。`
-        : `你在第 ${res.wave} 波倒下。下一波的宿傩会更强，下一次也许能走得更远。`)
+        ? `你在第 ${res.wave} 次轮回中途离开。最高纪录已保存。`
+        : `你在第 ${res.wave} 次轮回倒下。下一次宿傩会更强，下一次也许能走得更远。`)
     : e.desc;
   const stats = res.stats;
   const total = J.STATS.reduce((a, k) => a + stats[k], 0);
   $('#settle-grid').innerHTML = `
     <div class="settle-cell"><div class="k">难度</div><div class="v" style="font-size:16px;color:var(--gold)">${res.difficultyName || '标准'}</div></div>
-    <div class="settle-cell"><div class="k">${res.endless ? '无尽波次' : '最终等级'}</div><div class="v">${res.endless ? '第 ' + res.wave + ' 波' : 'Lv.' + res.level}</div></div>
+    <div class="settle-cell"><div class="k">${res.endless ? '无尽轮回' : '最终等级'}</div><div class="v">${res.endless ? '第 ' + res.wave + ' 次' : 'Lv.' + res.level}</div></div>
     <div class="settle-cell"><div class="k">评级</div><div class="v" style="font-size:17px">${res.bench.grade}</div></div>
     <div class="settle-cell"><div class="k">年龄</div><div class="v">${res.age.toFixed(1)}<small>岁</small></div></div>
     <div class="settle-cell"><div class="k">弱点</div><div class="v">${res.weak}<small>/5</small></div></div>
-    <div class="settle-cell"><div class="k">${res.endless ? '无尽纪录' : '获得经验'}</div><div class="v">${res.endless ? '第 ' + res.wave + ' 波' : res.exp}</div></div>
-    <div class="settle-cell"><div class="k">${res.endless ? '最高纪录' : '保底积分'}</div><div class="v">${res.endless ? '第 ' + (G.meta.endlessBest || res.wave) + ' 波' : '+' + res.points}</div></div>
+    <div class="settle-cell"><div class="k">${res.endless ? '本次轮回' : '获得经验'}</div><div class="v">${res.endless ? '第 ' + res.wave + ' 次' : res.exp}</div></div>
+    <div class="settle-cell"><div class="k">${res.endless ? '最高纪录' : '保底积分'}</div><div class="v">${res.endless ? '第 ' + (G.meta.endlessBest || res.wave) + ' 次' : '+' + res.points}</div></div>
     <div class="settle-cell"><div class="k">六维总和</div><div class="v">${Math.round(total)}</div></div>
     <div class="settle-cell"><div class="k">术师等级</div><div class="v">Lv.${G.meta.lv}</div></div>
   `;
@@ -4484,7 +4522,7 @@ function bind() {
   $('#btn-retreat').onclick = () => {
     if (!G.duel || G.duel.over) return;
     if (G.run && G.run.endless) {
-      openModal('结束无尽', `<p>当前到达第 ${G.run.endlessWave || 1} 波。结束后会记录本次最高波次。</p>`, [
+      openModal('结束无尽', `<p>当前到达第 ${G.run.endlessWave || 1} 次轮回。结束后会记录本次最高轮回。</p>`, [
         { label: '继续战斗', cls: 'ghost' },
         { label: '确认结束', cls: 'primary', fn: () => {
           J.retreatDuel(G.duel);
@@ -4540,7 +4578,7 @@ bind();
 renderHome();
 
 if (typeof window !== 'undefined') {
-  window.__JJK_UI = { G, MUSIC, MUSIC_NAMES, toggleMusic, startRun, startTrial, startEndlessFromRun, restartEndless, enterEndlessWave, endDuel, advance, enterDuel, doMove, doVow, finishRun, openDuelPrep, renderGame, renderDuel, startAuto, stopAuto, openTrait, quickRestart, closeModal, setDifficulty, setMobileTab, setDuelLog, renderDiffPicker, weakStrike, shareResult, openChoiceEvent, chooseEvent };
+  window.__JJK_UI = { G, MUSIC, MUSIC_NAMES, toggleMusic, startRun, startTrial, startEndlessFromRun, restartEndless, beginEndlessCycle, applyEndlessSukuScale, endlessSukuScale, endDuel, advance, enterDuel, doMove, doVow, finishRun, openDuelPrep, renderGame, renderDuel, startAuto, stopAuto, openTrait, quickRestart, closeModal, setDifficulty, setMobileTab, setDuelLog, renderDiffPicker, weakStrike, shareResult, openChoiceEvent, chooseEvent };
 }
 
 </script>
