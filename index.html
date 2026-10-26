@@ -404,7 +404,6 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
       <p class="diff-note" id="diff-note">难度只改变宿傩的强度与积分倍率，不改变剧情与觉醒概率。</p>
       <div class="home-actions">
         <button id="btn-start" class="btn primary big">开始模拟</button>
-        <button id="btn-endless" class="btn ghost big">无尽回廊 · 连战宿傩</button>
         <button id="btn-trial" class="btn ghost big">试炼场 · 直接挑战宿傩</button>
       </div>
       <div class="home-meta" id="home-meta"></div>
@@ -530,6 +529,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
       <div class="settle-log" id="settle-log"></div>
       <div class="home-actions">
         <button class="btn primary" id="btn-again">再来一局</button>
+        <button class="btn ghost" id="btn-endless-run" hidden>进入无尽回廊 · 继续轮回</button>
         <button class="btn ghost" id="btn-share">分享战绩</button>
         <button class="btn ghost" data-nav="home">返回首页</button>
       </div>
@@ -609,6 +609,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
           <li><b>咒灵体质</b>：生命与回复提升，反转术式效果减半。</li>
           <li><b>宿傩容器</b>：对宿傩伤害提升，每场一次免死。</li>
           <li><b>多术式体质</b>：额外获得一门生得术式，可同时使用两套招式；第二术式消耗提高 15%。</li>
+          <li><b>九相图</b>：半人半咒灵的死胎体质，固定觉醒赤血操术；专属事件「九相图」会逐步解锁穿血、超新星、赤血之铠与血星磊。</li>
         </ul>
       </div>
 
@@ -627,7 +628,8 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
             <tr><td>十种影法术</td><td>十影宿傩会召唤颚吐与魔虚罗，两者落地后每回合都会行动</td></tr>
             <tr><td>咒灵操术</td><td>3 只咒灵，攻击消耗增伤，每 3 回合补充</td></tr>
             <tr><td>无为转变</td><td>无视防御；自身防御降低</td></tr>
-            <tr><td>赤血操术</td><td>消耗生命、攻击吸血、残血增伤</td></tr>
+            <tr><td>赤血操术</td><td>消耗生命、攻击吸血、残血增伤；九相图体质会随专属事件逐步觉醒</td></tr>
+            <tr><td>杀意之光</td><td>给光赋予杀意与质量，光柱/光雨/亚光速贯穿；反转后化为暗</td></tr>
             <tr><td>冰凝咒法</td><td>冻结目标；对冻结目标增伤</td></tr>
             <tr><td>投射咒法</td><td>每第 3 回合攻击追加一段</td></tr>
             <tr><td>十划咒法</td><td>暴击伤害提升至 2.2 倍</td></tr>
@@ -647,7 +649,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
         <p>宿傩共有 20 处可被看破的弱点，每局最多看破 5 处；看破 3 处后，可在开战前发动一次「弱点重创」，扣除宿傩当前形态 30% 生命，之后仍需正面打完。每处弱点提供 10% 伤害加成。</p>
         <p>事件池新增「天赋重估」与「六维突破」：前者提高生得天赋，后者提高六维上限；天赋越高，六维突破成功率越高。天与咒缚在事件中的强度按体术、体质与战斗智商重新计算，不再因无咒力被误判。</p>
         <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。可抉择事件会暂停并弹出选项，选择后默认恢复自动推进。</p>
-        <p><b>无尽回廊</b>：固定 Lv.100 构筑，连续挑战不断变强的宿傩。每击败一波，下一波生命 +16%、攻击 +12%、防御 +7%；每波开始恢复全部生命与咒力，三处弱点保留并可在开局手动重创一次。失败或主动离开时记录到达波次，首页显示最高纪录。</p>
+        <p><b>无尽回廊</b>：击败宿傩后，在结算页选择进入。当前等级、六维、词条、觉醒、弱点与生命体系全部保留，不会清零；每击败一波，下一波生命 +16%、攻击 +12%、防御 +7%，同时获得等级、六维、弱点或词条等轮回馈赠，继续叠加。每波开始恢复全部生命与咒力。失败或主动离开时记录到达波次，首页显示最高纪录。</p>
       </div>
 
       <div class="about-sec">
@@ -722,7 +724,7 @@ const BENCH = [
 
 const CONS = {
   none: {
-    name: '普通术师', w: 38,
+    name: '普通术师', w: 31,
     desc: '没有特殊体质，六维成长均衡。',
     mods: {}, tag: ''
   },
@@ -755,6 +757,11 @@ const CONS = {
     name: '宿傩容器', w: 12,
     desc: '对宿傩伤害提升，每场战斗一次免死。',
     mods: { vit: 10, ce: 10 }, tag: '容器'
+  },
+  ninePhases: {
+    name: '九相图', w: 7,
+    desc: '半人半咒灵的九相图体质。生得术式固定为赤血操术，初始只觉醒「穿血」；专属事件「九相图」会逐步唤醒超新星、赤血之铠与血星磊。',
+    mods: { ce: 6, ctrl: 6, vit: 12, tai: 4 }, tag: '九相'
   }
 };
 
@@ -831,10 +838,23 @@ const TECHS = {
     desc: '以血为刃。部分招式消耗生命，攻击附带吸血。',
     passive: 'blood',
     moves: [
-      { id: 'pierce', name: '穿血', cost: 15, hpCost: .03, kind: 'atk', power: 2.0, lifesteal: .15, desc: '高压血柱贯穿。' },
-      { id: 'supernova', name: '超新星', cost: 30, hpCost: .06, kind: 'atk', power: 1.4, hits: 2, lifesteal: .15, desc: '血滴引爆，两段伤害。' },
-      { id: 'bloodArmor', name: '赤血操术·铠', cost: 25, kind: 'def', shield: .5, buff: { def: .15, turns: 2 }, desc: '血液凝固成甲。' },
-      { id: 'convergence', name: '血星磊', cost: 50, hpCost: .1, kind: 'atk', power: 4.2, ignore: .2, lifesteal: .2, desc: '全部血液压缩后的重击。' }
+      { id: 'pierce', name: '穿血', cost: 15, hpCost: .03, kind: 'atk', power: 2.0, lifesteal: .15, bloodStage: 1, desc: '高压血柱贯穿。' },
+      { id: 'supernova', name: '超新星', cost: 30, hpCost: .06, kind: 'atk', power: 1.4, hits: 2, lifesteal: .15, bloodStage: 2, desc: '血滴引爆，两段伤害。' },
+      { id: 'bloodArmor', name: '赤血操术·铠', cost: 25, kind: 'def', shield: .5, buff: { def: .15, turns: 2 }, bloodStage: 2, desc: '血液凝固成甲。' },
+      { id: 'convergence', name: '血星磊', cost: 50, hpCost: .1, kind: 'atk', power: 4.2, ignore: .2, lifesteal: .2, bloodStage: 3, desc: '全部血液压缩后的重击。' }
+    ]
+  },
+  murderLight: {
+    name: '杀意之光', req: 10, domain: '杀意光庭',
+    focus: { ce: 1.1, ctrl: 1.1, eff: 1.2, vit: .9, tai: 1.0, iq: 1.1 },
+    desc: '达布拉·卡拉巴的术式：把杀意与质量赋予光本身，让光成为可站立、可贯穿、可粉碎的武器；反转后化为吞噬一切的暗。',
+    passive: 'light',
+    moves: [
+      { id: 'lightPillar', name: '杀意之光·光柱', cost: 24, kind: 'atk', power: 2.15, ignore: .35, crit: .06, desc: '压缩的杀意光柱，瞬间贯穿目标。' },
+      { id: 'lightRain', name: '杀意之光·光雨', cost: 42, kind: 'atk', power: .82, hits: 4, ignore: .18, desc: '赋予光质量后洒落，四段贯穿。' },
+      { id: 'killingMass', name: '杀意赋予', cost: 34, kind: 'atk', power: 2.1, ignore: .2, stun: 1, debuff: { atk: .12, turns: 2 }, desc: '把杀意压进光里，令宿傩失衡并削弱其攻击。' },
+      { id: 'sublight', name: '亚光速', cost: 30, kind: 'atk', power: 1.15, buff: { atk: .25, turns: 2 }, dodgeDown: .15, desc: '以光速逼近后重击，并提升下一击威力。' },
+      { id: 'lightDomain', name: '领域展开·杀意光庭', cost: 150, kind: 'domain', power: 1.95, req: 'domain', desc: '四回合必中增伤；光庭内每一束光都带着杀意；结束后熔断。' }
     ]
   },
   iceFormation: {
@@ -983,6 +1003,7 @@ const MASTERY_LINES = {
   spiritManip: '咒灵的层级在你眼中重排，漩涡更凝练。',
   idleTransfig: '灵魂的触感变得精确，改造自身时损耗更低。',
   bloodManip: '血液的流速与压力被你重新计算，赤血更锋利。',
+  murderLight: '光的质量与杀意被你重新称量，白昼也会成为凶器。',
   iceFormation: '冰晶的生成更快，霜层更薄却更坚硬。',
   projection: '分身的落点更准，突进的距离更短。',
   ratio: '七三分的界线更清晰，弱点更容易被切中。',
@@ -1001,6 +1022,7 @@ const AWAKEN_PATHS = {
   spiritManip: ['domain', 'reverse', 'expand', 'maximum', 'amplify'],
   idleTransfig: ['domain', 'reverse', 'maximum', 'expand', 'amplify'],
   bloodManip: ['reverse', 'domain', 'maximum', 'expand', 'amplify'],
+  murderLight: ['reverse', 'domain', 'maximum', 'expand', 'amplify'],
   iceFormation: ['reverse', 'domain', 'expand', 'maximum', 'amplify'],
   projection: ['domain', 'reverse', 'amplify', 'maximum', 'expand'],
   ratio: ['reverse', 'domain', 'maximum', 'expand', 'amplify'],
@@ -1019,6 +1041,7 @@ const AWAKEN_NAMES = {
   spiritManip: { reverse: '术式反转·咒灵回生', maximum: '极之番·百鬼夜行', domain: '胎藏遍野' },
   idleTransfig: { reverse: '术式反转·魂塑', maximum: '极之番·遍杀即灵体', domain: '自闭圆顿裹' },
   bloodManip: { reverse: '术式反转·赤血逆流', maximum: '极之番·赤血天幕', domain: '赤血苑囿' },
+  murderLight: { reverse: '术式反转·蚀暗', maximum: '极之番·无光黑洞', domain: '杀意光庭' },
   iceFormation: { reverse: '术式反转·霜逆', maximum: '极之番·冰河世纪', domain: '万古冰狱' },
   projection: { reverse: '术式反转·逆帧', maximum: '极之番·二十四帧', domain: '时隙回廊' },
   ratio: { reverse: '术式反转·七三倒置', maximum: '极之番·必中七三', domain: '七三裁定所' },
@@ -1275,6 +1298,7 @@ function makeRun(opts = {}) {
   const tierIdx = opts.tier || rollTier(playerLv, opts.guardMin || 1);
   const consId = opts.cons || rollCons();
   let techId = consId === 'heavenly' ? 'heavenly' : (opts.tech || rollTech(tierIdx));
+  if (consId === 'ninePhases') techId = 'bloodManip';
   const tech = TECHS[techId];
   const stats = initStats(tierIdx, techId, consId);
   const techChoices = Object.keys(TECHS).filter(k => k !== 'heavenly' && TECHS[k].req <= tierIdx && k !== techId);
@@ -1303,6 +1327,8 @@ function makeRun(opts = {}) {
     stats,
     refine: { ce: 0, ctrl: 0, eff: 0, vit: 0, tai: 0, iq: 0 },
     techMastery: 0,
+    bloodStage: consId === 'ninePhases' ? 1 : 0,
+    bloodAwakened: false,
     weak: [],
     capBonus: 0,
     flags: {
@@ -1344,6 +1370,9 @@ function makeRun(opts = {}) {
   run.log.push({ text: '你穿越到了咒术回战的世界。', cls: 'sys' });
   run.log.push({ text: `难度：${diff.name}。${diff.desc}。`, cls: 'gold' });
   run.log.push({ text: `生得术式『${tech.name}』，咒术天赋 ${run.tierName}，特殊体质「${run.consName}」。`, cls: 'gold' });
+  if (consId === 'ninePhases') {
+    run.log.push({ text: '九相图在腹中醒来。九道死胎的血液同时流动，赤血操术·穿血已经可以发动；剩下的招式要在专属事件「九相图」中唤醒。', cls: 'gold' });
+  }
   const b = benchOf(run.lvl);
   run.log.push({ text: `初始评级 ${b.grade}（对标 ${b.who}），六维已生成。`, cls: 'sys' });
   if (consId === 'heavenly') {
@@ -1603,6 +1632,14 @@ function eventPower(run) {
   return run.stats.ce + run.stats.ctrl + run.stats.tai + run.stats.iq * 0.2;
 }
 
+function advanceBlood(run, amount = 1) {
+  const before = run.bloodStage || 1;
+  const stage = Math.min(3, before + amount);
+  run.bloodStage = stage;
+  run.bloodAwakened = stage >= 3;
+  return { before, stage };
+}
+
 const EVENTS = [
   {
     id: 'core', name: '咒力核心觉醒', w: 18, max: 2,
@@ -1621,6 +1658,55 @@ const EVENTS = [
       addStat(r, 'ce', ce); addStat(r, 'ctrl', ctrl); addStat(r, 'eff', eff);
       return [`你发现身上流着御三家的血：咒力总量 +${ce}，操控 +${ctrl}，效率 +${eff}。`];
     }
+  },
+  {
+    id: 'ninePhases', name: '九相图', w: 14, max: 3,
+    cond: r => r.cons === 'ninePhases' && (r.bloodStage || 1) < 3 && r.age >= 8,
+    prompt: '梦里，九个死胎在同一个腹腔里睁眼。加茂宪伦留下的血脉在叫你的名字，兄弟们的手从血里伸出来，掌心里各自握着一式赤血操术。',
+    options: [
+      {
+        id: 'accept', label: '让兄弟的血流进来', cls: 'blood',
+        desc: '78% 唤醒下一式赤血操术并强化体质；22% 被九相图反噬。',
+        run: r => {
+          if (Math.random() < 0.78) {
+            const step = advanceBlood(r);
+            const vit = rnd(2, 4), ce = rnd(2, 3), tai = rnd(1, 3);
+            addStat(r, 'vit', vit); addStat(r, 'ce', ce); addStat(r, 'tai', tai); gainXp(r, 95);
+            const msg = step.stage === 2
+              ? '血液在血管里炸开又收束。你听见「超新星」与「赤血操术·铠」同时成形的声响。'
+              : step.stage === 3
+                ? '九道心跳终于重合。血液压缩到极致，『血星磊』在你掌心凝成一颗赤色星辰。'
+                : '九相图的血液继续流动，赤血操术更深一层。';
+            return [`${msg} 体质 +${vit}，咒力 +${ce}，体术 +${tai}。`];
+          }
+          const loss = rnd(4, 8);
+          r.points -= loss;
+          return [`兄弟的血在体内逆流。你压住喉咙里的铁锈味，行动点 -${loss}。`];
+        }
+      },
+      {
+        id: 'commune', label: '与九道死胎对话', cls: 'ghost',
+        desc: '65% 唤醒下一式并提升操控与战斗智商；35% 只得到一点感悟。',
+        run: r => {
+          if (Math.random() < 0.65) {
+            const step = advanceBlood(r);
+            const ctrl = rnd(2, 4), iq = rnd(1, 3);
+            addStat(r, 'ctrl', ctrl); addStat(r, 'iq', iq); gainXp(r, 75);
+            return [`九个声音同时开口。你听见了赤血操术的下一个音节，${step.stage >= 3 ? '血星磊已经完整。' : '招式在血里继续成形。'} 操控 +${ctrl}，战斗智商 +${iq}。`];
+          }
+          r.points += 3;
+          return ['兄弟们没有回答，只留下一点温热的血。行动点 +3。'];
+        }
+      },
+      {
+        id: 'suppress', label: '压制九相图', cls: 'ghost',
+        desc: '不推进觉醒，稳定获得咒力效率与行动点。',
+        run: r => {
+          r.points += 4; addStat(r, 'eff', 2);
+          return ['你把九道胎动压回腹腔深处。行动点 +4，咒力效率 +2。'];
+        }
+      }
+    ]
   },
   {
     id: 'culling', name: '死灭回游·结界', w: 12, max: 2,
@@ -2246,6 +2332,10 @@ function movesOf(run) {
         cost: typeof m.cost === 'number' ? Math.max(0, Math.round(m.cost * 1.15)) : m.cost,
         desc: `第二术式：${m.desc || ''}`
       })));
+  }
+  if (run.cons === 'ninePhases' && run.tech === 'bloodManip') {
+    const stage = run.bloodStage || 1;
+    arr = arr.filter(m => (m.bloodStage || 0) <= stage);
   }
   arr = arr.filter(m => {
     if (m.req === 'sixeyes') return run.cons === 'sixEyes';
@@ -3111,7 +3201,7 @@ const JJK = {
   rollTier, rollCons, rollTech, techPool, initStats, statCap, statCapFor, makeRun,
   xpNeed, xpGain, addStat, train, levelUp, gainXp, checkUnlocks, totalRefine, checkMastery, MASTERY_TIERS, MASTERY_LINES,
   AWAKEN_PATHS, AWAKEN_NAMES, AWAKEN_DESC, DOMAIN_COUNTERS, DOMAIN_COUNTER_FLAGS, awakenCount, awakenChance, nextAwakenKind, tryAwaken, syncAwakening, awakenName,
-  addWeak, weakBonus, applyWeakStrike, eventPower, doEvent, resolveEventChoice, doPlot, advanceYear, advanceAction,
+  addWeak, weakBonus, applyWeakStrike, advanceBlood, eventPower, doEvent, resolveEventChoice, doPlot, advanceYear, advanceAction,
   rollIntent, checkSukuPhase, enterStage2, summonAct,
   derived, movesOf, moveById, effectiveCost, isBodyMove, startDuel, playerMove, sukuTurn, useVow,
   retreatDuel, calcPoints, settle, guardMinFor
@@ -3380,38 +3470,64 @@ function startTrial() {
   enterDuel();
 }
 
-function startEndless() {
+function startEndlessFromRun() {
+  const r = G.run;
+  if (!r || r.endless) return;
   stopAuto();
   closeModal();
   leaveBossMusic();
-  const r = J.makeRun({ tier: 7, playerLv: 0, guardMin: 7, difficulty: G.meta.difficulty || 'normal' });
-  r.lvl = 100;
-  r.age = 28;
-  r.points = 0;
-  r.actions = 0;
-  r.xp = 0;
-  for (const k of J.STATS) r.stats[k] = Math.max(r.stats[k], 112);
-  if (r.cons === 'heavenly') {
-    r.stats.ce = 0; r.stats.ctrl = 0; r.stats.eff = 0;
-    r.stats.vit = Math.max(r.stats.vit, 124);
-    r.stats.tai = Math.max(r.stats.tai, 124);
-  }
-  r.flags.rct = r.cons !== 'heavenly';
-  r.flags.domain = !!J.TECHS[r.tech].domain;
-  r.flags.simpleDomain = true;
-  r.flags.fallingBlossom = true;
-  r.flags.hollowWicker = true;
-  r.weak = J.WEAK_POINTS.slice(0, 3);
-  r.phase = 'duel';
-  r.trial = false;
   r.endless = true;
   r.endlessWave = 1;
+  r.endlessWins = 0;
+  r.endlessOutcome = '';
+  r.phase = 'duel';
   r.mode = null;
-  r.log.push({ text: '【无尽回廊】固定 Lv.100 构筑，迎战一波强过一波的宿傩。每波开始恢复全部生命与咒力。', cls: 'gold' });
-  r.log.push({ text: '已标记 3 处弱点，每波可发动一次弱点重创。击败一波后可选择继续或带着战绩离开。', cls: 'gold' });
-  G.run = r;
+  r.slain = false;
+  r._settled = false;
+  while ((r.weak || []).length < 3) {
+    if (!J.addWeak(r)) break;
+  }
+  r.log.push({ text: '【无尽回廊】你从宿傩的尸骸上站起来，轮回的门在背后打开。等级、六维、词条、觉醒与弱点全部保留，每一波结束后还会继续叠加。', cls: 'gold' });
+  r.log.push({ text: '宿傩会一波强过一波；每波开始恢复全部生命与咒力，数据不清零。', cls: 'gold' });
   G.duelFromSim = false;
   enterEndlessWave();
+}
+
+function restartEndless() {
+  const r = G.run;
+  if (!r || !r.endless) { startRun(); return; }
+  stopAuto();
+  closeModal();
+  leaveBossMusic();
+  r.phase = 'duel';
+  r.mode = null;
+  r.slain = false;
+  r._settled = false;
+  r.endlessWave = 1;
+  r.endlessWins = 0;
+  r.endlessOutcome = '';
+  r.log.push({ text: '【无尽回廊】轮回重新收紧。你的数据没有清零，只是再次从第一波开始。', cls: 'gold' });
+  enterEndlessWave();
+}
+
+function endlessWaveReward(run, wave) {
+  const beforeLvl = run.lvl;
+  const beforeStats = Object.fromEntries(J.STATS.map(k => [k, Math.round(run.stats[k])]));
+  J.gainXp(run, 60 + wave * 35);
+  const keys = ['ce', 'ctrl', 'eff', 'vit', 'tai', 'iq'];
+  const picks = 2 + Math.floor((wave - 1) / 3);
+  for (let i = 0; i < picks; i++) {
+    J.addStat(run, J.pick(keys), 2 + Math.floor(wave / 2));
+  }
+  if (wave % 2 === 0) J.addWeak(run);
+  if (wave % 3 === 0) J.grantTrait(run);
+  run.points += 2;
+  run.endlessWins = (run.endlessWins || 0) + 1;
+  const grew = J.STATS.filter(k => Math.round(run.stats[k]) > beforeStats[k])
+    .map(k => `${J.STAT_NAMES[k]} +${Math.round(run.stats[k]) - beforeStats[k]}`);
+  const lvlText = run.lvl > beforeLvl ? `Lv.${beforeLvl} → Lv.${run.lvl}` : `Lv.${run.lvl}`;
+  run.log.push({ text: `【轮回馈赠】第 ${wave} 波后：${lvlText}${grew.length ? '，' + grew.join('，') : ''}${wave % 2 === 0 ? '，新增一处弱点' : ''}${wave % 3 === 0 ? '，获得新词条' : ''}。`, cls: 'gold' });
+  return { beforeLvl, afterLvl: run.lvl, grew };
 }
 
 function enterEndlessWave() {
@@ -3419,6 +3535,8 @@ function enterEndlessWave() {
   stopAuto();
   const r = G.run;
   if (!r || !r.endless) return;
+  r.phase = 'duel';
+  r._settled = false;
   const wave = r.endlessWave || 1;
   G.duel = J.startDuel(r);
   const d = G.duel, s = d.suku;
@@ -3463,7 +3581,7 @@ function openTrait(id) {
 
 function quickRestart() {
   const endless = !!(G.run && G.run.endless);
-  if (endless) { startEndless(); toast('无尽回廊已重开'); }
+  if (endless) { restartEndless(); toast('无尽回廊已重开，数据保留'); }
   else { startRun(); toast('已快速重开'); }
 }
 
@@ -3529,6 +3647,7 @@ function renderGame() {
   const flags = $('#flag-chips');
   flags.innerHTML = '';
   if (r.cons !== 'none') flags.innerHTML += `<span class="chip gold">${J.CONS[r.cons].name}</span>`;
+  if (r.cons === 'ninePhases') flags.innerHTML += `<span class="chip red">赤血 ${r.bloodStage || 1} / 3</span>`;
   if (r.tech2) flags.innerHTML += `<span class="chip purple">副·${r.tech2Name}</span>`;
   if (r.flags.rct) flags.innerHTML += '<span class="chip purple">反转术式</span>';
   if (r.flags.domain) flags.innerHTML += `<span class="chip purple">领域·${r.domainName || J.TECHS[r.tech].domain || r.techName}</span>`;
@@ -3708,7 +3827,7 @@ function weakStrike() {
 
 function endlessWeakStrike() {
   const d = G.duel;
-  if (!d || !d.endlessWave || d.over || d.busy || d.weakStrikeUsed) return;
+  if (!d || !d.endlessWave || d.over || d.busy || d.weakStrikeUsed || (G.run.weak || []).length < 3) return;
   J.applyWeakStrike(d);
   if (!d.over && d.suku.forceIntent) J.rollIntent(d);
   renderDuel();
@@ -3786,7 +3905,7 @@ function renderDuel() {
   if (dtitle) dtitle.textContent = d.endlessWave ? `无尽回廊 · 第 ${d.endlessWave} 波` : '人外魔境 · 新宿决战';
   const eTag = $('#endless-wave-tag'), eWrap = $('#endless-weak-wrap');
   if (eTag) { eTag.hidden = !d.endlessWave; eTag.textContent = d.endlessWave ? `第 ${d.endlessWave} 波` : ''; }
-  if (eWrap) eWrap.hidden = !d.endlessWave || d.weakStrikeUsed;
+  if (eWrap) eWrap.hidden = !d.endlessWave || d.weakStrikeUsed || (r.weak || []).length < 3;
 
   const ml = $('#move-list');
   ml.innerHTML = '';
@@ -3884,10 +4003,12 @@ function endDuel() {
     G.meta.endlessBest = Math.max(G.meta.endlessBest || 0, wave);
     saveMeta();
     if (d.result === 'win') {
+      const reward = endlessWaveReward(G.run, wave);
       G.run.log.push({ text: `无尽回廊：第 ${wave} 波突破。`, cls: 'big' });
       openModal(`无尽回廊 · 第 ${wave} 波突破`,
-        `<p>十影与原身都已倒下。下一波的宿傩会更强。</p>
-         <p class="dim" style="margin-top:10px">每波开始恢复全部生命与咒力；三处弱点会保留，每波可手动重创一次。</p>`,
+        `<p>十影与原身都已倒下。轮回没有结束，下一波的宿傩会更强。</p>
+         <p class="dim" style="margin-top:10px">本轮馈赠：${reward.afterLvl > reward.beforeLvl ? `Lv.${reward.beforeLvl} → Lv.${reward.afterLvl}` : `Lv.${reward.afterLvl}`}${reward.grew.length ? '；' + reward.grew.join('，') : ''}。已有数据全部保留，每波开始恢复生命与咒力。</p>
+         <p class="dim" style="margin-top:8px">三处弱点保留，每波可手动重创一次。</p>`,
         [
           { label: `进入第 ${wave + 1} 波`, cls: 'primary', fn: () => { G.run.endlessWave = wave + 1; enterEndlessWave(); } },
           { label: '带着战绩离开', cls: 'ghost', fn: () => { G.run.endlessOutcome = 'clear'; finishRun('endless'); } }
@@ -4286,6 +4407,10 @@ function renderSettle(res) {
   const e = ENDINGS[res.mode] || ENDINGS.points;
   $('#settle-kicker').textContent = res.endless ? 'ENDLESS · 无尽回廊' : ((G.run && G.run.trial) ? 'TRIAL MODE · 不计入记录' : e.kicker);
   $('#settle-title').textContent = res.endless ? `止步第 ${res.wave} 波` : e.title;
+  const er = $('#btn-endless-run');
+  if (er) er.hidden = !(res.mode === 'slain' && !res.endless && G.run);
+  const again = $('#btn-again');
+  if (again) again.textContent = res.endless ? '再入轮回' : '再来一局';
   $('#settle-desc').textContent = res.endless
     ? (res.endlessOutcome === 'clear'
       ? `你在第 ${res.wave} 波结束后主动离开。最高纪录已保存，下一次可以继续冲击更深的波次。`
@@ -4321,7 +4446,6 @@ function renderSettle(res) {
 
 function bind() {
   $('#btn-start').onclick = startRun;
-  $('#btn-endless').onclick = startEndless;
   $('#btn-trial').onclick = startTrial;
   $('#btn-about').onclick = () => show('about');
   $$('[data-nav]').forEach(b => b.onclick = () => {
@@ -4397,9 +4521,11 @@ function bind() {
   });
 
   $('#btn-again').onclick = () => {
-    if (G.lastResult && G.lastResult.endless) startEndless();
+    if (G.lastResult && G.lastResult.endless) restartEndless();
     else startRun();
   };
+  const endlessRunBtn = $('#btn-endless-run');
+  if (endlessRunBtn) endlessRunBtn.onclick = startEndlessFromRun;
   const shareBtn = $('#btn-share');
   if (shareBtn) shareBtn.onclick = shareResult;
   $('#music-toggle').onclick = toggleMusic;
@@ -4414,7 +4540,7 @@ bind();
 renderHome();
 
 if (typeof window !== 'undefined') {
-  window.__JJK_UI = { G, MUSIC, MUSIC_NAMES, toggleMusic, startRun, startTrial, startEndless, enterEndlessWave, endDuel, advance, enterDuel, doMove, doVow, finishRun, openDuelPrep, renderGame, renderDuel, startAuto, stopAuto, openTrait, quickRestart, closeModal, setDifficulty, setMobileTab, setDuelLog, renderDiffPicker, weakStrike, shareResult, openChoiceEvent, chooseEvent };
+  window.__JJK_UI = { G, MUSIC, MUSIC_NAMES, toggleMusic, startRun, startTrial, startEndlessFromRun, restartEndless, enterEndlessWave, endDuel, advance, enterDuel, doMove, doVow, finishRun, openDuelPrep, renderGame, renderDuel, startAuto, stopAuto, openTrait, quickRestart, closeModal, setDifficulty, setMobileTab, setDuelLog, renderDiffPicker, weakStrike, shareResult, openChoiceEvent, chooseEvent };
 }
 
 </script>
