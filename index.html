@@ -565,7 +565,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
           <li><b>体质</b>：生命与防御。</li>
           <li><b>体术</b>：攻击、闪避与先手。</li>
           <li><b>战斗智商</b>：暴击、看破与部分术式的成长系数。</li>
-          <li><b>突破 100</b>：Lv.100 起六维上限按生得天赋继续抬升，最终 F 105、E 110、D 114、C 118、B 122、A 126、S 130、SS 133、SSS 136、EX 140；100 以上会多出一段金色突破条，数值也会带「+」。</li>
+          <li><b>突破 100</b>：Lv.90 后六维上限按生得天赋逐步抬升，Lv.100 到达终局：F 105、E 110、D 114、C 118、B 122、A 126、S 130、SS 133、SSS 136、EX 140；100 以上会多出一段金色突破条，数值也会带「+」。</li>
           <li><b>精炼与术式领悟</b>：六维达到当前上限后，训练溢出转为对应属性的精炼；每 100 点精炼小幅强化衍生属性。总精炼 300 / 600 / 900 各触发一阶术式领悟，最多三阶，提升当前术式伤害并降低消耗。</li>
           <li><b>术式觉醒</b>：觉醒需要契机事件，不会随领悟阶位自动解锁；术式领悟越高、天赋越好，契机成功率越高。术式反转、领域展开、领域展延、极之番、术式对象扩张都在觉醒路径中，失败后可以等待下一次契机。</li>
           <li><b>术式反转 ≠ 反转术式</b>：术式反转是觉醒后把生得术式方向逆转的攻击招式；反转术式是治疗招式。两者独立显示，不要混淆。</li>
@@ -644,13 +644,13 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
         <p>每回合可选择一次束缚（每场各一次）：不闪不避、术式封印、以命换力、真名束缚、孤注一掷、铁身、血契、受身。反转术式消耗咒力回复生命并清除流血，天与咒缚无法使用。</p>
         <p>宿傩共有 20 处可被看破的弱点，每局最多看破 5 处；看破 3 处后，可在开战前发动一次「弱点重创」，扣除宿傩当前形态 30% 生命，之后仍需正面打完。每处弱点提供 10% 伤害加成。</p>
         <p>事件池新增「天赋重估」与「六维突破」：前者提高生得天赋，后者提高六维上限；天赋越高，六维突破成功率越高。天与咒缚在事件中的强度按体术、体质与战斗智商重新计算，不再因无咒力被误判。</p>
-        <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。</p>
+        <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。可抉择事件会暂停并弹出选项，选择后默认恢复自动推进。</p>
       </div>
 
       <div class="about-sec">
         <h3>继承自原版</h3>
         <p>行动点与年龄分离：每次行动消耗 1 点行动点，年龄只前进约 0.15 岁。没有触发事件、升级、解锁或弱点的行动不会写入日志，只更新六维与年龄；默认自动推进，无事件时约 0.15 秒一步，有事件时约 0.46 秒一步，可随时暂停。每局行动点与年龄都有上限，不会出现活四百年。顶部「快速重开」立即换一局。榜单、点赞、关注等社交内容全部移除。</p>
-        <p>Lv.100 起进入「极限突破」，最高 Lv.130；六维上限随等级抬升，但最终受生得天赋限制：F 105、E 110、D 114、C 118、B 122、A 126、S 130、SS 133、SSS 136、EX 140。「六维突破」最多再提供 +15 上限，最终硬顶 145。击败宿傩后直接进入结算，不再展开后传剧情。</p>
+        <p>Lv.90 后六维上限按生得天赋逐步抬升，Lv.100 到达终局：F 105、E 110、D 114、C 118、B 122、A 126、S 130、SS 133、SSS 136、EX 140。「六维突破」最多再提供 +15 上限，最终硬顶 145。90 级后的经验需求已放缓，正常生涯可以进入 100 级以上；最高 Lv.130。击败宿傩后直接进入结算，不再展开后传剧情。</p>
         <p>首页的「试炼场」可直接以 Lv.90 挑战宿傩，用于测试出招与数值，不计入生涯记录。</p>
         <p>结算页新增「分享战绩」：生成 1080×1440 的战绩长图，包含结算数据、六维、构筑与最近战报；手机可调用系统分享，桌面可直接下载 PNG。</p>
         <p>右下角音乐开关：随机播放《AIZO》《心似烟火 DJ版》《雨爱 DJ版》《如果可以DJ版》；进入宿傩战时自动切到《雨爱解说版》，离开战场后恢复随机播放。</p>
@@ -1257,13 +1257,13 @@ function statCapFor(run, k) {
   const base = statCap(run.tier, run.cons, k);
   const bonus = run.capBonus || 0;
   if (run.lvl < 90) return base + bonus;
-  if (run.lvl < 100) {
-    const late = 80 + (run.lvl - 90) * 1.4;
-    return Math.max(base, Math.min(140, Math.round(late))) + bonus;
-  }
   const final = TALENT_FINAL_CAP[clamp(run.tier, 1, 10) - 1];
-  const growth = 110 + (run.lvl - 100) * 1.5;
-  return Math.min(145, Math.min(final, Math.round(growth)) + bonus);
+  if (run.lvl < 100) {
+    const progress = clamp((run.lvl - 90) / 10, 0, 1);
+    const cap = Math.max(base, 80 + (final - 80) * progress);
+    return Math.min(145, Math.round(cap) + bonus);
+  }
+  return Math.min(145, final + bonus);
 }
 
 function makeRun(opts = {}) {
@@ -1365,8 +1365,8 @@ function makeRun(opts = {}) {
 /* ---------------- 成长 ---------------- */
 
 function xpNeed(lvl) {
-  if (lvl >= 100) return Math.round(6000 + (lvl - 100) * 1200);
-  const late = lvl >= 90 ? (lvl - 89) * 300 : 0;
+  if (lvl >= 100) return Math.round(1000 + (lvl - 100) * 200);
+  const late = lvl >= 90 ? (lvl - 89) * 20 : 0;
   return Math.round(20 + lvl * 1.9 + late);
 }
 
@@ -1510,7 +1510,7 @@ function levelUp(run, gainLabel) {
   }
   if (l === 100 && !run.flags.limitBreak) {
     run.flags.limitBreak = true;
-    run.log.push({ text: '你越过了咒术师的极限。六维上限开始随等级继续增长。', cls: 'big' });
+    run.log.push({ text: '你越过了咒术师的极限。六维上限到达天赋终局。', cls: 'big' });
   }
   checkUnlocks(run);
   if ([30, 60, 90, 105, 120].includes(l)) grantTrait(run);
@@ -3432,7 +3432,7 @@ function renderGame() {
   for (const k of J.STATS) {
     const val = Math.round(r.stats[k]);
     const ref = Math.round((r.refine && r.refine[k]) || 0);
-    const cap = Math.max(100, J.statCapFor(r, k));
+    const cap = Math.max(1, J.statCapFor(r, k));
     const basePct = Math.min(100, Math.min(100, val) / cap * 100);
     const overPct = val > 100 ? Math.min(100, (val - 100) / cap * 100) : 0;
     const row = document.createElement('div');
@@ -3543,6 +3543,10 @@ function chooseEvent(choiceId) {
   } else if (r.phase === 'over') {
     stopAuto();
     setTimeout(() => finishRun(r.mode), 500);
+  } else if (r.phase === 'sim') {
+    setTimeout(() => {
+      if (G.run === r && r.phase === 'sim' && !r.pendingEvent && !G.autoOn) startAuto();
+    }, 500);
   }
 }
 
