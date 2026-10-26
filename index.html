@@ -153,6 +153,12 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.04em;margin:0}
 .vow:hover{border-color:#7d3540;background:rgba(193,18,31,.1)}
 .vow:disabled{opacity:.32;cursor:not-allowed}
 .vow b{display:block;color:#ff9aa6;font-weight:500;letter-spacing:.06em}
+@media (min-width:901px){.vow-list{display:grid;grid-template-columns:1fr 1fr;gap:5px}.vow{padding:6px 7px;font-size:11px;line-height:1.35}}
+.event-prompt{margin:0 0 12px;color:var(--txt);line-height:1.75}
+.event-options{display:grid;gap:8px;margin:12px 0 2px}
+.event-option{border:1px solid var(--line2);border-radius:3px;background:rgba(255,255,255,.018);padding:9px 11px;text-align:left}
+.event-option b{display:block;color:var(--gold);font-size:12.5px;font-weight:500;letter-spacing:.08em;margin-bottom:3px}
+.event-option span{display:block;color:var(--mut);font-size:12px;line-height:1.6}
 .move-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:260px;overflow-y:auto;padding-right:4px}
 .move{border:1px solid var(--line2);background:linear-gradient(180deg,#1a1a24,#121219);border-radius:3px;padding:8px 10px;text-align:left;cursor:pointer;transition:.15s;color:var(--txt);position:relative}
 .move:hover:not(:disabled){border-color:#6d5a9b;background:#1e1e2a}
@@ -190,7 +196,9 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
 .settle-cell .k{font-size:10.5px;letter-spacing:.18em;color:var(--dim)}
 .settle-cell .v{font-family:var(--serif);font-size:24px;margin-top:3px;color:#e8e2da}
 .settle-cell .v small{font-size:12px;color:var(--mut);font-family:var(--sans);margin-left:3px}
-.settle-log{text-align:left;border:1px solid var(--line);background:rgba(10,10,14,.7);padding:14px 16px;max-height:200px;overflow:auto;font-size:12.5px;color:var(--mut);border-radius:3px}
+ .settle-log{text-align:left;border:1px solid var(--line);background:rgba(10,10,14,.7);padding:14px 16px;max-height:200px;overflow:auto;font-size:12.5px;color:var(--mut);border-radius:3px}
+.share-preview{display:block;width:100%;max-height:58vh;object-fit:contain;background:#08080c;border:1px solid var(--line2);border-radius:3px;margin:0 0 10px}
+.share-hint{font-size:12px;color:var(--dim);line-height:1.7;text-align:center}
 .after-wrap{max-width:840px;margin:0 auto;text-align:center}
 .after-wrap h2{font-size:clamp(32px,6vw,52px);margin:10px 0 8px}
 .after-wrap>p{color:var(--mut);margin:0 auto;max-width:640px;line-height:1.9}
@@ -434,10 +442,10 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
         </div>
         <p class="tech-desc" id="tech-desc"></p>
         <div class="meta-grid" id="meta-grid"></div>
-        <div class="mini-label">六维 <span class="muted" style="letter-spacing:0">100 刻度 · 140 上限</span></div>
+        <div class="mini-label">六维 <span class="muted" style="letter-spacing:0">100 刻度 · 天赋上限</span></div>
         <div class="stat-list" id="stat-list"></div>
         <div class="refine-panel" id="refine-panel">
-          <div class="refine-line"><span>术式精炼 <b id="refine-total">0</b></span><span class="rn" id="refine-note">满 140 后溢出转入</span></div>
+          <div class="refine-line"><span>术式精炼 <b id="refine-total">0</b></span><span class="rn" id="refine-note">达到当前上限后溢出转入</span></div>
           <div class="refine-track"><i id="refine-fill"></i></div>
         </div>
         <div class="chips" id="flag-chips"></div>
@@ -520,6 +528,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
       <div class="settle-log" id="settle-log"></div>
       <div class="home-actions">
         <button class="btn primary" id="btn-again">再来一局</button>
+        <button class="btn ghost" id="btn-share">分享战绩</button>
         <button class="btn ghost" data-nav="home">返回首页</button>
       </div>
     </div>
@@ -556,8 +565,8 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
           <li><b>体质</b>：生命与防御。</li>
           <li><b>体术</b>：攻击、闪避与先手。</li>
           <li><b>战斗智商</b>：暴击、看破与部分术式的成长系数。</li>
-          <li><b>突破 100</b>：Lv.100 起六维上限从 110 继续抬升到 140；100 以上会多出一段金色突破条，数值也会带「+」。</li>
-          <li><b>精炼与术式领悟</b>：六维满 140 后，训练溢出转为对应属性的精炼；每 100 点精炼小幅强化衍生属性。总精炼 300 / 600 / 900 各触发一阶术式领悟，最多三阶，提升当前术式伤害并降低消耗。</li>
+          <li><b>突破 100</b>：Lv.100 起六维上限按生得天赋继续抬升，最终 F 105、E 110、D 114、C 118、B 122、A 126、S 130、SS 133、SSS 136、EX 140；100 以上会多出一段金色突破条，数值也会带「+」。</li>
+          <li><b>精炼与术式领悟</b>：六维达到当前上限后，训练溢出转为对应属性的精炼；每 100 点精炼小幅强化衍生属性。总精炼 300 / 600 / 900 各触发一阶术式领悟，最多三阶，提升当前术式伤害并降低消耗。</li>
           <li><b>术式觉醒</b>：觉醒需要契机事件，不会随领悟阶位自动解锁；术式领悟越高、天赋越好，契机成功率越高。术式反转、领域展开、领域展延、极之番、术式对象扩张都在觉醒路径中，失败后可以等待下一次契机。</li>
           <li><b>术式反转 ≠ 反转术式</b>：术式反转是觉醒后把生得术式方向逆转的攻击招式；反转术式是治疗招式。两者独立显示，不要混淆。</li>
           <li><b>领域与熔断</b>：领域展开持续 4 回合，领域内攻击增伤、每回合造成必中侵蚀。使用后固定进入 3 回合术式熔断，只能使用体术、防御、闪避和调息；学会「修复熔断」后，熔断期间会出现单独出招，使用它会把剩余熔断压缩到 1 回合，下一回合仍需以体术过渡。</li>
@@ -631,18 +640,20 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
 
       <div class="about-sec">
         <h3>宿傩战</h3>
-        <p>生命、攻击、防御、咒力全部数值化。宿傩会提前显示下一招意图；你可以防御、闪避、用术式对攻，或在关键时刻立下束缚。战斗分为两个独立阶段：<b>十影宿傩</b>会召唤颚吐与魔虚罗，并展开伏魔御厨子；生命归零后进入<b>原身宿傩</b>，四手原身继续以伏魔御厨子、网格解与空间斩压制，生命、攻击、防御全部重置并强化。</p>
-        <p>每回合可选择一次束缚（每场各一次）：不闪不避、术式封印、以命换力、真名束缚。反转术式消耗咒力回复生命并清除流血，天与咒缚无法使用。</p>
+        <p>生命、攻击、防御、咒力全部数值化。宿傩会提前显示下一招意图；你可以防御、闪避、用术式对攻，或在关键时刻立下束缚。战斗分为两个独立阶段：<b>十影宿傩</b>在 85% 生命展开伏魔御厨子，并更早召唤颚吐与魔虚罗；生命归零后进入<b>原身宿傩</b>，四手原身开场展开伏魔御厨子，网格解与空间斩「世界」的触发线更早，领域期间每回合还会侵蚀你的生命。</p>
+        <p>每回合可选择一次束缚（每场各一次）：不闪不避、术式封印、以命换力、真名束缚、孤注一掷、铁身、血契、受身。反转术式消耗咒力回复生命并清除流血，天与咒缚无法使用。</p>
         <p>宿傩共有 20 处可被看破的弱点，每局最多看破 5 处；看破 3 处后，可在开战前发动一次「弱点重创」，扣除宿傩当前形态 30% 生命，之后仍需正面打完。每处弱点提供 10% 伤害加成。</p>
         <p>事件池新增「天赋重估」与「六维突破」：前者提高生得天赋，后者提高六维上限；天赋越高，六维突破成功率越高。天与咒缚在事件中的强度按体术、体质与战斗智商重新计算，不再因无咒力被误判。</p>
+        <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。</p>
       </div>
 
       <div class="about-sec">
         <h3>继承自原版</h3>
         <p>行动点与年龄分离：每次行动消耗 1 点行动点，年龄只前进约 0.15 岁。没有触发事件、升级、解锁或弱点的行动不会写入日志，只更新六维与年龄；默认自动推进，无事件时约 0.15 秒一步，有事件时约 0.46 秒一步，可随时暂停。每局行动点与年龄都有上限，不会出现活四百年。顶部「快速重开」立即换一局。榜单、点赞、关注等社交内容全部移除。</p>
-        <p>90 级后六维上限随等级继续抬升；Lv.100 起进入「极限突破」，最高 Lv.130。击败宿傩后直接进入结算，不再展开后传剧情。</p>
+        <p>Lv.100 起进入「极限突破」，最高 Lv.130；六维上限随等级抬升，但最终受生得天赋限制：F 105、E 110、D 114、C 118、B 122、A 126、S 130、SS 133、SSS 136、EX 140。「六维突破」最多再提供 +15 上限，最终硬顶 145。击败宿傩后直接进入结算，不再展开后传剧情。</p>
         <p>首页的「试炼场」可直接以 Lv.90 挑战宿傩，用于测试出招与数值，不计入生涯记录。</p>
-        <p>右下角音乐开关：随机播放《AIZO》《心似烟火 DJ版》《雨爱 DJ版》；进入宿傩战时自动切到《雨爱解说版》，离开战场后恢复随机播放。</p>
+        <p>结算页新增「分享战绩」：生成 1080×1440 的战绩长图，包含结算数据、六维、构筑与最近战报；手机可调用系统分享，桌面可直接下载 PNG。</p>
+        <p>右下角音乐开关：随机播放《AIZO》《心似烟火 DJ版》《雨爱 DJ版》《如果可以DJ版》；进入宿傩战时自动切到《雨爱解说版》，离开战场后恢复随机播放。</p>
         <p class="dim" style="font-size:12px">音乐来源：B站 BV1pDidBpEek《AIZO》、BV1qapt6eE75《心似烟火 DJ版》、BV1JYED6tEff《雨爱 DJ版》；BOSS 战 BV1u48B6PEtp《雨爱解说版》。</p>
       </div>
     </div>
@@ -674,6 +685,7 @@ const STAT_NAMES = {
   vit: '体质', tai: '体术', iq: '战斗智商'
 };
 
+const TALENT_FINAL_CAP = [105, 110, 114, 118, 122, 126, 130, 133, 136, 140];
 const TIERS = [
   { i: 1,  name: 'F',   w: 33, grow: 0.55, cap: 62 },
   { i: 2,  name: 'E',   w: 25, grow: 0.65, cap: 68 },
@@ -953,7 +965,11 @@ const VOWS = [
   { id: 'noDodge', name: '不闪不避', desc: '本回合受伤 +50%，下一次攻击伤害 ×2.2。' },
   { id: 'seal', name: '术式封印', desc: '封印一个随机术式，永久攻击 +25%。' },
   { id: 'life', name: '以命换力', desc: '消耗 20% 当前生命，回满咒力；下一次攻击必中且暴击。' },
-  { id: 'name', name: '真名束缚', desc: '本场咒力消耗 -40%，防御 -25%。' }
+  { id: 'name', name: '真名束缚', desc: '本场咒力消耗 -40%，防御 -25%。' },
+  { id: 'allIn', name: '孤注一掷', desc: '当前生命降至 55%，下一次攻击伤害 ×2.8，且必中、暴击。' },
+  { id: 'ironBody', name: '铁身', desc: '本场无法闪避；防御永久 +30%，攻击永久 -12%。' },
+  { id: 'bloodPact', name: '血契', desc: '生命上限永久 -15%，攻击永久 +30%。' },
+  { id: 'lastStand', name: '受身', desc: '回复 20% 最大生命，本回合受到的伤害 -45%。' }
 ];
 
 const MASTERY_TIERS = [300, 600, 900];
@@ -1241,9 +1257,13 @@ function statCapFor(run, k) {
   const base = statCap(run.tier, run.cons, k);
   const bonus = run.capBonus || 0;
   if (run.lvl < 90) return base + bonus;
-  if (run.lvl >= 100) return Math.max(base, Math.min(140, Math.round(110 + (run.lvl - 100) * 1.5))) + bonus;
-  const late = 80 + (run.lvl - 90) * 1.4;
-  return Math.max(base, Math.min(140, Math.round(late))) + bonus;
+  if (run.lvl < 100) {
+    const late = 80 + (run.lvl - 90) * 1.4;
+    return Math.max(base, Math.min(140, Math.round(late))) + bonus;
+  }
+  const final = TALENT_FINAL_CAP[clamp(run.tier, 1, 10) - 1];
+  const growth = 110 + (run.lvl - 100) * 1.5;
+  return Math.min(145, Math.min(final, Math.round(growth)) + bonus);
 }
 
 function makeRun(opts = {}) {
@@ -1758,6 +1778,243 @@ const EVENTS = [
         ? '长久的积累在某一刻连成一线，术式的边界向后退了一寸。'
         : '你试图在寂静里抓住那道灵光，但它还差一点。'];
     }
+  },
+  {
+    id: 'blackFlash', name: '黑闪', w: 7, max: 4,
+    cond: r => r.lvl >= 15,
+    run: r => {
+      const chance = clamp(0.12 + r.stats.tai * 0.0022 + r.stats.iq * 0.0014, 0.12, 0.68);
+      if (Math.random() < chance) {
+        const tai = rnd(2, 4), ce = rnd(1, 3);
+        addStat(r, 'tai', tai);
+        if (r.cons !== 'heavenly') addStat(r, 'ce', ce);
+        r.points += rnd(3, 6);
+        gainXp(r, 55);
+        return [`你的拳头与咒力在同一帧重叠。黑闪！体术 +${tai}${r.cons === 'heavenly' ? '' : `，咒力 +${ce}`}，行动点增加。`];
+      }
+      r.points -= rnd(1, 4);
+      return ['你试图抓住黑闪的间隙，但咒力在最后一刻偏了半寸。'];
+    }
+  },
+  {
+    id: 'curseWomb', name: '废弃咒胎', w: 6, max: 2,
+    cond: r => r.lvl >= 30,
+    run: r => {
+      const chance = clamp(0.3 + eventPower(r) / 720, 0.3, 0.9);
+      if (Math.random() < chance) {
+        const eff = rnd(2, 4), vit = rnd(1, 3);
+        addStat(r, 'eff', eff); addStat(r, 'vit', vit);
+        r.points += rnd(2, 5); gainXp(r, 50);
+        return [`你在废弃医院里找到一枚未成形的咒胎。咒力效率 +${eff}，体质 +${vit}，行动点增加。`];
+      }
+      r.points -= rnd(3, 6);
+      return ['咒胎在你靠近时突然睁眼。你毁掉了它，但也被残秽拖住了脚步。'];
+    }
+  },
+  {
+    id: 'oldFriend', name: '旧友的刀', w: 5, max: 1,
+    cond: r => r.age >= 28,
+    run: r => {
+      if (Math.random() < 0.55) {
+        r.points += rnd(2, 5);
+        const t = grantTrait(r);
+        return [`旧友把一把用旧的咒具交给你。${t ? `你从中得到词条「${t.name}」。` : '你把它收进背包。'}`];
+      }
+      r.points -= rnd(2, 4);
+      addStat(r, 'iq', 1);
+      return ['旧友已经不在原来的地方。你只找到一封被雨泡烂的信，战斗智商 +1。'];
+    }
+  },
+  {
+    id: 'tengenBarrier', name: '天元结界', w: 4, max: 1,
+    cond: r => r.lvl >= 70,
+    run: r => {
+      if (Math.random() < 0.6) {
+        const ctrl = rnd(2, 4), eff = rnd(1, 3);
+        addStat(r, 'ctrl', ctrl); addStat(r, 'eff', eff); gainXp(r, 85);
+        r.points += 3;
+        return [`你替天元补完了一段结界。咒力操控 +${ctrl}，效率 +${eff}，行动点 +3。`];
+      }
+      r.points -= rnd(2, 5);
+      return ['结界的排斥力把你弹了出来。你咳出一口血，行动点受损。'];
+    }
+  },
+  {
+    id: 'demonWhisper', name: '宿傩的耳语', w: 5, max: 1,
+    cond: r => r.lvl >= 35,
+    prompt: '新宿的废墟里，有一道不属于你的声音在笑。它说，只要点头，就能少走十年弯路。',
+    options: [
+      {
+        id: 'listen', label: '倾听', cls: 'blood',
+        desc: '55% 获得力量；45% 被咒力反噬。',
+        run: r => {
+          if (Math.random() < 0.55) {
+            const ce = rnd(3, 6), tai = rnd(2, 4);
+            if (r.cons !== 'heavenly') addStat(r, 'ce', ce);
+            addStat(r, 'tai', tai); gainXp(r, 70);
+            return [`你听见了斩击的节拍。${r.cons === 'heavenly' ? '' : `咒力 +${ce}，`}体术 +${tai}。`];
+          }
+          const loss = rnd(4, 8);
+          r.points -= loss;
+          return [`耳语突然变成大笑。你的术式回路被震得发麻，行动点 -${loss}。`];
+        }
+      },
+      {
+        id: 'retort', label: '反呛', cls: 'ghost',
+        desc: '60% 获得感悟；40% 被拖入幻境。',
+        run: r => {
+          if (Math.random() < 0.6) {
+            const iq = rnd(2, 3), eff = rnd(1, 2);
+            addStat(r, 'iq', iq); addStat(r, 'eff', eff); gainXp(r, 40);
+            return [`你没有顺着它的话走，反而从声音的缝隙里听出了破绽。战斗智商 +${iq}，效率 +${eff}。`];
+          }
+          const loss = rnd(3, 6);
+          r.points -= loss;
+          return [`幻境把你按在废墟里。你挣脱时，行动点已经 -${loss}。`];
+        }
+      },
+      {
+        id: 'leave', label: '离开', cls: 'ghost',
+        desc: '稳定获得少量感悟，不承担风险。',
+        run: r => {
+          r.points += 2; addStat(r, 'iq', 1);
+          return ['你没有回头。耳语在身后淡去，行动点 +2，战斗智商 +1。'];
+        }
+      }
+    ]
+  },
+  {
+    id: 'vowAltar', name: '束缚祭坛', w: 4, max: 1,
+    cond: r => r.lvl >= 45,
+    prompt: '地下祭坛刻满了旧时代的束缚。只要你给出代价，它就能把代价变成力量。',
+    options: [
+      {
+        id: 'blood', label: '以血为祭', cls: 'blood',
+        desc: '65% 体术与体质提升；35% 祭坛反噬。',
+        run: r => {
+          if (Math.random() < 0.65) {
+            const tai = rnd(2, 4), vit = rnd(1, 3);
+            addStat(r, 'tai', tai); addStat(r, 'vit', vit); r.points += 4;
+            return [`祭坛收下了你的血。体术 +${tai}，体质 +${vit}，行动点 +4。`];
+          }
+          const loss = rnd(4, 8);
+          r.points -= loss;
+          const vit = Math.max(1, r.stats.vit - 1);
+          r.stats.vit = vit;
+          return [`祭坛索要的比你说的更多。行动点 -${loss}，体质 -1。`];
+        }
+      },
+      {
+        id: 'oath', label: '以名为誓', cls: 'ghost',
+        desc: '55% 获得一个词条；45% 名字被祭坛吞掉一部分。',
+        run: r => {
+          if (Math.random() < 0.55) {
+            const t = grantTrait(r);
+            r.points += 2;
+            return [`祭坛认可了你的名字。${t ? `获得词条「${t.name}」。` : '你的咒力变得更沉。'}`];
+          }
+          const loss = rnd(3, 7);
+          r.points -= loss;
+          return [`你的名字被刮掉了一角。行动点 -${loss}。`];
+        }
+      },
+      {
+        id: 'refuse', label: '不立誓', cls: 'ghost',
+        desc: '不付出代价，获得少量咒力效率。',
+        run: r => {
+          r.points += 2; addStat(r, 'eff', 1);
+          return ['你把祭坛留在身后。行动点 +2，咒力效率 +1。'];
+        }
+      }
+    ]
+  },
+  {
+    id: 'domainShard', name: '领域残片', w: 3, max: 1,
+    cond: r => r.lvl >= 55 && !r.flags.domain,
+    prompt: '一枚半透明的领域残片嵌在墙里。它还在呼吸，像一颗没有主人的心脏。',
+    options: [
+      {
+        id: 'devour', label: '吞下残片', cls: 'blood',
+        desc: '45% 学会领域；40% 获得咒力成长；15% 被残片撑碎。',
+        run: r => {
+          const roll = Math.random();
+          if (roll < 0.45) {
+            r.flags.domain = true;
+            addStat(r, 'ctrl', 3); gainXp(r, 100);
+            return ['残片在你体内展开。你学会了领域展开；咒力操控 +3。'];
+          }
+          if (roll < 0.85) {
+            const eff = rnd(2, 4), ctrl = rnd(1, 3);
+            addStat(r, 'eff', eff); addStat(r, 'ctrl', ctrl); r.points += 3;
+            return [`残片没有成形，但它的结构留在了你的回路里。效率 +${eff}，操控 +${ctrl}，行动点 +3。`];
+          }
+          r.dead = true;
+          return ['残片在你体内重新闭合。你被自己的领域压成了齑粉。'];
+        }
+      },
+      {
+        id: 'analyze', label: '解析残片', cls: 'ghost',
+        desc: '70% 提升效率与操控；30% 精神受损。',
+        run: r => {
+          if (Math.random() < 0.7) {
+            const eff = rnd(2, 4), ctrl = rnd(1, 2);
+            addStat(r, 'eff', eff); addStat(r, 'ctrl', ctrl); gainXp(r, 45);
+            return [`你拆开了残片的纹路。咒力效率 +${eff}，操控 +${ctrl}。`];
+          }
+          r.points -= rnd(3, 6);
+          return ['残片的纹路反客为主。你的精神被拖进去一瞬，行动点受损。'];
+        }
+      },
+      {
+        id: 'seal', label: '封印残片', cls: 'ghost',
+        desc: '稳定获得行动点与战斗智商。',
+        run: r => {
+          r.points += 5; addStat(r, 'iq', 1);
+          return ['你把残片封进咒具匣。行动点 +5，战斗智商 +1。'];
+        }
+      }
+    ]
+  },
+  {
+    id: 'junior', name: '后辈的请求', w: 4, max: 1,
+    cond: r => r.lvl >= 25,
+    prompt: '一个刚入学的后辈拦住你，说想看看真正的咒术师是怎么战斗的。',
+    options: [
+      {
+        id: 'teach', label: '认真指导', cls: 'ghost',
+        desc: '80% 教学相长；20% 被拖慢进度。',
+        run: r => {
+          if (Math.random() < 0.8) {
+            const iq = rnd(2, 3);
+            addStat(r, 'iq', iq); r.points += 4; gainXp(r, 35);
+            return [`你把基础拆开讲了一遍，自己也理清了几个旧问题。战斗智商 +${iq}，行动点 +4。`];
+          }
+          r.points -= rnd(2, 4);
+          return ['后辈的问题比你想象的多。你花掉了半天，行动点受损。'];
+        }
+      },
+      {
+        id: 'test', label: '带他实战', cls: 'blood',
+        desc: '55% 获得词条；45% 被突发咒灵打乱。',
+        run: r => {
+          if (Math.random() < 0.55) {
+            const t = grantTrait(r);
+            r.points += 2;
+            return [`你们在废弃大楼里遇到一只低级咒灵。${t ? `你护住后辈，获得词条「${t.name}」。` : '你护住了后辈。'}`];
+          }
+          r.points -= rnd(3, 6);
+          return ['咒灵比预想中多。你带着后辈撤退，行动点受损。'];
+        }
+      },
+      {
+        id: 'decline', label: '拒绝', cls: 'ghost',
+        desc: '不承担风险，获得少量行动点。',
+        run: r => {
+          r.points += 2; addStat(r, 'eff', 1);
+          return ['你让后辈去找别的老师。行动点 +2，咒力效率 +1。'];
+        }
+      }
+    ]
   }
 ];
 
@@ -1770,9 +2027,44 @@ function doEvent(run) {
   let r = Math.random() * total, chosen = pool[0];
   for (const e of pool) { r -= e.w; if (r <= 0) { chosen = e; break; } }
   run.eventCounts[chosen.id] = (run.eventCounts[chosen.id] || 0) + 1;
+  if (chosen.options) {
+    run.pendingEvent = { id: chosen.id, name: chosen.name };
+    run.log.push({ text: `【事件·${chosen.name}】`, cls: 'purple' });
+    run.log.push({ text: chosen.prompt, cls: 'big' });
+    return null;
+  }
   const msgs = chosen.run(run) || [];
   run.log.push({ text: `【事件·${chosen.name}】`, cls: 'purple' });
   for (const m of msgs) run.log.push({ text: m, cls: run.dead ? 'dmg' : 'sys' });
+  return msgs;
+}
+
+function resolveEventChoice(run, choiceId) {
+  const pending = run && run.pendingEvent;
+  if (!pending) return [];
+  const ev = EVENTS.find(e => e.id === pending.id);
+  const opt = ev && ev.options && ev.options.find(o => o.id === choiceId);
+  run.pendingEvent = null;
+  if (!opt) return [];
+  run.log.push({ text: `【抉择·${ev.name}】${opt.label}`, cls: 'gold' });
+  const msgs = opt.run(run) || [];
+  for (const m of msgs) run.log.push({ text: m, cls: run.dead ? 'dmg' : 'sys' });
+  if (run.points < 0) run.points = 0;
+  checkUnlocks(run);
+  if (run.dead) {
+    run.phase = 'over';
+    run.mode = 'dead';
+  } else if (run.points <= 0 || run.age >= AGE_LIMIT) {
+    const why = run.age >= AGE_LIMIT ? '身体到达极限' : '行动点耗尽';
+    if (run.lvl >= 90) {
+      run.phase = 'duel';
+      run.log.push({ text: `${why}。宿傩就在新宿的废墟上等你。`, cls: 'big' });
+    } else {
+      run.phase = 'over';
+      run.mode = 'points';
+      run.log.push({ text: `${why}。以你现在的等级，连站在宿傩面前的资格都没有。`, cls: 'dmg' });
+    }
+  }
   return msgs;
 }
 
@@ -1821,7 +2113,7 @@ function doPlot(run) {
 /* ---------------- 年度推进 ---------------- */
 
 function advanceAction(run) {
-  if (run.phase !== 'sim') return [];
+  if (run.phase !== 'sim' || run.pendingEvent) return [];
   run.actions = (run.actions || 0) + 1;
   run.points -= 1 + traitVal(run, 'pointsDrain');
   run.age = Math.round((run.age + 0.15) * 100) / 100;
@@ -1835,12 +2127,16 @@ function advanceAction(run) {
     addWeak(run);
   }
   if (Math.random() < 0.24 * (1 + traitVal(run, 'eventChance'))) doEvent(run);
-  if (!run.dead && Math.random() < 0.07 * (1 + traitVal(run, 'eventChance') * 0.5)) doPlot(run);
+  if (!run.dead && !run.pendingEvent && Math.random() < 0.07 * (1 + traitVal(run, 'eventChance') * 0.5)) doPlot(run);
 
   if (run.log.length > before) {
     run.log.splice(before, 0, { text: `── 行动 ${run.actions} · ${run.age.toFixed(1)} 岁 ──`, cls: 'year' });
   }
 
+  if (run.pendingEvent) {
+    if (run.points < 0) run.points = 0;
+    return run.log.slice(-6);
+  }
   if (run.points < 0) run.points = 0;
   if (run.dead) {
     run.phase = 'over';
@@ -2006,13 +2302,13 @@ const SUKU_STAGE_NAMES = { 1: '十影宿傩', 2: '原身宿傩' };
 function startDuel(run) {
   const d = derived(run);
   const diff = diffOf(run.difficulty);
-  const sukuTotal = Math.round((8400 + run.lvl * 44) * diff.enemyHp);
+  const sukuTotal = Math.round((10920 + run.lvl * 57) * diff.enemyHp);
   const stage1Max = Math.round(sukuTotal * 0.54);
   const stage2Max = sukuTotal - stage1Max;
-  const baseAtk = Math.round((200 + run.lvl * 0.7) * diff.enemyAtk);
-  const baseDef = Math.round((135 + run.lvl * 0.4) * diff.enemyDef);
-  const stage1Atk = Math.round(baseAtk * 1.08);
-  const stage2Atk = Math.round(baseAtk * 1.34);
+  const baseAtk = Math.round((244 + run.lvl * 0.85) * diff.enemyAtk);
+  const baseDef = Math.round((160 + run.lvl * 0.52) * diff.enemyDef);
+  const stage1Atk = Math.round(baseAtk * 1.20);
+  const stage2Atk = Math.round(baseAtk * 1.55);
   const duel = {
     run, turn: 1, over: false, result: null, busy: false, vowThisTurn: false,
     weakStrikeUsed: false,
@@ -2023,7 +2319,7 @@ function startDuel(run) {
       shield: 0, evade: 0, dodgeBuff: 0,
       atkBuff: 0, atkBuffT: 0, defBuff: 0, defBuffT: 0,
       bleed: 0, burn: 0, skip: 0,
-      domainTurns: 0, burnout: 0, domainGuard: null,
+      domainTurns: 0, burnout: 0, burnoutFixUsed: false, domainGuard: null,
       vowAtk: 1, vowVuln: 1, vowCrit: false, vowSure: false,
       costMod: 1, defDownPerm: 0, sealed: [], cd: {},
       revive: run.cons === 'vessel' ? 1 : 0,
@@ -2082,12 +2378,12 @@ function rollIntent(d) {
   }
   if (s.forceIntent === 'domain') {
     s.forceIntent = null; s.domainUsed = true;
-    s.intent = { id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 1.85, sure: true, domain: true };
+    s.intent = { id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 2.2, sure: true, domain: true };
     return;
   }
   if (s.forceIntent === 'world') {
     s.forceIntent = null; s.worldUsed = true;
-    s.intent = { id: 'world', name: '空间斩「世界」', mult: 5.2, sure: true, ignore: .55, cd: 4 };
+    s.intent = { id: 'world', name: '空间斩「世界」', mult: 6.0, sure: true, ignore: .75, cd: 4 };
     return;
   }
 
@@ -2099,7 +2395,7 @@ function rollIntent(d) {
       { id: 'elephant', name: '满象', mult: 2.45, w: 2, cd: 2 },
       { id: 'sword', name: '八握剑', mult: 3.05, w: 2, cd: 2 }
     ];
-    if (!s.domainUsed) pool.push({ id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 1.85, w: 5, sure: true, domain: true });
+    if (!s.domainUsed) pool.push({ id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 2.2, w: 5, sure: true, domain: true });
   } else {
     pool = [
       { id: 'kai', name: '解', mult: 2.0, w: 4 },
@@ -2108,8 +2404,8 @@ function rollIntent(d) {
       { id: 'grid', name: '网格解', mult: .82, w: 4, hits: 7, ignore: .38, bleed: 1 },
       { id: 'kafu', name: '火焰·竈', mult: 2.8, w: 3, burn: 2, cd: 3 }
     ];
-    if (!s.domainUsed) pool.push({ id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 1.85, w: 6, sure: true, domain: true });
-    if (!s.worldUsed) pool.push({ id: 'world', name: '空间斩「世界」', mult: 5.2, w: 3, sure: true, ignore: .55, cd: 4 });
+    if (!s.domainUsed) pool.push({ id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 2.2, w: 6, sure: true, domain: true });
+    if (!s.worldUsed) pool.push({ id: 'world', name: '空间斩「世界」', mult: 6.0, w: 3, sure: true, ignore: .75, cd: 4 });
     if (s.worldUsed) pool.push({ id: 'kai7', name: '解·七连', mult: .62, w: 2, hits: 7, cd: 4 });
   }
   const avail = pool.filter(o => !o.cd || !(s.cd[o.id] > 0));
@@ -2139,7 +2435,7 @@ function tickSukuStatus(d) {
 
 function healSuku(d) {
   const s = d.suku;
-  const heal = Math.round(s.maxHp * 0.1);
+  const heal = Math.round(s.maxHp * 0.15);
   s.hp = Math.min(s.maxHp, s.hp + heal);
   s.healUsed[s.stage] = true;
   pushDuel(d, `宿傩结出反转术式的印。伤口逆流，回复 ${money(heal)} 点生命。`, 'red');
@@ -2172,6 +2468,22 @@ function sukuTurn(d) {
 
   tickSukuStatus(d);
   if (d.over) return;
+  if (s.domainTurns > 0) {
+    const aura = Math.max(1, Math.round(p.maxHp * 0.02));
+    p.hp -= aura;
+    pushDuel(d, `伏魔御厨子的领域仍在侵蚀你，受到 ${money(aura)} 点必中伤害。`, 'dmg');
+    if (p.hp <= 0) {
+      if (p.revive > 0) {
+        p.revive--;
+        p.hp = Math.round(p.maxHp * 0.35);
+        pushDuel(d, '领域几乎把你磨碎，但容器里的另一道灵魂把你推了回来。', 'big');
+      } else {
+        p.hp = 0; d.over = true; d.result = 'lose';
+        pushDuel(d, '伏魔御厨子合拢。你的身体在领域里失去了形状。', 'big');
+        return;
+      }
+    }
+  }
   if (s.justChanged) { s.justChanged = false; endEnemyTurn(d); return; }
 
   if (p.domainTurns > 0) {
@@ -2196,7 +2508,7 @@ function sukuTurn(d) {
     endEnemyTurn(d);
     return;
   }
-  if (s.hp < s.maxHp * 0.45 && !s.healUsed[s.stage]) {
+  if (s.hp < s.maxHp * 0.60 && !s.healUsed[s.stage]) {
     healSuku(d);
     endEnemyTurn(d);
     return;
@@ -2430,6 +2742,10 @@ function playerMove(d, id) {
     pushDuel(d, '术式回路没有熔断，无需修复。', 'sys');
     return false;
   }
+  if (mv.kind === 'repair' && p.burnoutFixUsed) {
+    pushDuel(d, '这段熔断已经修复过，接下来只能先以体术过渡。', 'sys');
+    return false;
+  }
   if (mv.domainOnly && !(s.domainTurns > 0 || (s.intent && s.intent.domain))) {
     pushDuel(d, `『${mv.name}』只能在敌方领域展开时使用。`, 'sys');
     return false;
@@ -2468,6 +2784,7 @@ function playerMove(d, id) {
   if (mv.kind === 'repair') {
     const before = p.burnout;
     p.burnout = 1;
+    p.burnoutFixUsed = true;
     pushDuel(d, `你重接术式回路，熔断从 ${before} 回合压缩到 1 回合；下一回合仍需以体术过渡，之后才能再次使用术式。`, 'purple');
   } else if (mv.kind === 'counter') {
     const before = !!s.domainTurns;
@@ -2502,6 +2819,7 @@ function playerMove(d, id) {
   } else if (mv.kind === 'domain') {
     p.domainTurns = 4 + traitVal(run, 'domainTurn');
     p.burnout = 3;
+    p.burnoutFixUsed = false;
     s.domainTurns = 0;
     s.stun = Math.max(s.stun, 1);
     const res = attackOnce(d, { ...mv, power: mv.power }, 0);
@@ -2588,7 +2906,10 @@ function playerMove(d, id) {
     pushDuel(d, '你倒下了。', 'big');
     return true;
   }
-  if (p.burnout > 0 && mv.kind !== 'domain' && mv.kind !== 'repair') p.burnout--;
+  if (p.burnout > 0 && mv.kind !== 'domain' && mv.kind !== 'repair') {
+    p.burnout--;
+    if (p.burnout <= 0) p.burnoutFixUsed = false;
+  }
   d.busy = true;
   return true;
 }
@@ -2613,7 +2934,7 @@ function enterStage2(d) {
   s.agitoSummoned = true; s.mahoSummoned = true;
   s.summons = { agito: false, maho: false };
   s.forceIntent = null;
-  s.intent = { id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 1.85, sure: true, domain: true };
+  s.intent = { id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 2.2, sure: true, domain: true };
   s.justChanged = true;
   pushDuel(d, '十影宿傩的影之肉体崩解。影子缩回地面，露出里面那具四手四眼的身体。', 'big');
   pushDuel(d, '「十影只是借来的壳。」原身宿傩活动了一下手腕。第二阶段开始。', 'big');
@@ -2624,19 +2945,19 @@ function checkSukuPhase(d) {
   if (!s) return;
   if (s.stage === 1) {
     if (s.hp <= 0) { enterStage2(d); return; }
-    if (!s.forceIntent && !s.domainUsed && s.hp <= s.maxHp * 0.72) {
+    if (!s.forceIntent && !s.domainUsed && s.hp <= s.maxHp * 0.85) {
       s.domainUsed = true;
       s.forceIntent = 'domain';
       pushDuel(d, '十影宿傩的影子开始收束，领域要展开了。', 'purple');
       return;
     }
-    if (!s.forceIntent && !s.agitoSummoned && s.hp <= s.maxHp * 0.65) {
+    if (!s.forceIntent && !s.agitoSummoned && s.hp <= s.maxHp * 0.78) {
       s.agitoSummoned = true;
       s.forceIntent = 'summonAgito';
       pushDuel(d, '影子里传来第二道呼吸。宿傩要召唤颚吐。', 'gold');
       return;
     }
-    if (!s.forceIntent && !s.mahoSummoned && s.hp <= s.maxHp * 0.40) {
+    if (!s.forceIntent && !s.mahoSummoned && s.hp <= s.maxHp * 0.58) {
       s.mahoSummoned = true;
       s.forceIntent = 'summonMaho';
       pushDuel(d, '轮盘转动的声音从影中升起。魔虚罗要来了。', 'gold');
@@ -2649,13 +2970,13 @@ function checkSukuPhase(d) {
     pushDuel(d, '原身宿傩的最后一只手落下。诅咒之王，这一次真的死了。', 'big');
     return;
   }
-  if (!s.forceIntent && !s.worldUsed && s.hp <= s.maxHp * 0.35) {
+  if (!s.forceIntent && !s.worldUsed && s.hp <= s.maxHp * 0.48) {
     s.forceIntent = 'world';
     s.worldUsed = true;
     pushDuel(d, '宿傩收起了玩闹的表情。空间在他指尖折成一条线。', 'big');
     return;
   }
-  if (!s.forceIntent && !s.gridUsed && s.hp <= s.maxHp * 0.58) {
+  if (!s.forceIntent && !s.gridUsed && s.hp <= s.maxHp * 0.70) {
     s.gridUsed = true;
     s.forceIntent = 'grid';
     pushDuel(d, '宿傩抬手划出纵横的线。网格解，要落下来了。', 'purple');
@@ -2699,6 +3020,29 @@ function useVow(d, id) {
     p.costMod *= 0.6;
     p.defDownPerm += p.def * 0.25;
     pushDuel(d, '「以真名为誓。」咒力消耗降低 40%，防御永久下降 25%。', 'gold');
+  } else if (id === 'allIn') {
+    const loss = Math.max(0, p.hp - Math.max(1, Math.round(p.hp * 0.55)));
+    p.hp = Math.max(1, p.hp - loss);
+    p.vowAtk = 2.8;
+    p.vowCrit = true;
+    p.vowSure = true;
+    pushDuel(d, `「孤注一掷。」你舍弃 ${money(loss)} 点生命，下一击伤害 ×2.8，必中且暴击。`, 'gold');
+  } else if (id === 'ironBody') {
+    if (!p.sealed.includes('dodge')) p.sealed.push('dodge');
+    p.def = Math.max(1, Math.round(p.def * 1.3));
+    p.atk = Math.max(1, Math.round(p.atk * 0.88));
+    pushDuel(d, '「铁身。」你放弃闪避，以肉身承受一切；防御 +30%，攻击 -12%。', 'gold');
+  } else if (id === 'bloodPact') {
+    p.maxHp = Math.max(1, Math.round(p.maxHp * 0.85));
+    p.hp = Math.min(p.hp, p.maxHp);
+    p.atk = Math.round(p.atk * 1.3);
+    pushDuel(d, `「以血为契。」生命上限降至 ${p.maxHp}，攻击永久 +30%。`, 'gold');
+  } else if (id === 'lastStand') {
+    const heal = Math.round(p.maxHp * 0.2);
+    const before = p.hp;
+    p.hp = Math.min(p.maxHp, p.hp + heal);
+    p.vowVuln = 0.55;
+    pushDuel(d, `「受身。」你回复 ${money(p.hp - before)} 点生命，本回合受到的伤害 -45%。`, 'gold');
   }
   return true;
 }
@@ -2761,7 +3105,7 @@ const JJK = {
   rollTier, rollCons, rollTech, techPool, initStats, statCap, statCapFor, makeRun,
   xpNeed, xpGain, addStat, train, levelUp, gainXp, checkUnlocks, totalRefine, checkMastery, MASTERY_TIERS, MASTERY_LINES,
   AWAKEN_PATHS, AWAKEN_NAMES, AWAKEN_DESC, DOMAIN_COUNTERS, DOMAIN_COUNTER_FLAGS, awakenCount, awakenChance, nextAwakenKind, tryAwaken, syncAwakening, awakenName,
-  addWeak, weakBonus, applyWeakStrike, eventPower, doEvent, doPlot, advanceYear, advanceAction,
+  addWeak, weakBonus, applyWeakStrike, eventPower, doEvent, resolveEventChoice, doPlot, advanceYear, advanceAction,
   rollIntent, checkSukuPhase, enterStage2, summonAct,
   derived, movesOf, moveById, effectiveCost, isBodyMove, startDuel, playerMove, sukuTurn, useVow,
   retreatDuel, calcPoints, settle, guardMinFor
@@ -3107,7 +3451,7 @@ function renderGame() {
   if (mastery < tiers.length) {
     refFill = Math.max(0, Math.min(100, refTotal / tiers[tiers.length - 1] * 100));
     refNote = refTotal <= 0 && mastery === 0
-      ? `满 140 后转入 · 首阶 ${tiers[0]}`
+      ? `达到当前上限后转入 · 首阶 ${tiers[0]}`
       : `术式领悟 ${mastery} / 3 · 下一 ${tiers[mastery]}`;
   }
   $('#refine-total').textContent = refTotal;
@@ -3173,11 +3517,42 @@ function scrollLog() {
   if (box) box.scrollTop = box.scrollHeight;
 }
 
+function openChoiceEvent() {
+  const r = G.run;
+  const pe = r && r.pendingEvent;
+  if (!pe) return;
+  const ev = J.EVENTS.find(e => e.id === pe.id);
+  if (!ev || !ev.options) return;
+  const body = `<p class="event-prompt">${ev.prompt}</p><div class="event-options">${ev.options.map(o =>
+    `<div class="event-option"><b>${o.label}</b><span>${o.desc}</span></div>`
+  ).join('')}</div><p class="dim" style="margin:12px 0 0;font-size:11.5px">选择后立即结算，结果可能成功，也可能反噬。</p>`;
+  const actions = ev.options.map(o => ({ label: o.label, cls: o.cls || 'ghost', fn: () => chooseEvent(o.id) }));
+  openModal(`事件 · ${ev.name}`, body, actions);
+}
+
+function chooseEvent(choiceId) {
+  const r = G.run;
+  if (!r || !r.pendingEvent) return;
+  J.resolveEventChoice(r, choiceId);
+  closeModal();
+  renderGame();
+  if (r.pendingEvent) { openChoiceEvent(); return; }
+  if (r.phase === 'duel') {
+    stopAuto();
+    setTimeout(() => openDuelPrep(false), 350);
+  } else if (r.phase === 'over') {
+    stopAuto();
+    setTimeout(() => finishRun(r.mode), 500);
+  }
+}
+
 function advance() {
   const r = G.run;
   if (!r || r.phase !== 'sim') return;
+  if (r.pendingEvent) { stopAuto(); openChoiceEvent(); return; }
   J.advanceAction(r);
   renderGame();
+  if (r.pendingEvent) { stopAuto(); openChoiceEvent(); return; }
   if (r.phase === 'duel') {
     stopAuto();
     setTimeout(() => openDuelPrep(false), 350);
@@ -3189,7 +3564,7 @@ function advance() {
 
 function startAuto() {
   if (G.autoOn) return;
-  if (!G.run || G.run.phase !== 'sim') return;
+  if (!G.run || G.run.phase !== 'sim' || G.run.pendingEvent) return;
   G.autoOn = true;
   const b = $('#btn-auto');
   if (b) { b.textContent = '暂停'; b.classList.add('auto-on'); }
@@ -3331,7 +3706,7 @@ function renderDuel() {
   ml.innerHTML = '';
   const domainThreat = s.domainTurns > 0 || !!(s.intent && s.intent.domain);
   const moves = J.movesOf(r).filter(m =>
-    (!m.domainOnly || domainThreat) && (m.kind !== 'repair' || p.burnout > 0)
+    (!m.domainOnly || domainThreat) && (m.kind !== 'repair' || (p.burnout > 0 && !p.burnoutFixUsed))
   );
   for (const m of moves) {
     const cost = J.effectiveCost(r, m, p.costMod);
@@ -3484,7 +3859,311 @@ function finishRun(mode) {
   show('settle');
 }
 
+
+/* ---------------- 分享战绩 ---------------- */
+
+function canvasRoundRect(ctx, x, y, w, h, r) {
+  const rr = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
+}
+
+function canvasSpacedText(ctx, text, x, y, space) {
+  let cx = x;
+  for (const ch of String(text)) {
+    ctx.fillText(ch, cx, y);
+    cx += ctx.measureText(ch).width + space;
+  }
+  return cx;
+}
+
+function canvasFitFont(ctx, text, maxWidth, start, weight, family) {
+  let size = start;
+  while (size > 12) {
+    ctx.font = `${weight} ${size}px ${family}`;
+    if (ctx.measureText(String(text)).width <= maxWidth) break;
+    size -= 2;
+  }
+  return size;
+}
+
+function canvasWrap(ctx, text, maxWidth, maxLines) {
+  const chars = Array.from(String(text));
+  const lines = [];
+  let cur = '';
+  for (const ch of chars) {
+    const next = cur + ch;
+    if (cur && ctx.measureText(next).width > maxWidth) {
+      lines.push(cur);
+      cur = ch;
+      if (lines.length === maxLines) break;
+    } else {
+      cur = next;
+    }
+  }
+  if (cur && lines.length < maxLines) lines.push(cur);
+  if (lines.length === maxLines && chars.join('').length > lines.join('').length) {
+    let last = lines[lines.length - 1];
+    while (last && ctx.measureText(last + '…').width > maxWidth) last = last.slice(0, -1);
+    lines[lines.length - 1] = last + '…';
+  }
+  return lines;
+}
+
+function drawShareCanvas(res) {
+  const W = 1080, H = 1440, M = 72;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  const run = G.run || {};
+  const stats = res.stats || run.stats || {};
+  const ending = ENDINGS[res.mode] || ENDINGS.points;
+  const serif = '"Songti SC","Noto Serif SC","STSong","SimSun",serif';
+  const sans = '"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif';
+  const INK = '#ece5dc', MUT = '#9c949e', DIM = '#6c6572', GOLD = '#d9b36c', RED = '#c1121f';
+
+  const bg = ctx.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#0c0c12');
+  bg.addColorStop(.55, '#08080c');
+  bg.addColorStop(1, '#100a0c');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+
+  let rg = ctx.createRadialGradient(540, 70, 0, 540, 70, 720);
+  rg.addColorStop(0, 'rgba(193,18,31,.32)');
+  rg.addColorStop(.56, 'rgba(120,10,25,.10)');
+  rg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
+  rg = ctx.createRadialGradient(940, 1240, 0, 940, 1240, 520);
+  rg.addColorStop(0, 'rgba(217,179,108,.10)');
+  rg.addColorStop(1, 'rgba(217,179,108,0)');
+  ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
+
+  ctx.strokeStyle = 'rgba(255,255,255,.035)';
+  ctx.lineWidth = 1;
+  for (let x = M; x <= W - M; x += 72) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke(); }
+  for (let y = 72; y <= H - 72; y += 72) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+
+  ctx.fillStyle = 'rgba(193,18,31,.035)';
+  ctx.font = `700 430px ${serif}`;
+  ctx.textAlign = 'right';
+  ctx.fillText('宿', W - 38, 1030);
+
+  ctx.strokeStyle = 'rgba(217,179,108,.30)';
+  ctx.lineWidth = 2;
+  canvasRoundRect(ctx, 34, 34, W - 68, H - 68, 8);
+  ctx.stroke();
+  ctx.strokeStyle = 'rgba(193,18,31,.55)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(M, 60); ctx.lineTo(W - M, 60); ctx.stroke();
+
+  ctx.textAlign = 'left';
+  ctx.font = `600 18px ${sans}`;
+  ctx.fillStyle = '#b23d49';
+  canvasSpacedText(ctx, 'JUJUTSU KAISEN · SIMULATOR', M, 96, 4);
+  ctx.textAlign = 'right';
+  ctx.fillStyle = DIM;
+  ctx.font = `16px ${sans}`;
+  ctx.fillText('jujutsu.desthon.xyz', W - M, 96);
+
+  ctx.textAlign = 'left';
+  ctx.font = `600 24px ${sans}`;
+  ctx.fillStyle = '#c1121f';
+  canvasSpacedText(ctx, ending.kicker, M, 150, 7);
+
+  const badge = res.mode === 'slain' ? '宿傩讨伐' : res.mode === 'dead' ? '战死' : res.mode === 'retreat' ? '撤退' : '时间耗尽';
+  const badgeColor = res.mode === 'slain' ? GOLD : res.mode === 'dead' ? '#e05a64' : MUT;
+  ctx.font = `700 20px ${sans}`;
+  const bw = ctx.measureText(badge).width + 36;
+  canvasRoundRect(ctx, W - M - bw, 120, bw, 42, 21);
+  ctx.fillStyle = res.mode === 'slain' ? 'rgba(217,179,108,.12)' : 'rgba(193,18,31,.12)';
+  ctx.fill();
+  ctx.strokeStyle = res.mode === 'slain' ? 'rgba(217,179,108,.55)' : 'rgba(193,18,31,.45)';
+  ctx.lineWidth = 1; ctx.stroke();
+  ctx.fillStyle = badgeColor; ctx.textAlign = 'center';
+  ctx.fillText(badge, W - M - bw / 2, 148);
+
+  const titleSize = canvasFitFont(ctx, ending.title, W - 2 * M - 180, 88, 600, serif);
+  ctx.textAlign = 'left';
+  ctx.font = `600 ${titleSize}px ${serif}`;
+  ctx.fillStyle = INK;
+  ctx.fillText(ending.title, M, 246);
+
+  ctx.font = `20px ${sans}`;
+  ctx.fillStyle = MUT;
+  let descY = 292;
+  for (const line of canvasWrap(ctx, ending.desc, W - 2 * M - 30, 2)) {
+    ctx.fillText(line, M, descY); descY += 30;
+  }
+
+  const total = J.STATS.reduce((a, k) => a + (stats[k] || 0), 0);
+  const cells = [
+    ['难度', res.difficultyName || '标准', GOLD],
+    ['最终等级', 'Lv.' + res.level, INK],
+    ['评级', res.bench.grade, GOLD],
+    ['年龄', res.age.toFixed(1) + ' 岁', INK],
+    ['弱点', res.weak + ' / 5', INK],
+    ['获得经验', '+' + res.exp, INK],
+    ['保底积分', '+' + res.points, GOLD],
+    ['六维总和', String(Math.round(total)), INK],
+    ['术师等级', 'Lv.' + G.meta.lv, INK]
+  ];
+  const gap = 14, cellW = (W - 2 * M - gap * 2) / 3, cellH = 128;
+  const gridY = 382;
+  for (let i = 0; i < cells.length; i++) {
+    const cx = M + (i % 3) * (cellW + gap);
+    const cy = gridY + Math.floor(i / 3) * (cellH + gap);
+    canvasRoundRect(ctx, cx, cy, cellW, cellH, 4);
+    ctx.fillStyle = 'rgba(255,255,255,.035)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,.09)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.textAlign = 'left';
+    ctx.font = `16px ${sans}`;
+    ctx.fillStyle = DIM;
+    ctx.fillText(cells[i][0], cx + 18, cy + 34);
+    const vs = canvasFitFont(ctx, cells[i][1], cellW - 36, 38, 600, serif);
+    ctx.font = `600 ${vs}px ${serif}`;
+    ctx.fillStyle = cells[i][2];
+    ctx.fillText(cells[i][1], cx + 18, cy + 92);
+  }
+
+  const statsTop = 850;
+  ctx.textAlign = 'left';
+  ctx.font = `600 26px ${serif}`;
+  ctx.fillStyle = INK;
+  ctx.fillText('六维', M, statsTop);
+  ctx.font = `15px ${sans}`;
+  ctx.fillStyle = DIM;
+  ctx.textAlign = 'right';
+  ctx.fillText('100 刻度 · 金色突破段', W - M, statsTop);
+  ctx.textAlign = 'left';
+
+  const colW = (W - 2 * M - 30) / 2;
+  const rowH = 60;
+  J.STATS.forEach((k, i) => {
+    const col = i % 2, row = Math.floor(i / 2);
+    const x = M + col * (colW + 30), y = statsTop + 46 + row * rowH;
+    const val = Math.round(stats[k] || 0);
+    const cap = Math.max(100, J.statCapFor(run, k));
+    ctx.font = `20px ${sans}`;
+    ctx.fillStyle = '#b9b2ba';
+    ctx.fillText(J.STAT_NAMES[k], x, y + 6);
+    ctx.textAlign = 'right';
+    ctx.font = `600 25px ${serif}`;
+    ctx.fillStyle = val > 100 ? GOLD : INK;
+    ctx.fillText(String(val), x + colW - 8, y + 6);
+    ctx.textAlign = 'left';
+    const bx = x + 104, bwBar = colW - 118, by = y + 17;
+    canvasRoundRect(ctx, bx, by, bwBar, 8, 4);
+    ctx.fillStyle = '#1a1920'; ctx.fill();
+    const pct = Math.max(0, Math.min(1, val / cap));
+    if (pct > 0) {
+      const grad = ctx.createLinearGradient(bx, 0, bx + bwBar, 0);
+      grad.addColorStop(0, val > 100 ? '#a77c34' : '#7c1420');
+      grad.addColorStop(1, val > 100 ? GOLD : '#c1121f');
+      canvasRoundRect(ctx, bx, by, Math.max(4, bwBar * pct), 8, 4);
+      ctx.fillStyle = grad; ctx.fill();
+    }
+    const tick = bx + bwBar * Math.min(1, 100 / cap);
+    ctx.strokeStyle = 'rgba(236,229,220,.42)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(tick, by - 3); ctx.lineTo(tick, by + 11); ctx.stroke();
+  });
+
+  const buildY = 1112;
+  const build = `${run.techName || '—'}${run.tech2 ? ' / ' + run.tech2Name : ''} · ${run.consName || '—'} · 天赋 ${run.tierName || '—'}${(run.capBonus || 0) ? ' · 突破 +' + run.capBonus : ''}`;
+  ctx.font = `16px ${sans}`;
+  ctx.fillStyle = DIM;
+  ctx.fillText('BUILD', M, buildY);
+  ctx.font = `20px ${sans}`;
+  ctx.fillStyle = '#cfc7c0';
+  ctx.fillText(canvasWrap(ctx, build, W - 2 * M, 1)[0] || '', M, buildY + 30);
+
+  ctx.font = `600 22px ${serif}`;
+  ctx.fillStyle = GOLD;
+  ctx.fillText('战报', M, buildY + 78);
+  const logs = (run.log || []).filter(l => l && l.text).slice(-2);
+  let ly = buildY + 112;
+  if (!logs.length) {
+    ctx.font = `18px ${sans}`; ctx.fillStyle = MUT; ctx.fillText('没有留下战报。', M, ly);
+  } else {
+    ctx.font = `18px ${sans}`;
+    for (const l of logs) {
+      const ls = canvasWrap(ctx, '· ' + l.text, W - 2 * M, 2);
+      ctx.fillStyle = '#aba3ac';
+      for (const line of ls) { ctx.fillText(line, M, ly); ly += 26; }
+      if (ly > 1340) break;
+    }
+  }
+
+  ctx.strokeStyle = 'rgba(255,255,255,.10)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(M, 1370); ctx.lineTo(W - M, 1370); ctx.stroke();
+  ctx.textAlign = 'left';
+  ctx.font = `17px ${sans}`;
+  ctx.fillStyle = DIM;
+  ctx.fillText('咒术回战模拟器 · 重构版', M, 1396);
+  ctx.textAlign = 'right';
+  ctx.fillStyle = GOLD;
+  ctx.fillText('jujutsu.desthon.xyz', W - M, 1396);
+
+  return canvas;
+}
+
+function dataUrlToFile(dataUrl, name) {
+  const parts = dataUrl.split(',');
+  const mime = (parts[0].match(/data:([^;]+)/) || [])[1] || 'image/png';
+  const bin = atob(parts[1]);
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new File([bytes], name, { type: mime });
+}
+
+function downloadShareImage(dataUrl, filename) {
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  toast('战绩图片已导出');
+}
+
+async function nativeShareImage(dataUrl, filename) {
+  try {
+    const file = dataUrlToFile(dataUrl, filename);
+    await navigator.share({ files: [file], title: '咒术回战战绩', text: '我的咒术回战模拟器战绩' });
+  } catch (e) {
+    if (e && e.name !== 'AbortError') toast('系统分享不可用，请下载图片');
+  }
+}
+
+function shareResult() {
+  const res = G.lastResult;
+  if (!res) { toast('还没有可分享的战绩'); return; }
+  let dataUrl;
+  try { dataUrl = drawShareCanvas(res).toDataURL('image/png'); }
+  catch (e) { toast('战绩图片生成失败'); return; }
+  const ending = ENDINGS[res.mode] || ENDINGS.points;
+  const safe = String(ending.title).replace(/[\\/:*?"<>|]/g, '').slice(0, 20);
+  const filename = `咒术回战-${safe}-Lv.${res.level}.png`;
+  let canShare = false;
+  try {
+    if (navigator.share && navigator.canShare && window.File) {
+      canShare = navigator.canShare({ files: [dataUrlToFile(dataUrl, filename)] });
+    }
+  } catch (e) { canShare = false; }
+  const actions = [
+    { label: '下载图片', cls: 'primary', fn: () => downloadShareImage(dataUrl, filename) }
+  ];
+  if (canShare) actions.push({ label: '系统分享', cls: 'ghost', fn: () => nativeShareImage(dataUrl, filename) });
+  actions.push({ label: '关闭', cls: 'ghost' });
+  openModal('分享战绩', `<img class="share-preview" src="${dataUrl}" alt="咒术回战战绩图片"><div class="share-hint">图片已生成。手机可长按保存，或点击“系统分享”；桌面请下载图片。</div>`, actions);
+}
+
 function renderSettle(res) {
+  G.lastResult = res;
   const e = ENDINGS[res.mode] || ENDINGS.points;
   $('#settle-kicker').textContent = (G.run && G.run.trial) ? 'TRIAL MODE · 不计入记录' : e.kicker;
   $('#settle-title').textContent = e.title;
@@ -3580,6 +4259,8 @@ function bind() {
   });
 
   $('#btn-again').onclick = startRun;
+  const shareBtn = $('#btn-share');
+  if (shareBtn) shareBtn.onclick = shareResult;
   $('#music-toggle').onclick = toggleMusic;
   const mm = $('#m-music');
   if (mm) mm.onclick = toggleMusic;
@@ -3592,7 +4273,7 @@ bind();
 renderHome();
 
 if (typeof window !== 'undefined') {
-  window.__JJK_UI = { G, MUSIC, MUSIC_NAMES, toggleMusic, startRun, startTrial, advance, enterDuel, doMove, doVow, finishRun, openDuelPrep, renderGame, renderDuel, startAuto, stopAuto, openTrait, quickRestart, closeModal, setDifficulty, setMobileTab, setDuelLog, renderDiffPicker, weakStrike };
+  window.__JJK_UI = { G, MUSIC, MUSIC_NAMES, toggleMusic, startRun, startTrial, advance, enterDuel, doMove, doVow, finishRun, openDuelPrep, renderGame, renderDuel, startAuto, stopAuto, openTrait, quickRestart, closeModal, setDifficulty, setMobileTab, setDuelLog, renderDiffPicker, weakStrike, shareResult, openChoiceEvent, chooseEvent };
 }
 
 </script>
