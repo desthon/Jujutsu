@@ -122,6 +122,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.04em;margin:0}
 .line .yr{color:var(--dim);font-size:11.5px;letter-spacing:.1em;margin-right:8px}
 .line.sys{color:var(--mut)} .line.dmg{color:#ff7d8c} .line.heal{color:var(--green)}
 .line.tech{color:var(--purple2)} .line.gold{color:var(--gold)} .line.big{color:#fff;font-family:var(--serif);font-size:15px;letter-spacing:.05em}
+.line.rainbow{background:linear-gradient(90deg,#ff6b9d,#ffd166,#63e6be,#7aa2ff,#c084fc);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600;animation:rainbowShift 6s linear infinite}
 .log-actions{padding-top:12px;border-top:1px solid var(--line);display:flex;gap:10px}
 .log-actions .btn{flex:1}
 
@@ -144,6 +145,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.04em;margin:0}
 .f-line{display:flex;gap:18px;margin-top:8px;font-size:12px;color:var(--mut);flex-wrap:wrap}
 .f-line b{color:#ded9d2;font-weight:400;font-variant-numeric:tabular-nums}
 .intent{margin-top:9px;font-size:12.5px;border-left:2px solid var(--red);padding:4px 10px;background:rgba(193,18,31,.06);color:#ffb3bb}
+.intent.world{border-left-color:var(--gold);background:rgba(255,209,102,.10);color:#ffe4a3}
 .intent .k{color:var(--dim);font-size:10.5px;letter-spacing:.18em;margin-right:8px}
 .duel-log{border:1px solid var(--line);border-radius:4px;padding:12px 16px;overflow-y:auto;font-size:13px;background:rgba(8,8,12,.7);min-height:0}
 .duel-bottom{display:grid;grid-template-columns:270px 1fr;gap:12px}
@@ -159,6 +161,9 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.04em;margin:0}
 .event-option{border:1px solid var(--line2);border-radius:3px;background:rgba(255,255,255,.018);padding:9px 11px;text-align:left}
 .event-option b{display:block;color:var(--gold);font-size:12.5px;font-weight:500;letter-spacing:.08em;margin-bottom:3px}
 .event-option span{display:block;color:var(--mut);font-size:12px;line-height:1.6}
+.event-rarity{display:inline-block;font-size:10px;letter-spacing:.18em;padding:2px 8px;margin:0 0 10px;border:1px solid rgba(160,150,255,.5);border-radius:2px;background:linear-gradient(90deg,rgba(255,60,120,.14),rgba(255,210,80,.12),rgba(60,230,190,.12),rgba(90,140,255,.16));color:#efeaff}
+.btn.rainbow{border-color:rgba(160,150,255,.75);background:linear-gradient(90deg,rgba(255,60,120,.16),rgba(255,210,80,.13),rgba(60,230,190,.14),rgba(90,140,255,.18));color:#fff}
+.rainbow-text{background:linear-gradient(90deg,#ff6b9d,#ffd166,#63e6be,#7aa2ff,#c084fc);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rainbowShift 6s linear infinite}
 .move-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:260px;overflow-y:auto;padding-right:4px}
 .move{border:1px solid var(--line2);background:linear-gradient(180deg,#1a1a24,#121219);border-radius:3px;padding:8px 10px;text-align:left;cursor:pointer;transition:.15s;color:var(--txt);position:relative}
 .move:hover:not(:disabled){border-color:#6d5a9b;background:#1e1e2a}
@@ -182,6 +187,9 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
 .chip.r-legendary{color:#f0d18d;border-color:#6b5227;background:rgba(220,181,106,.08)}
 .chip.r-curse{color:#ff9aa6;border-color:#6e2a32;background:rgba(193,18,31,.08)}
 .chip.r-curse::before{content:"咒";font-size:9px;margin-right:4px;opacity:.8}
+.chip.r-mythic{color:#fff;border-color:#8d7dff;background:linear-gradient(90deg,rgba(255,60,120,.22),rgba(255,210,80,.18),rgba(60,230,190,.18),rgba(90,140,255,.22));background-size:220% 100%;animation:rainbowShift 7s linear infinite;box-shadow:0 0 9px rgba(160,150,255,.16)}
+.chip.r-mythic::before{content:"彩";font-size:9px;margin-right:4px;opacity:.9}
+@keyframes rainbowShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 #btn-auto.auto-on{border-color:#7d3540;color:#ff9aa6}
 #btn-auto.auto-on::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--red2);margin-right:6px;animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
@@ -573,6 +581,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
           <li><b>术式反转 ≠ 反转术式</b>：术式反转是觉醒后把生得术式方向逆转的攻击招式；反转术式是治疗招式。两者独立显示，不要混淆。</li>
           <li><b>领域与熔断</b>：领域展开持续 4 回合，领域内攻击增伤、每回合造成必中侵蚀。使用后固定进入 3 回合术式熔断，只能使用体术、防御、闪避和调息；学会「修复熔断」后，熔断期间会出现单独出招，使用它会把剩余熔断压缩到 1 回合，下一回合仍需以体术过渡。</li>
           <li><b>领域对抗</b>：简易领域、落花之情、弥虚葛笼都需要通过学习事件掌握，天赋越高越容易学会；它们能抵消领域必中、减伤或反震。</li>
+          <li><b>空间斩预警</b>：原身宿傩的「世界」会在下一招前显示预警；此时使用「空间抗性」可抵消必中、获得 35% 闪避并把本次伤害压低 80%。不应对时，单次「世界」伤害最高为最大生命的 80%。</li>
         </ul>
       </div>
 
@@ -615,7 +624,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
 
       <div class="about-sec">
         <h3>词条</h3>
-        <p>每局开局获得 3 个词条，30 / 60 / 90 / 105 / 120 级各再获得 1 个。词条分为普通、稀有、传说、诅咒四档，效果即时生效：六维、生命、攻击、防御、暴击、咒力消耗、反转治疗、领域、事件与弱点发现率。点击左侧或战斗中的词条可查看详情。</p>
+        <p>每局开局获得 3 个词条，30 / 60 / 90 / 105 / 120 级各再获得 1 个。词条分为普通、稀有、传说、诅咒、彩色五档；彩色词条会带来暴击滚雪球、必中伤害减免、复活、冷却刷新等机制，不再只是数值堆叠。部分词条会改变出招顺序与资源循环，例如防御/调息后的「残心」、暴击回蓝、领域熔断缩短、束缚回响与反震。点击左侧或战斗中的词条可查看详情。</p>
       </div>
 
       <div class="about-sec">
@@ -648,7 +657,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
         <p>每回合可选择一次束缚（每场各一次）：不闪不避、术式封印、以命换力、真名束缚、孤注一掷、铁身、血契、受身。反转术式消耗咒力回复生命并清除流血，天与咒缚无法使用。</p>
         <p>宿傩共有 20 处可被看破的弱点，每局最多看破 5 处；看破 3 处后，可在开战前发动一次「弱点重创」，扣除宿傩当前形态 30% 生命，之后仍需正面打完。每处弱点提供 10% 伤害加成。</p>
         <p>事件池新增「天赋重估」与「六维突破」：前者提高生得天赋，后者提高六维上限；天赋越高，六维突破成功率越高。天与咒缚在事件中的强度按体术、体质与战斗智商重新计算，不再因无咒力被误判。</p>
-        <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。可抉择事件会暂停并弹出选项，选择后默认恢复自动推进。</p>
+        <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」「涩谷事变」「咒具拍卖会」「束缚契约」「走马灯」「领域试炼」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。彩色事件「轮回之门」「万色咒线」会以彩色标题与文字出现，可直接给予彩色词条。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。可抉择事件会暂停并弹出选项，选择后默认恢复自动推进。</p>
         <p><b>无尽回廊</b>：击败宿傩后，在结算页选择进入。每次轮回不会直接开战，而是像重开一局一样从满行动点开始：年龄与事件重新展开，等级、六维、词条、觉醒、术式、弱点、精炼全部保留。修炼结束后再挑战宿傩。宿傩每次轮回都会获得极大加成：首轮生命 ×1.55、攻击 ×1.30、防御 ×1.18，之后每一轮继续乘算；玩家每次胜利也会获得等级、六维、弱点或词条等轮回馈赠。失败或主动离开时记录到达的轮回次数，首页显示最高纪录。</p>
       </div>
 
@@ -970,7 +979,8 @@ const UNIVERSAL = [
   { id: 'basic', name: '普通攻击', cost: 0, kind: 'atk', power: 1.0, desc: '不消耗咒力的体术攻击。' },
   { id: 'guard', name: '防御', cost: 0, kind: 'def', shield: .6, ceGain: 14, desc: '本回合伤害降低 60%，回复少量咒力。' },
   { id: 'dodge', name: '闪避', cost: 0, kind: 'def', evade: .55, ceGain: 5, desc: '赌一次闪避，成功则完全免伤。' },
-  { id: 'breath', name: '调息', cost: 0, kind: 'rest', ceGain: 45, desc: '不攻击，集中恢复咒力。' }
+  { id: 'breath', name: '调息', cost: 0, kind: 'rest', ceGain: 45, desc: '不攻击，集中恢复咒力。' },
+  { id: 'spaceGuard', name: '空间抗性', cost: 35, kind: 'def', body: true, spaceOnly: true, spaceGuard: 1, evade: .35, desc: '仅在空间斩「世界」预警时可用：抵消必中，闪避率 +35%，本次空间斩伤害降低 80%。' }
 ];
 
 const RCT_MOVE = {
@@ -1095,7 +1105,8 @@ const RARITY = {
   common: { name: '普通', cls: 'common' },
   rare: { name: '稀有', cls: 'rare' },
   legendary: { name: '传说', cls: 'legendary' },
-  curse: { name: '诅咒', cls: 'curse' }
+  curse: { name: '诅咒', cls: 'curse' },
+  mythic: { name: '彩色', cls: 'mythic' }
 };
 
 const TRAITS = [
@@ -1125,7 +1136,26 @@ const TRAITS = [
   { id: 'short', name: '短命', rarity: 'curse', w: 7, desc: '初始行动点 -30，造成伤害 +15%。', points: -30, dmg: 0.15 },
   { id: 'glass', name: '玻璃', rarity: 'curse', w: 7, desc: '受到伤害 +12%，暴击率 +10%。', taken: 0.12, crit: 0.10 },
   { id: 'wild', name: '咒力失控', rarity: 'curse', w: 7, desc: '造成伤害 +12%，术式消耗 +15%。', dmg: 0.12, cost: 0.15 },
-  { id: 'gaze', name: '宿傩的注视', rarity: 'curse', w: 7, desc: '对宿傩伤害 +10%，但受到宿傩伤害 +10%。', sukuDmg: 0.10, taken: 0.10 }
+  { id: 'gaze', name: '宿傩的注视', rarity: 'curse', w: 7, desc: '对宿傩伤害 +10%，但受到宿傩伤害 +10%。', sukuDmg: 0.10, taken: 0.10 },
+
+  { id: 'tempo', name: '残心', rarity: 'common', w: 9, desc: '使用防御或调息后，下一次攻击伤害 +30%，暴击率 +15%。', focusDmg: 0.30, focusCrit: 0.15 },
+  { id: 'siphon', name: '咒力虹吸', rarity: 'common', w: 9, desc: '暴击时回复 8 点咒力。', critCe: 8 },
+  { id: 'vanguard', name: '先手', rarity: 'common', w: 9, desc: '战斗第 1 回合造成伤害 +25%。', opening: 0.25 },
+  { id: 'bleedEdge', name: '裂伤', rarity: 'common', w: 9, desc: '攻击有 30% 概率追加 1 层流血。', bleedOnHit: 0.30 },
+  { id: 'lastBreath', name: '穷地', rarity: 'common', w: 8, desc: '生命低于 40% 时，防御 +20%，受到伤害 -10%。', lowDef: 0.20, lowTaken: -0.10 },
+
+  { id: 'sureStep', name: '空间步', rarity: 'rare', w: 4, desc: '每场一次，必中攻击伤害降低 75%，并回复 10% 生命。', sureGuard: 0.75, sureHeal: 0.10 },
+  { id: 'execution', name: '处刑', rarity: 'rare', w: 5, desc: '对生命低于 30% 的宿傩造成伤害 +25%。', execute: 0.25 },
+  { id: 'bloodPact', name: '血之契', rarity: 'rare', w: 5, desc: '生命低于 50% 时攻击 +18%；每回合回复 2% 生命。', lowAtk: 0.18, regenPct: 0.02 },
+  { id: 'counter', name: '反震', rarity: 'rare', w: 4, desc: '受到直接攻击时，对宿傩造成相当于你防御 80% 的反伤。', counter: 0.80 },
+
+  { id: 'domainEcho', name: '领域余响', rarity: 'legendary', w: 2, desc: '领域展开后的术式熔断减少 1 回合。', burnoutCut: 1 },
+  { id: 'vowEcho', name: '束缚回响', rarity: 'legendary', w: 2, desc: '每场第一次立下束缚后，回复 15% 生命，且不消耗本回合的束缚次数。', vowEcho: 1 },
+  { id: 'undying', name: '不灭', rarity: 'legendary', w: 2, desc: '每场一次，致死时以 30% 生命复活，并清除流血与灼烧。', revive: 1, cleanse: 1 },
+
+  { id: 'reincarnator', name: '回廊行者', rarity: 'mythic', w: 1, desc: '每场一次，必中攻击伤害降低 80% 并回复 10% 生命；每场一次，致死时以 35% 生命复活。', sureGuard: 0.80, sureHeal: 0.10, revive: 1 },
+  { id: 'zenith', name: '万象归一', rarity: 'mythic', w: 1, desc: '每次暴击使本场暴击率 +2%、暴击伤害 +5%，最多叠加 5 层。', critStack: 1 },
+  { id: 'chrono', name: '时之楔', rarity: 'mythic', w: 1, desc: '每 3 回合，随机刷新一个术式的冷却。', cdRefresh: 1 }
 ];
 
 function traitVal(run, key) {
@@ -1151,17 +1181,23 @@ function rollTraits(n) {
   return out;
 }
 
-function grantTrait(run) {
+function traitCls(t) {
+  return t.rarity === 'mythic' ? 'rainbow'
+    : t.rarity === 'legendary' ? 'gold'
+    : t.rarity === 'rare' ? 'purple'
+    : t.rarity === 'curse' ? 'dmg' : 'sys';
+}
+
+function grantTrait(run, wantedId) {
   if (!run.traits) run.traits = [];
   const owned = new Set(run.traits.map(t => t.id));
-  const pool = TRAITS.filter(t => !owned.has(t.id));
+  const pool = TRAITS.filter(t => !owned.has(t.id) && (!wantedId || t.id === wantedId));
   if (!pool.length) return null;
   const t = weightedTrait(pool);
   run.traits.push(t);
   if (t.mods) for (const k in t.mods) addStat(run, k, t.mods[k]);
   run.points += t.points || 0;
-  const cls = t.rarity === 'legendary' ? 'gold' : t.rarity === 'rare' ? 'purple' : t.rarity === 'curse' ? 'dmg' : 'sys';
-  run.log.push({ text: `【词条·${RARITY[t.rarity].name}】获得「${t.name}」：${t.desc}`, cls });
+  run.log.push({ text: `【词条·${RARITY[t.rarity].name}】获得「${t.name}」：${t.desc}`, cls: traitCls(t) });
   return t;
 }
 
@@ -1388,8 +1424,7 @@ function makeRun(opts = {}) {
     run.log.push({ text: `复制完成：${run.copiedMoves.map(m => '「' + m.name + '」').join('、')}。`, cls: 'purple' });
   }
   for (const t of run.traits) {
-    const cls = t.rarity === 'legendary' ? 'gold' : t.rarity === 'rare' ? 'purple' : t.rarity === 'curse' ? 'dmg' : 'sys';
-    run.log.push({ text: `【词条·${RARITY[t.rarity].name}】${t.name}：${t.desc}`, cls });
+    run.log.push({ text: `【词条·${RARITY[t.rarity].name}】${t.name}：${t.desc}`, cls: traitCls(t) });
   }
   return run;
 }
@@ -2104,6 +2139,281 @@ const EVENTS = [
         }
       }
     ]
+  },
+  {
+    id: 'shibuya', name: '涩谷事变', w: 12, max: 2,
+    cond: r => r.lvl >= 40,
+    prompt: '涩谷站的地下通道挤满了人。广播反复播放着避难通知，墙缝里却渗出不属于这个季节的寒气。远处，一道帐正在合拢。',
+    options: [
+      {
+        id: 'rescue', label: '先疏散普通人', cls: 'ghost',
+        desc: '稳定获得行动点、体质与经验；不会追击咒灵。',
+        run: r => {
+          const pts = rnd(5, 9), vit = rnd(1, 3);
+          r.points += pts; addStat(r, 'vit', vit); gainXp(r, 60);
+          return [`你把最后一批人推出闸机。行动点 +${pts}，体质 +${vit}，经验增加。`];
+        }
+      },
+      {
+        id: 'hunt', label: '逆着人流追杀咒灵', cls: 'blood',
+        desc: '高概率获得体术、咒力与经验；失败会重伤。',
+        run: r => {
+          const chance = clamp(0.55 + eventPower(r) / 1000, 0.55, 0.92);
+          if (Math.random() < chance) {
+            const tai = rnd(2, 4), ce = r.cons === 'heavenly' ? 0 : rnd(2, 4);
+            if (ce) addStat(r, 'ce', ce);
+            addStat(r, 'tai', tai); gainXp(r, 85); r.points += 3;
+            return [`你在帐合拢前撕开了咒灵的腹部。体术 +${tai}${ce ? `，咒力 +${ce}` : ''}，行动点 +3。`];
+          }
+          r.points -= rnd(4, 8);
+          return ['咒灵的数量远超情报。你拖着伤腿退回地面，行动点大幅流失。'];
+        }
+      },
+      {
+        id: 'seal', label: '协助封锁结界', cls: 'ghost',
+        desc: '有机会学会简易领域；否则获得效率与操控。',
+        run: r => {
+          if (!r.flags.simpleDomain && Math.random() < 0.55) {
+            r.flags.simpleDomain = true; gainXp(r, 45);
+            return ['你跟着结界班补完最后一笔符文。学会了『简易领域』。'];
+          }
+          const eff = rnd(2, 3), ctrl = rnd(1, 3);
+          addStat(r, 'eff', eff); addStat(r, 'ctrl', ctrl); r.points += 2;
+          return [`你没能完全掌握简易领域，但记住了结界的骨架。效率 +${eff}，操控 +${ctrl}，行动点 +2。`];
+        }
+      }
+    ]
+  },
+  {
+    id: 'auction', name: '咒具拍卖会', w: 9, max: 2,
+    cond: r => r.lvl >= 35,
+    prompt: '地下拍卖场的灯很暗，台上的咒具却一盏比一盏亮。主持人说，今晚最后一件拍品没有底价，也没有安全说明。',
+    options: [
+      {
+        id: 'bid', label: '举牌竞拍', cls: 'primary',
+        desc: '消耗 10 行动点，获得一个随机词条。',
+        run: r => {
+          if (r.points < 10) return ['你的行动点不够举牌。主持人移开了视线。'];
+          r.points -= 10;
+          const t = grantTrait(r);
+          return [t ? `你拍下了那件咒具，从铭文里得到词条「${t.name}」。` : '你拍下了咒具，但它没有提供新的词条。'];
+        }
+      },
+      {
+        id: 'steal', label: '在散场时动手', cls: 'blood',
+        desc: '55% 抢到词条与行动点；25% 受伤；20% 被咒具反噬。',
+        run: r => {
+          const roll = Math.random();
+          if (roll < 0.55) {
+            const t = grantTrait(r); r.points += rnd(3, 6);
+            return [`你在后巷截住了卖家。${t ? `获得词条「${t.name}」，` : ''}行动点增加。`];
+          }
+          if (roll < 0.80) {
+            r.points -= rnd(4, 7);
+            return ['卖家早有准备。你抢到一半就被咒具震开，行动点受损。'];
+          }
+          if (Math.random() < 0.35) { r.dead = true; return ['那件咒具没有保险栓。你的身体在巷子里被自己的咒力撕开。']; }
+          r.points -= rnd(6, 10);
+          return ['咒具反噬，你勉强保住性命，行动点几乎见底。'];
+        }
+      },
+      {
+        id: 'appraise', label: '只看不买，帮人掌眼', cls: 'ghost',
+        desc: '稳定获得战斗智商与行动点。',
+        run: r => {
+          const iq = rnd(2, 3); addStat(r, 'iq', iq); r.points += 5;
+          return [`你替一位老术师看穿了三件赝品。战斗智商 +${iq}，行动点 +5。`];
+        }
+      }
+    ]
+  },
+  {
+    id: 'vowContract', name: '束缚契约', w: 8, max: 1,
+    cond: r => r.lvl >= 45,
+    prompt: '一张没有落款的契约摊在桌上。条件写得很清楚：你交出一点自由，契约给你一点超出常理的力量。落款处已经有一个指纹。',
+    options: [
+      {
+        id: 'accept', label: '按下指纹', cls: 'blood',
+        desc: '获得诅咒词条「契阔」；若已拥有则改为全属性提升。',
+        run: r => {
+          const t = grantTrait(r, 'bound');
+          if (t) return ['契约认可了你。你获得诅咒词条「契阔」，每次行动会多消耗一点行动点。'];
+          for (const k of ['ce', 'ctrl', 'eff', 'vit', 'tai', 'iq']) addStat(r, k, 2);
+          r.points -= 3;
+          return ['契约在你身上找不到新的缝隙，只留下旧痕。全属性 +2，行动点 -3。'];
+        }
+      },
+      {
+        id: 'refuse', label: '把契约烧掉', cls: 'ghost',
+        desc: '稳定获得行动点与效率。',
+        run: r => {
+          r.points += 4; addStat(r, 'eff', 1);
+          return ['纸灰落地时，你听见一声很轻的叹息。行动点 +4，咒力效率 +1。'];
+        }
+      },
+      {
+        id: 'rewrite', label: '在落款处改写条件', cls: 'rainbow',
+        desc: '60% 获得传说词条「束缚回响」；40% 被契约反噬。',
+        run: r => {
+          if (Math.random() < 0.60) {
+            const t = grantTrait(r, 'vowEcho');
+            return [t ? '你改写了契约的结尾。获得传说词条「束缚回响」。' : '契约已经记住了你的笔迹，但没有新的力量回应。'];
+          }
+          r.points -= rnd(5, 9);
+          return ['契约的墨迹反过来爬上你的手腕。行动点被抽走，留下灼痕。'];
+        }
+      }
+    ]
+  },
+  {
+    id: 'memory', name: '走马灯', w: 6, max: 1,
+    cond: r => r.lvl >= 70,
+    prompt: '濒死的一瞬间，过去的日子在眼前倒放。你看见第一次握紧咒具的手，也看见某个还没有发生的结局。',
+    options: [
+      {
+        id: 'look', label: '把走马灯看完', cls: 'ghost',
+        desc: '获得大量经验与战斗智商。',
+        run: r => {
+          const iq = rnd(2, 4);
+          addStat(r, 'iq', iq); gainXp(r, 130);
+          return [`你把每一个细节都记住了。战斗智商 +${iq}，经验大幅增加。`];
+        }
+      },
+      {
+        id: 'move', label: '睁开眼，继续走', cls: 'primary',
+        desc: '获得行动点与咒力。',
+        run: r => {
+          r.points += 7; addStat(r, 'ce', 3);
+          return ['你从走马灯里挣脱出来。行动点 +7，咒力总量 +3。'];
+        }
+      },
+      {
+        id: 'grasp', label: '伸手抓住那个结局', cls: 'rainbow',
+        desc: '若仍有术式未觉醒，进行一次高成功率觉醒判定；否则获得经验。',
+        run: r => {
+          if (nextAwakenKind(r)) {
+            const ok = tryAwaken(r, '走马灯', 0.10);
+            return [ok ? '你在尚未发生的结局里抓住了术式的另一面。' : '那个结局从指缝里滑走，但你看清了它的轮廓。'];
+          }
+          gainXp(r, 90);
+          return ['术式已经没有未走完的路。你把这份经验收进身体。'];
+        }
+      }
+    ]
+  },
+  {
+    id: 'domainTrial', name: '领域试炼', w: 7, max: 2,
+    cond: r => r.lvl >= 50,
+    prompt: '一座废弃的咒术高专训练场在夜里亮起。结界自动闭合，广播里传来没有感情的电子音：请在一分钟内完成领域展开。',
+    options: [
+      {
+        id: 'expand', label: '强行展开领域', cls: 'blood',
+        desc: '已有领域则获得传说词条「领域余响」；否则 60% 学会领域。',
+        run: r => {
+          if (r.flags.domain) {
+            const t = grantTrait(r, 'domainEcho');
+            return [t ? '领域在训练场里稳定下来。获得传说词条「领域余响」。' : '领域已经足够稳定，训练场没有再给出新的东西。'];
+          }
+          if (Math.random() < 0.60) {
+            r.flags.domain = true; addStat(r, 'ctrl', 3); gainXp(r, 100);
+            return ['结界在你脚下展开。你学会了领域展开，咒力操控 +3。'];
+          }
+          r.points -= rnd(4, 8);
+          return ['领域的骨架在最后一秒崩塌。你被反冲震伤，行动点受损。'];
+        }
+      },
+      {
+        id: 'endure', label: '用身体承受领域', cls: 'ghost',
+        desc: '获得体质与防御成长，但消耗行动点。',
+        run: r => {
+          const vit = rnd(2, 4);
+          addStat(r, 'vit', vit); r.points -= 2;
+          return [`你在领域里站满了六十秒。体质 +${vit}，行动点 -2。`];
+        }
+      },
+      {
+        id: 'analyze', label: '记录结界结构', cls: 'ghost',
+        desc: '获得效率、操控与经验。',
+        run: r => {
+          const eff = rnd(2, 4), ctrl = rnd(1, 3);
+          addStat(r, 'eff', eff); addStat(r, 'ctrl', ctrl); gainXp(r, 50);
+          return [`你把结界的节点画满了一整本笔记。效率 +${eff}，操控 +${ctrl}。`];
+        }
+      }
+    ]
+  },
+  {
+    id: 'reincarnationGate', name: '轮回之门', w: 2, max: 1, rarity: 'mythic',
+    cond: r => r.lvl >= 65,
+    prompt: '门立在废墟中央，门后站着另一个你。那个你没有影子，胸口却亮着和你一样的咒力回路。它说：走进去，你会得到不属于这一世的东西。',
+    options: [
+      {
+        id: 'step', label: '走进门里', cls: 'rainbow',
+        desc: '获得一个彩色词条「回廊行者」「万象归一」或「时之楔」。',
+        run: r => {
+          const t = grantTrait(r, 'reincarnator') || grantTrait(r, 'zenith') || grantTrait(r, 'chrono');
+          if (t) return [`门后的你把手按在你胸口。获得彩色词条「${t.name}」。`];
+          gainXp(r, 180);
+          return ['门后的你已经没有更多东西可以给你，只留下一段很长的经验。'];
+        }
+      },
+      {
+        id: 'bargain', label: '和另一个自己交易', cls: 'blood',
+        desc: '60% 获得彩色词条「时之楔」；40% 被夺走一段行动点。',
+        run: r => {
+          if (Math.random() < 0.60) {
+            const t = grantTrait(r, 'chrono');
+            return [t ? '交易达成。获得彩色词条「时之楔」。' : '另一个你摊开手：这件东西你已经有了。'];
+          }
+          r.points -= rnd(8, 14);
+          return ['另一个你拿走了一段属于你的时间。行动点大幅流失。'];
+        }
+      },
+      {
+        id: 'close', label: '把门关上', cls: 'ghost',
+        desc: '稳定获得行动点、经验与六维。',
+        run: r => {
+          r.points += 10; gainXp(r, 80);
+          addStat(r, 'ce', 3); addStat(r, 'ctrl', 2);
+          return ['门合上时，你听见另一个自己轻轻笑了一声。行动点 +10，咒力 +3，操控 +2。'];
+        }
+      }
+    ]
+  },
+  {
+    id: 'rainbowThread', name: '万色咒线', w: 2, max: 1, rarity: 'mythic',
+    cond: r => r.lvl >= 55,
+    prompt: '一根看不见的线从天空垂下来，穿过你的胸口，另一端连着一个正在发光的词条。线的颜色一直在变，像是把很多人的命运拧在了一起。',
+    options: [
+      {
+        id: 'weave', label: '把线织进身体', cls: 'rainbow',
+        desc: '获得彩色词条「万象归一」或「回廊行者」。',
+        run: r => {
+          const t = grantTrait(r, 'zenith') || grantTrait(r, 'reincarnator');
+          return [t ? `咒线融进回路。获得彩色词条「${t.name}」。` : '咒线只是从你身体里穿过去，没有留下新的词条。'];
+        }
+      },
+      {
+        id: 'cut', label: '一刀斩断咒线', cls: 'blood',
+        desc: '获得大量经验与行动点；小概率被命运反噬。',
+        run: r => {
+          if (Math.random() < 0.80) {
+            gainXp(r, 120); r.points += 8;
+            return ['咒线断开，散成漫天光点。经验大幅增加，行动点 +8。'];
+          }
+          r.points -= rnd(6, 10);
+          return ['断口喷出不属于你的记忆。你站在原地很久，行动点受损。'];
+        }
+      },
+      {
+        id: 'follow', label: '顺着线走', cls: 'ghost',
+        desc: '获得随机词条与经验；可能遇到另一段人生。',
+        run: r => {
+          const t = grantTrait(r); gainXp(r, 70);
+          return [t ? `线的另一端系着一个词条。获得「${t.name}」。` : '线的另一端什么也没有，只留下一段经验。'];
+        }
+      }
+    ]
   }
 ];
 
@@ -2116,14 +2426,15 @@ function doEvent(run) {
   let r = Math.random() * total, chosen = pool[0];
   for (const e of pool) { r -= e.w; if (r <= 0) { chosen = e; break; } }
   run.eventCounts[chosen.id] = (run.eventCounts[chosen.id] || 0) + 1;
+  const mythic = chosen.rarity === 'mythic';
   if (chosen.options) {
     run.pendingEvent = { id: chosen.id, name: chosen.name };
-    run.log.push({ text: `【事件·${chosen.name}】`, cls: 'purple' });
-    run.log.push({ text: chosen.prompt, cls: 'big' });
+    run.log.push({ text: `【${mythic ? '彩色事件' : '事件'}·${chosen.name}】`, cls: mythic ? 'rainbow' : 'purple' });
+    run.log.push({ text: chosen.prompt, cls: mythic ? 'rainbow' : 'big' });
     return null;
   }
   const msgs = chosen.run(run) || [];
-  run.log.push({ text: `【事件·${chosen.name}】`, cls: 'purple' });
+  run.log.push({ text: `【${mythic ? '彩色事件' : '事件'}·${chosen.name}】`, cls: mythic ? 'rainbow' : 'purple' });
   for (const m of msgs) run.log.push({ text: m, cls: run.dead ? 'dmg' : 'sys' });
   return msgs;
 }
@@ -2135,7 +2446,7 @@ function resolveEventChoice(run, choiceId) {
   const opt = ev && ev.options && ev.options.find(o => o.id === choiceId);
   run.pendingEvent = null;
   if (!opt) return [];
-  run.log.push({ text: `【抉择·${ev.name}】${opt.label}`, cls: 'gold' });
+  run.log.push({ text: `【抉择·${ev.name}】${opt.label}`, cls: ev.rarity === 'mythic' ? 'rainbow' : 'gold' });
   const msgs = opt.run(run) || [];
   for (const m of msgs) run.log.push({ text: m, cls: run.dead ? 'dmg' : 'sys' });
   if (run.points < 0) run.points = 0;
@@ -2415,9 +2726,10 @@ function startDuel(run) {
       domainTurns: 0, burnout: 0, burnoutFixUsed: false, domainGuard: null,
       vowAtk: 1, vowVuln: 1, vowCrit: false, vowSure: false,
       costMod: 1, defDownPerm: 0, sealed: [], cd: {},
-      revive: run.cons === 'vessel' ? 1 : 0,
+      revive: (run.cons === 'vessel' ? 1 : 0) + traitVal(run, 'revive'),
       spirits: run.tech === 'spiritManip' ? 3 : 0,
-      rctUses: 0, shouts: 0
+      rctUses: 0, shouts: 0,
+      focusShot: false, sureGuardUsed: false, vowEchoUsed: false, critStack: 0, spaceGuard: 0
     },
     suku: {
       hp: stage1Max, maxHp: stage1Max, totalMax: sukuTotal,
@@ -2430,7 +2742,7 @@ function startDuel(run) {
       worldUsed: false, mahoSummoned: false, agitoSummoned: false, gridUsed: false,
       summons: { agito: false, maho: false }, justChanged: false,
       intent: null, cd: {}, healUsed: {}, lastMove: null,
-      mahoraga: false, forceIntent: null
+      mahoraga: false, forceIntent: null, worldWarned: false
     },
     vowUsed: {}
   };
@@ -2444,6 +2756,7 @@ function startDuel(run) {
     pushDuel(duel, `词条：${run.traits.map(t => t.name).join('、')}。`, 'sys');
   }
   rollIntent(duel);
+  announceWorldWarning(duel);
   return duel;
 }
 
@@ -2509,6 +2822,17 @@ function rollIntent(d) {
   s.intent = chosen;
 }
 
+function worldIncoming(s) {
+  return !!(s && ((s.intent && s.intent.id === 'world') || s.forceIntent === 'world'));
+}
+
+function announceWorldWarning(d) {
+  const s = d.suku;
+  if (!worldIncoming(s) || s.worldWarned) return;
+  s.worldWarned = true;
+  pushDuel(d, '空间斩「世界」已经锁定。你有一回合准备：使用「空间抗性」可抵消必中并把本次伤害压低 80%；若不应对，单次伤害最高为最大生命的 80%。', 'big');
+}
+
 function tickSukuStatus(d) {
   const s = d.suku;
   if (s.bleed > 0) {
@@ -2569,7 +2893,8 @@ function sukuTurn(d) {
       if (p.revive > 0) {
         p.revive--;
         p.hp = Math.round(p.maxHp * 0.35);
-        pushDuel(d, '领域几乎把你磨碎，但容器里的另一道灵魂把你推了回来。', 'big');
+        if (traitVal(d.run, 'cleanse') > 0) { p.bleed = 0; p.burn = 0; }
+        pushDuel(d, d.run.cons === 'vessel' ? '领域几乎把你磨碎，但容器里的另一道灵魂把你推了回来。' : '领域几乎把你磨碎，但某种更古老的力量把你推了回来。', 'big');
       } else {
         p.hp = 0; d.over = true; d.result = 'lose';
         pushDuel(d, '伏魔御厨子合拢。你的身体在领域里失去了形状。', 'big');
@@ -2611,6 +2936,13 @@ function sukuTurn(d) {
   s.intent = null;
   s.lastMove = intent;
   if (intent.id === 'world') s.worldUsed = true;
+  const spaceGuarded = intent.id === 'world' && (p.spaceGuard || 0) > 0;
+  if (spaceGuarded) {
+    p.spaceGuard = 0;
+    intent.mult *= 0.2;
+    intent.sure = false;
+    pushDuel(d, '空间抗性生效。『世界』的斩击被你提前压偏，必中被抵消，伤害大幅降低。', 'rainbow');
+  }
   if (intent.cd) s.cd[intent.id] = intent.cd;
   if (intent.summon) {
     s.summons[intent.summon] = true;
@@ -2644,7 +2976,15 @@ function sukuTurn(d) {
     }
   }
 
-  const sure = !!intent.sure && d.run.cons !== 'heavenly';
+  let sure = !!intent.sure && d.run.cons !== 'heavenly';
+  if (sure && traitVal(d.run, 'sureGuard') > 0 && !p.sureGuardUsed) {
+    p.sureGuardUsed = true;
+    const cut = Math.min(0.9, traitVal(d.run, 'sureGuard'));
+    intent.mult *= 1 - cut;
+    const heal = Math.round(p.maxHp * traitVal(d.run, 'sureHeal'));
+    if (heal > 0) p.hp = Math.min(p.maxHp, p.hp + heal);
+    pushDuel(d, `空间的必中轨迹被你看穿。『${intent.name}』的伤害降低 ${Math.round(cut * 100)}%${heal ? `，回复 ${money(heal)} 点生命` : ''}。`, traitVal(d.run, 'sureGuard') >= 0.8 ? 'rainbow' : 'purple');
+  }
 
   // 不义游戏：每第三回合自动交换
   if (d.run.tech === 'boogieWoogie' && d.turn % 3 === 0 && !sure) {
@@ -2666,6 +3006,7 @@ function sukuTurn(d) {
     for (let i = 0; i < hits; i++) {
       let raw = s.atk * intent.mult * (1 - s.atkDebuff);
       let def = p.def * (1 + p.defBuff) - p.defDownPerm;
+      if (p.hp <= p.maxHp * 0.40) def *= 1 + traitVal(d.run, 'lowDef');
       let dmg = Math.max(1, raw - def * 0.5);
       dmg *= rf(0.9, 1.12);
       if (s.domainTurns > 0) dmg *= 1.15;
@@ -2674,7 +3015,15 @@ function sukuTurn(d) {
       if (p.shield > 0) dmg *= (1 - p.shield);
       if (d.run.cons === 'heavenly') dmg *= 0.7;
       dmg *= 1 + traitVal(d.run, 'taken');
+      if (p.hp <= p.maxHp * 0.40) dmg *= 1 + traitVal(d.run, 'lowTaken');
       total += Math.round(dmg);
+    }
+    if (intent.id === 'world') {
+      const cap = Math.round(p.maxHp * (spaceGuarded ? 0.55 : 0.80));
+      if (total > cap) {
+        total = cap;
+        pushDuel(d, spaceGuarded ? '空间抗性把「世界」的余波压到最大生命的 55%。' : '「世界」的余波被限制在最大生命的 80%。', spaceGuarded ? 'rainbow' : 'purple');
+      }
     }
     p.hp -= total;
     s.lastDamage = total;
@@ -2687,6 +3036,13 @@ function sukuTurn(d) {
       p.burn += intent.burn;
       pushDuel(d, `竈的火焰附着在你身上，灼烧 ${intent.burn} 层。`, 'red');
     }
+    if (p.hp > 0 && traitVal(d.run, 'counter') > 0) {
+      const ref = Math.max(1, Math.round(p.def * traitVal(d.run, 'counter')));
+      s.hp -= ref;
+      pushDuel(d, `反震回敬宿傩 ${money(ref)} 点伤害。`, 'purple');
+      checkSukuPhase(d);
+      if (d.over) return;
+    }
   }
 
   if (s.summons && s.summons.agito) summonAct(d, 'agito');
@@ -2697,7 +3053,8 @@ function sukuTurn(d) {
     if (p.revive > 0) {
       p.revive--;
       p.hp = Math.round(p.maxHp * 0.35);
-      pushDuel(d, '宿傩的斩击贯穿了心脏——但容器里的另一道灵魂把你推了回来。你活了下来。', 'big');
+      if (traitVal(d.run, 'cleanse') > 0) { p.bleed = 0; p.burn = 0; }
+      pushDuel(d, d.run.cons === 'vessel' ? '宿傩的斩击贯穿了心脏——但容器里的另一道灵魂把你推了回来。你活了下来。' : '宿傩的斩击贯穿了心脏——某种更古老的力量把你推了回来。你活了下来。', 'big');
     } else {
       p.hp = 0;
       d.over = true; d.result = 'lose';
@@ -2741,6 +3098,7 @@ function beginPlayerTurn(d) {
   if (p.hp <= 0) {
     if (p.revive > 0) {
       p.revive--; p.hp = Math.round(p.maxHp * 0.3);
+      if (traitVal(d.run, 'cleanse') > 0) { p.bleed = 0; p.burn = 0; }
       pushDuel(d, '你再次从死亡边缘被拽了回来。', 'big');
     } else {
       p.hp = 0; d.over = true; d.result = 'lose';
@@ -2750,7 +3108,17 @@ function beginPlayerTurn(d) {
   }
   if (d.run.cons === 'star') p.hp = Math.min(p.maxHp, p.hp + p.maxHp * 0.02);
   if (d.run.cons === 'curse') p.hp = Math.min(p.maxHp, p.hp + p.maxHp * 0.03);
+  const regenPct = traitVal(d.run, 'regenPct');
+  if (regenPct > 0) p.hp = Math.min(p.maxHp, p.hp + p.maxHp * regenPct);
   p.ce = Math.min(p.maxCe, p.ce + p.regen);
+  if (traitVal(d.run, 'cdRefresh') > 0 && d.turn % 3 === 0) {
+    const ready = Object.keys(p.cd).filter(k => p.cd[k] > 0);
+    if (ready.length) {
+      const k = pick(ready);
+      p.cd[k] = 0;
+      pushDuel(d, '时之楔转动，一道术式冷却被强行抹去。', 'rainbow');
+    }
+  }
   if (d.run.tech === 'spiritManip' && d.turn % 3 === 0 && p.spirits < 6) {
     p.spirits++;
     pushDuel(d, '一只新的咒灵被收服，加入你的队列。', 'purple');
@@ -2778,12 +3146,15 @@ function beginPlayerTurn(d) {
   checkSukuPhase(d);
   if (d.over) return;
   if (s.forceIntent || !s.intent) rollIntent(d);
+  announceWorldWarning(d);
 }
 
 function attackOnce(d, mv, hitIndex) {
   const run = d.run, s = d.suku, p = d.player;
   let atk = p.atk * (1 + p.atkBuff);
   let mult = mv.power;
+  const focus = !!p.focusShot;
+  if (focus) p.focusShot = false;
   let ignore = mv.ignore || 0;
   if (run.tech === 'idleTransfig') ignore = 1;
   if (run.tech === 'heavenly') ignore = Math.max(ignore, .25);
@@ -2796,6 +3167,10 @@ function attackOnce(d, mv, hitIndex) {
   if (run.cons === 'vessel') base *= 1.15;
   base *= 1 + weakBonus(run);
   base *= 1 + traitVal(run, 'dmg') + traitVal(run, 'sukuDmg');
+  if (d.turn === 1) base *= 1 + traitVal(run, 'opening');
+  if (s.hp <= s.maxHp * 0.30) base *= 1 + traitVal(run, 'execute');
+  if (p.hp <= p.maxHp * 0.50) base *= 1 + traitVal(run, 'lowAtk');
+  if (focus) base *= 1 + traitVal(run, 'focusDmg');
   if (run.tech === 'idleTransfig' && s.hp < s.maxHp * 0.25) base *= 1.3;
   if (p.domainTurns > 0) base *= 1.36 + traitVal(run, 'domainDmg');
   if (p.vowAtk > 1) base *= p.vowAtk;
@@ -2805,12 +3180,18 @@ function attackOnce(d, mv, hitIndex) {
   let critChance = 0.05 + run.stats.iq * 0.0022 + (mv.crit || 0);
   if (run.tech === 'ratio') critChance += 0.08;
   if (run.tech === 'blackBird') critChance += 0.08;
-  critChance += traitVal(run, 'crit');
+  critChance += traitVal(run, 'crit') + (p.critStack || 0) * 0.02;
+  if (focus) critChance += traitVal(run, 'focusCrit');
   if (p.vowCrit) critChance = 1;
   const crit = Math.random() < Math.min(0.9, critChance);
-  if (crit) dmg *= (run.tech === 'ratio' ? 2.2 : 1.7) + traitVal(run, 'critDmg');
+  if (crit) dmg *= (run.tech === 'ratio' ? 2.2 : 1.7) + traitVal(run, 'critDmg') + (p.critStack || 0) * 0.05;
   dmg = Math.max(1, Math.round(dmg));
   s.hp -= dmg;
+  if (crit) {
+    if (traitVal(run, 'critCe') > 0) p.ce = Math.min(p.maxCe, p.ce + traitVal(run, 'critCe'));
+    if (traitVal(run, 'critStack') > 0) p.critStack = Math.min(5, (p.critStack || 0) + 1);
+  }
+  if (traitVal(run, 'bleedOnHit') > 0 && Math.random() < traitVal(run, 'bleedOnHit')) s.bleed += 1;
   return { dmg, crit };
 }
 
@@ -2841,6 +3222,10 @@ function playerMove(d, id) {
   }
   if (mv.domainOnly && !(s.domainTurns > 0 || (s.intent && s.intent.domain))) {
     pushDuel(d, `『${mv.name}』只能在敌方领域展开时使用。`, 'sys');
+    return false;
+  }
+  if (mv.spaceOnly && !worldIncoming(s)) {
+    pushDuel(d, '没有空间斩预警。『空间抗性』只能用来预判「世界」。', 'sys');
     return false;
   }
   const cost = effectiveCost(run, mv, p.costMod);
@@ -2895,9 +3280,16 @@ function playerMove(d, id) {
     if (mv.evade) p.evade = Math.max(p.evade, mv.evade);
     if (mv.ceGain) p.ce = Math.min(p.maxCe, p.ce + mv.ceGain);
     if (mv.buff) applyBuff(p, mv.buff);
-    pushDuel(d, `你摆出防御架势（${Math.round((mv.shield || 0) * 100)}% 减伤${mv.evade ? ' / 闪避' : ''}）。`, 'green');
+    if (mv.spaceGuard) {
+      p.spaceGuard = Math.max(p.spaceGuard || 0, 1);
+      pushDuel(d, '你把咒力压成一层贴身的空间褶曲。『世界』的轨迹被看穿：本次伤害降低 80%，必中被抵消。', 'rainbow');
+    } else {
+      pushDuel(d, `你摆出防御架势（${Math.round((mv.shield || 0) * 100)}% 减伤${mv.evade ? ' / 闪避' : ''}）。`, 'green');
+    }
+    if (traitVal(run, 'focusDmg') > 0) p.focusShot = true;
   } else if (mv.kind === 'rest') {
     p.ce = Math.min(p.maxCe, p.ce + (mv.ceGain || 0));
+    if (traitVal(run, 'focusDmg') > 0) p.focusShot = true;
     pushDuel(d, `你调匀呼吸，咒力回复 ${mv.ceGain || 0} 点。`, 'green');
   } else if (mv.kind === 'heal') {
     let heal = (mv.healBase || 0) + run.stats.ctrl * (mv.healCtrl || 0) + run.stats.eff * (mv.healEff || 0);
@@ -2911,7 +3303,7 @@ function playerMove(d, id) {
     pushDuel(d, `反转术式。伤口逆流，回复 ${money(heal)} 点生命，流血被清除。`, 'heal');
   } else if (mv.kind === 'domain') {
     p.domainTurns = 4 + traitVal(run, 'domainTurn');
-    p.burnout = 3;
+    p.burnout = Math.max(1, 3 - traitVal(run, 'burnoutCut'));
     p.burnoutFixUsed = false;
     s.domainTurns = 0;
     s.stun = Math.max(s.stun, 1);
@@ -3027,6 +3419,7 @@ function enterStage2(d) {
   s.agitoSummoned = true; s.mahoSummoned = true;
   s.summons = { agito: false, maho: false };
   s.forceIntent = null;
+  s.worldWarned = false;
   s.intent = { id: 'domain', name: '领域展开·伏魔御厨子', domainName: '伏魔御厨子', mult: 2.2, sure: true, domain: true };
   s.justChanged = true;
   pushDuel(d, '十影宿傩的影之肉体崩解。影子缩回地面，露出里面那具四手四眼的身体。', 'big');
@@ -3063,10 +3456,12 @@ function checkSukuPhase(d) {
     pushDuel(d, '原身宿傩的最后一只手落下。诅咒之王，这一次真的死了。', 'big');
     return;
   }
+  if (s.intent && s.intent.id === 'world') return;
   if (!s.forceIntent && !s.worldUsed && s.hp <= s.maxHp * 0.48) {
     s.forceIntent = 'world';
     s.worldUsed = true;
-    pushDuel(d, '宿傩收起了玩闹的表情。空间在他指尖折成一条线。', 'big');
+    s.worldWarned = false;
+    pushDuel(d, '宿傩收起了玩闹的表情。空间在他指尖折成一条线。下一回合，空间斩「世界」会落下——准备「空间抗性」。', 'big');
     return;
   }
   if (!s.forceIntent && !s.gridUsed && s.hp <= s.maxHp * 0.70) {
@@ -3136,6 +3531,13 @@ function useVow(d, id) {
     p.hp = Math.min(p.maxHp, p.hp + heal);
     p.vowVuln = 0.55;
     pushDuel(d, `「受身。」你回复 ${money(p.hp - before)} 点生命，本回合受到的伤害 -45%。`, 'gold');
+  }
+  if (traitVal(d.run, 'vowEcho') > 0 && !p.vowEchoUsed) {
+    p.vowEchoUsed = true;
+    const heal = Math.round(p.maxHp * 0.15);
+    p.hp = Math.min(p.maxHp, p.hp + heal);
+    d.vowThisTurn = false;
+    pushDuel(d, `束缚的回响在体内折返。你回复 ${money(heal)} 点生命，本回合仍可再立一次束缚。`, 'rainbow');
   }
   return true;
 }
@@ -3599,7 +4001,7 @@ function openTrait(id) {
   if (!t) return;
   const rar = J.RARITY[t.rarity];
   openModal(`词条 · ${t.name}`,
-    `<p class="dim" style="letter-spacing:.12em">${rar.name}词条</p>
+    `<p class="${t.rarity === 'mythic' ? 'rainbow-text' : 'dim'}" style="letter-spacing:.12em">${rar.name}词条</p>
      <p style="margin-top:10px">${t.desc}</p>
      <p class="dim" style="margin-top:12px">词条效果即时生效，点击左侧词条可随时查看。</p>`,
     [{ label: '知道了', cls: 'primary' }]);
@@ -3736,11 +4138,12 @@ function openChoiceEvent() {
   if (!pe) return;
   const ev = J.EVENTS.find(e => e.id === pe.id);
   if (!ev || !ev.options) return;
-  const body = `<p class="event-prompt">${ev.prompt}</p><div class="event-options">${ev.options.map(o =>
+  const mythic = ev.rarity === 'mythic';
+  const body = `${mythic ? '<div class="event-rarity">彩色事件</div>' : ''}<p class="event-prompt">${ev.prompt}</p><div class="event-options">${ev.options.map(o =>
     `<div class="event-option"><b>${o.label}</b><span>${o.desc}</span></div>`
   ).join('')}</div><p class="dim" style="margin:12px 0 0;font-size:11.5px">选择后立即结算，结果可能成功，也可能反噬。</p>`;
   const actions = ev.options.map(o => ({ label: o.label, cls: o.cls || 'ghost', fn: () => chooseEvent(o.id) }));
-  openModal(`事件 · ${ev.name}`, body, actions);
+  openModal(`${mythic ? '彩色事件' : '事件'} · ${ev.name}`, body, actions);
 }
 
 function chooseEvent(choiceId) {
@@ -3901,13 +4304,16 @@ function renderDuel() {
     (s.summons && s.summons.maho ? '<span class="gold">魔虚罗 <b>在场</b></span>' : '');
 
   const intent = s.intent;
+  const worldWarn = !!(intent && intent.id === 'world');
+  const intentBox = $('#suku-intent');
+  intentBox.classList.toggle('world', worldWarn);
   if (intent) {
-    const tag = intent.summon ? '召唤物将行动' : (intent.sure ? (r.cons === 'heavenly' ? '领域必中·天与免疫' : '必中') : '可闪避');
+    const tag = worldWarn ? '必中' : (intent.summon ? '召唤物将行动' : (intent.sure ? (r.cons === 'heavenly' ? '领域必中·天与免疫' : '必中') : '可闪避'));
     const hits = intent.hits ? ` × ${intent.hits}` : '';
     const dmgTxt = intent.summon ? '' : ` · 约 ${Math.round(s.atk * (intent.mult || 1) * (intent.hits || 1))} 伤害`;
-    $('#suku-intent').innerHTML = `<span class="k">下一招</span>${intent.name}${hits} · ${tag}${dmgTxt}`;
+    intentBox.innerHTML = `<span class="k">${worldWarn ? '空间斩预警' : '下一招'}</span>${intent.name}${hits} · ${tag}${dmgTxt}${worldWarn ? ' · 使用「空间抗性」' : ''}`;
   } else {
-    $('#suku-intent').innerHTML = '<span class="k">下一招</span>观察中……';
+    intentBox.innerHTML = '<span class="k">下一招</span>观察中……';
   }
 
   const php = Math.max(0, p.hp / p.maxHp * 100);
@@ -3929,6 +4335,7 @@ function renderDuel() {
     (p.burnout ? `<span class="red">熔断 <b>${p.burnout}</b></span>` : '') +
     (p.domainGuard ? `<span class="green">${p.domainGuard.name} <b>${p.domainGuard.turns}</b></span>` : '') +
     (p.revive ? '<span class="gold">容器免死</span>' : '') +
+    (p.spaceGuard ? '<span class="gold">空间抗性</span>' : '') +
     (p.spirits ? `<span class="purple">咒灵 ${p.spirits}</span>` : '');
 
   $('#duel-traits').innerHTML = traitChipsHTML(r);
@@ -3950,13 +4357,15 @@ function renderDuel() {
     const cd = p.cd[m.id] || 0;
     const sealed = p.sealed.includes(m.id);
     const burnoutBlocked = p.burnout > 0 && !J.isBodyMove(m) && m.kind !== 'repair';
-    const disabled = d.over || d.busy || sealed || cd > 0 || cost > p.ce || burnoutBlocked;
+    const spaceBlocked = m.spaceOnly && !worldWarn;
+    const disabled = d.over || d.busy || sealed || cd > 0 || cost > p.ce || burnoutBlocked || spaceBlocked;
     const b = document.createElement('button');
     b.className = 'move' + (['basic', 'guard', 'dodge', 'breath'].includes(m.id) ? ' uni' : '');
     b.dataset.move = m.id;
     b.disabled = disabled;
     let tag = '';
-    if (burnoutBlocked) tag = '<span class="m-tag">熔断</span>';
+    if (m.spaceOnly) tag = worldWarn ? '<span class="m-tag">空间</span>' : '<span class="m-tag">待预警</span>';
+    else if (burnoutBlocked) tag = '<span class="m-tag">熔断</span>';
     else if (m.kind === 'repair') tag = '<span class="m-tag">修复</span>';
     else if (m.kind === 'domain') tag = '<span class="m-tag">领域</span>';
     else if (m.kind === 'counter') tag = '<span class="m-tag">领域对抗</span>';
