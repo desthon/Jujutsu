@@ -162,7 +162,24 @@ h1,h2,h3{font-family:var(--serif);font-weight:600;letter-spacing:.04em;margin:0}
 .event-option b{display:block;color:var(--gold);font-size:12.5px;font-weight:500;letter-spacing:.08em;margin-bottom:3px}
 .event-option span{display:block;color:var(--mut);font-size:12px;line-height:1.6}
 .event-rarity{display:inline-block;font-size:10px;letter-spacing:.18em;padding:2px 8px;margin:0 0 10px;border:1px solid rgba(160,150,255,.5);border-radius:2px;background:linear-gradient(90deg,rgba(255,60,120,.14),rgba(255,210,80,.12),rgba(60,230,190,.12),rgba(90,140,255,.16));color:#efeaff}
-.btn.rainbow{border-color:rgba(160,150,255,.75);background:linear-gradient(90deg,rgba(255,60,120,.16),rgba(255,210,80,.13),rgba(60,230,190,.14),rgba(90,140,255,.18));color:#fff}
+.btn.rainbow{position:relative;overflow:hidden;border-color:rgba(190,180,255,.85);background:linear-gradient(90deg,rgba(255,60,120,.20),rgba(255,210,80,.16),rgba(60,230,190,.16),rgba(90,140,255,.22),rgba(200,120,255,.20));background-size:260% 100%;color:#fff;animation:rainbowShift 4s linear infinite, mythicButtonGlow 2.4s ease-in-out infinite}
+.btn.rainbow::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 20%,rgba(255,255,255,.42) 45%,transparent 70%);transform:translateX(-120%);animation:mythicSweep 2.8s ease-in-out infinite;pointer-events:none}
+.modal-box.mythic{position:relative;border-color:#8d7dff;animation:mythicBorder 3s linear infinite, mythicLift .45s ease both}
+.modal-box.mythic .event-rarity{animation:mythicRarity 1.8s ease-in-out infinite}
+.modal-box.mythic .event-option{border-color:rgba(160,150,255,.34);background:linear-gradient(110deg,rgba(255,60,120,.05),rgba(255,210,80,.045),rgba(60,230,190,.045),rgba(90,140,255,.06));background-size:220% 100%;animation:rainbowShift 7s linear infinite}
+.mythic-burst{position:fixed;inset:0;z-index:96;pointer-events:none;overflow:hidden;display:grid;place-items:center}
+.mythic-burst::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.35),rgba(160,150,255,.16) 22%,transparent 58%);animation:mythicFlash .8s ease-out forwards}
+.mythic-burst .ring{position:absolute;width:18vmin;height:18vmin;border:2px solid rgba(255,255,255,.9);border-radius:50%;box-shadow:0 0 34px rgba(160,150,255,.8),inset 0 0 24px rgba(255,210,80,.35);animation:mythicRing .95s cubic-bezier(.16,.8,.3,1) forwards}
+.mythic-burst .ring.delay{animation-delay:.12s;border-color:rgba(99,230,190,.9)}
+.mythic-burst b{position:absolute;left:50%;top:50%;width:7px;height:7px;border-radius:2px;background:var(--c);box-shadow:0 0 12px var(--c);animation:mythicShard 1.05s cubic-bezier(.12,.75,.24,1) forwards;transform-origin:center}
+@keyframes mythicButtonGlow{0%,100%{box-shadow:0 0 12px rgba(160,150,255,.22)}50%{box-shadow:0 0 28px rgba(160,150,255,.55),0 0 46px rgba(255,210,80,.18)}}
+@keyframes mythicSweep{0%,35%{transform:translateX(-120%)}65%,100%{transform:translateX(120%)}}
+@keyframes mythicBorder{0%,100%{border-color:#8d7dff;box-shadow:0 0 0 1px rgba(141,125,255,.18),0 30px 90px rgba(0,0,0,.7),0 0 40px rgba(141,125,255,.18)}33%{border-color:#ff6b9d;box-shadow:0 0 0 1px rgba(255,107,157,.22),0 30px 90px rgba(0,0,0,.7),0 0 46px rgba(255,107,157,.22)}66%{border-color:#63e6be;box-shadow:0 0 0 1px rgba(99,230,190,.2),0 30px 90px rgba(0,0,0,.7),0 0 46px rgba(99,230,190,.2)}}
+@keyframes mythicLift{0%{opacity:0;transform:translateY(14px) scale(.96)}100%{opacity:1;transform:none}}
+@keyframes mythicRarity{0%,100%{box-shadow:0 0 0 rgba(160,150,255,0)}50%{box-shadow:0 0 18px rgba(160,150,255,.55)}}
+@keyframes mythicFlash{0%{opacity:0}18%{opacity:1}100%{opacity:0}}
+@keyframes mythicRing{0%{opacity:0;transform:scale(.25)}20%{opacity:1}100%{opacity:0;transform:scale(7.5)}}
+@keyframes mythicShard{0%{opacity:0;transform:translate(-50%,-50%) rotate(var(--a)) translateY(0) scale(.3)}15%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--a)) translateY(-48vmin) scale(1.15)}}
 .rainbow-text{background:linear-gradient(90deg,#ff6b9d,#ffd166,#63e6be,#7aa2ff,#c084fc);background-size:240% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rainbowShift 6s linear infinite}
 .move-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;max-height:260px;overflow-y:auto;padding-right:4px}
 .move{border:1px solid var(--line2);background:linear-gradient(180deg,#1a1a24,#121219);border-radius:3px;padding:8px 10px;text-align:left;cursor:pointer;transition:.15s;color:var(--txt);position:relative}
@@ -579,7 +596,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
           <li><b>精炼与术式领悟</b>：六维达到当前上限后，训练溢出转为对应属性的精炼；每 100 点精炼小幅强化衍生属性。总精炼 300 / 600 / 900 各触发一阶术式领悟，最多三阶，提升当前术式伤害并降低消耗。</li>
           <li><b>术式觉醒</b>：觉醒需要契机事件，不会随领悟阶位自动解锁；术式领悟越高、天赋越好，契机成功率越高。术式反转、领域展开、领域展延、极之番、术式对象扩张都在觉醒路径中，失败后可以等待下一次契机。</li>
           <li><b>术式反转 ≠ 反转术式</b>：术式反转是觉醒后把生得术式方向逆转的攻击招式；反转术式是治疗招式。两者独立显示，不要混淆。</li>
-          <li><b>领域与熔断</b>：领域展开持续 4 回合，领域内攻击增伤、每回合造成必中侵蚀。使用后固定进入 3 回合术式熔断，只能使用体术、防御、闪避和调息；学会「修复熔断」后，熔断期间会出现单独出招，使用它会把剩余熔断压缩到 1 回合，下一回合仍需以体术过渡。</li>
+          <li><b>领域与熔断</b>：领域展开持续 4 回合，领域内攻击增伤、每回合造成必中侵蚀。每个领域都有独立特性，不再统一复制无量空处的停滞效果；使用后固定进入 3 回合术式熔断，只能使用体术、防御、闪避和调息。学会「修复熔断」后，熔断期间会出现单独出招，使用它会把剩余熔断压缩到 1 回合，下一回合仍需以体术过渡；若拥有「领域余响」，修复熔断会在下一回合立刻结束熔断。</li>
           <li><b>领域对抗</b>：简易领域、落花之情、弥虚葛笼都需要通过学习事件掌握，天赋越高越容易学会；它们能抵消领域必中、减伤或反震。</li>
           <li><b>空间斩预警</b>：原身宿傩的「世界」会在下一招前显示预警；此时使用「空间抗性」可抵消必中、获得 35% 闪避并把本次伤害压低 80%。不应对时，单次「世界」伤害最高为最大生命的 80%。</li>
         </ul>
@@ -625,6 +642,7 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
       <div class="about-sec">
         <h3>词条</h3>
         <p>每局开局获得 3 个词条，30 / 60 / 90 / 105 / 120 级各再获得 1 个。词条分为普通、稀有、传说、诅咒、彩色五档；彩色词条会带来暴击滚雪球、必中伤害减免、复活、冷却刷新等机制，不再只是数值堆叠。部分词条会改变出招顺序与资源循环，例如防御/调息后的「残心」、暴击回蓝、领域熔断缩短、束缚回响与反震。点击左侧或战斗中的词条可查看详情。</p>
+        <p><b>彩色词条</b>是词条池中的最高稀有度，占用一个词条位，能被词条数量、词条查看与“已有词条”判定读到；<b>彩色祝福</b>只由彩色事件的额外奖励产生，独立记录在彩色祝福栏，不占词条位，也不会被“已有词条”判定吞掉。两者都会永久保留到本局结束或无尽轮回。</p>
       </div>
 
       <div class="about-sec">
@@ -654,16 +672,17 @@ button.chip:hover{border-color:#7d6a9c;color:#fff}
       <div class="about-sec">
         <h3>宿傩战</h3>
         <p>生命、攻击、防御、咒力全部数值化。宿傩会提前显示下一招意图；你可以防御、闪避、用术式对攻，或在关键时刻立下束缚。战斗分为两个独立阶段：<b>十影宿傩</b>在 85% 生命展开伏魔御厨子，并更早召唤颚吐与魔虚罗；生命归零后进入<b>原身宿傩</b>，四手原身开场展开伏魔御厨子，网格解与空间斩「世界」的触发线更早，领域期间每回合还会侵蚀你的生命。</p>
+        <p><b>额外伤害区</b>独立于攻击与暴击：最终伤害再乘「1 + 额外增伤」，并乘「1 - 宿傩伤害抗性 + 穿抗」。宿傩初始有 10% 伤害抗性，原身阶段提高到 15%；无尽轮回中抗性会继续增长。部分术式、领域、词条会提供额外增伤、穿抗或临时破抗，战斗界面会显示当前额外伤害与抗性。</p>
         <p>每回合可选择一次束缚（每场各一次）：不闪不避、术式封印、以命换力、真名束缚、孤注一掷、铁身、血契、受身。反转术式消耗咒力回复生命并清除流血，天与咒缚无法使用。</p>
         <p>宿傩共有 20 处可被看破的弱点，每局最多看破 5 处；看破 3 处后，可在开战前发动一次「弱点重创」，扣除宿傩当前形态 30% 生命，之后仍需正面打完。每处弱点提供 10% 伤害加成。</p>
         <p>事件池新增「天赋重估」与「六维突破」：前者提高生得天赋，后者提高六维上限；天赋越高，六维突破成功率越高。天与咒缚在事件中的强度按体术、体质与战斗智商重新计算，不再因无咒力被误判。</p>
-        <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」「涩谷事变」「咒具拍卖会」「束缚契约」「走马灯」「领域试炼」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。彩色事件「轮回之门」「万色咒线」会以彩色标题与文字出现，可直接给予彩色词条。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤甚至死亡。可抉择事件会暂停并弹出选项，选择后默认恢复自动推进。</p>
-        <p><b>无尽回廊</b>：击败宿傩后，在结算页选择进入。每次轮回不会直接开战，而是像重开一局一样从满行动点开始：年龄与事件重新展开，等级、六维、词条、觉醒、术式、弱点、精炼全部保留。修炼结束后再挑战宿傩。宿傩每次轮回都会获得极大加成：首轮生命 ×1.55、攻击 ×1.30、防御 ×1.18，之后每一轮继续乘算；玩家每次胜利也会获得等级、六维、弱点或词条等轮回馈赠。失败或主动离开时记录到达的轮回次数，首页显示最高纪录。</p>
+        <p>新增「黑闪」「废弃咒胎」「旧友的刀」「天元结界」「涩谷事变」「咒具拍卖会」「束缚契约」「走马灯」「领域试炼」等随机事件；另有「宿傩的耳语」「束缚祭坛」「领域残片」「后辈的请求」等可抉择事件。彩色事件「轮回之门」「万色咒线」会以彩色标题与文字出现，除了彩色词条外还会给予「门后余身」「时间债」「万色回路」「断线余烬」「线外之身」等永久彩色祝福，选择时会有全屏彩光爆发。每个选项都会独立判定结果，可能获得属性、词条、领域或行动点，也可能反噬、受伤；Lv.70 以上的特级术师不会被随机事件直接抹杀。可抉择事件会暂停并弹出选项，选择后默认恢复自动推进。</p>
+        <p><b>无尽回廊</b>：击败宿傩后，在结算页选择进入。每次轮回不会直接开战，而是像重开一局一样从满行动点开始：年龄与事件重新展开，等级、六维、词条、觉醒、术式、弱点、精炼全部保留。修炼结束后再挑战宿傩。宿傩每次轮回都会获得极大加成：首轮生命 ×1.55、攻击 ×1.30、防御 ×1.18，之后每一轮继续乘算，伤害抗性也会从 10% 开始逐轮增长；玩家每次胜利也会获得等级、六维、弱点或词条等轮回馈赠。失败或主动离开时记录到达的轮回次数，首页显示最高纪录。</p>
       </div>
 
       <div class="about-sec">
         <h3>继承自原版</h3>
-        <p>行动点与年龄分离：每次行动消耗 1 点行动点，年龄只前进约 0.15 岁。没有触发事件、升级、解锁或弱点的行动不会写入日志，只更新六维与年龄；默认自动推进，无事件时约 0.15 秒一步，有事件时约 0.46 秒一步，可随时暂停。每局行动点与年龄都有上限，不会出现活四百年。顶部「快速重开」立即换一局。榜单、点赞、关注等社交内容全部移除。</p>
+        <p>行动点与年龄分离：每次行动消耗 1 点行动点，年龄只前进约 0.15 岁。没有触发事件、升级、解锁或弱点的行动不会写入日志，只更新六维与年龄；默认自动推进，没有事件发生的行动点会以最大速度直接跳过，有事件时暂停等待选择，可随时暂停。每局行动点与年龄都有上限，不会出现活四百年。顶部「快速重开」立即换一局。榜单、点赞、关注等社交内容全部移除。</p>
         <p>Lv.90 后六维上限按生得天赋逐步抬升，Lv.100 到达终局：F 105、E 110、D 114、C 118、B 122、A 126、S 130、SS 133、SSS 136、EX 140。「六维突破」最多再提供 +15 上限，最终硬顶 145。90 级后的经验需求已放缓，正常生涯可以进入 100 级以上；最高 Lv.130。击败宿傩后直接进入结算，不再展开后传剧情。</p>
         <p>首页的「试炼场」可直接以 Lv.90 挑战宿傩，用于测试出招与数值，不计入生涯记录。</p>
         <p>结算页新增「分享战绩」：生成 1080×1440 的战绩长图，包含结算数据、六维、构筑与最近战报；手机可调用系统分享，桌面可直接下载 PNG。</p>
@@ -783,10 +802,10 @@ const TECHS = {
     desc: '把「无限」具现化。没有六眼时，每一步都昂贵得可怕。',
     passive: 'sixeyes',
     moves: [
-      { id: 'blue', name: '术式顺转·苍', cost: 35, kind: 'atk', power: 2.1, ignore: .2, debuff: { atk: .1, turns: 2 }, desc: '引力吸附，削弱敌方攻击。' },
+      { id: 'blue', name: '术式顺转·苍', cost: 35, kind: 'atk', power: 2.1, ignore: .2, resistCut: .06, debuff: { atk: .1, turns: 2 }, desc: '引力吸附，削弱敌方攻击并撕开 6% 伤害抗性。' },
       { id: 'red', name: '术式反转·赫', cost: 50, kind: 'atk', power: 3.1, desc: '斥力轰击，最简单的高伤。' },
       { id: 'infinity', name: '无下限', cost: 18, kind: 'def', shield: .75, ceGain: 8, desc: '本回合伤害降低 75%。' },
-      { id: 'purple', name: '虚式「茈」', cost: 90, kind: 'atk', power: 6.4, ignore: .5, req: 'sixeyes', cd: 3, desc: '苍与赫的融合。需六眼。' },
+      { id: 'purple', name: '虚式「茈」', cost: 90, kind: 'atk', power: 6.4, ignore: .5, resistCut: .16, req: 'sixeyes', cd: 3, desc: '苍与赫的融合，湮灭 16% 伤害抗性。需六眼。' },
       { id: 'muryo', name: '领域展开·无量空处', cost: 150, kind: 'domain', power: 1.7, req: 'domain', desc: '四回合必中增伤，并让宿傩停止一回合；结束后熔断。' }
     ]
   },
@@ -824,7 +843,7 @@ const TECHS = {
     moves: [
       { id: 'release', name: '咒灵放出', cost: 20, kind: 'atk', power: 1.1, hits: 2, desc: '放出低级咒灵撕咬。' },
       { id: 'grade1', name: '准一级咒灵', cost: 45, kind: 'atk', power: 2.5, desc: '准一级咒灵全力一击。' },
-      { id: 'uzumaki', name: '极之番「漩涡」', cost: 80, kind: 'atk', power: 4.6, ignore: .3, cd: 2, desc: '将所有咒灵熔为一击。' },
+      { id: 'uzumaki', name: '极之番「漩涡」', cost: 80, kind: 'atk', power: 4.6, ignore: .3, extraDmg: .10, cd: 2, desc: '将所有咒灵熔为一击，额外伤害 +10%。' },
       { id: 'armor', name: '咒灵铠', cost: 25, kind: 'def', shield: .5, buff: { def: .2, turns: 2 }, desc: '咒灵覆体，减伤并提升防御。' }
     ]
   },
@@ -834,9 +853,9 @@ const TECHS = {
     desc: '触碰灵魂，无视防御。代价是自身防御下降。',
     passive: 'soul',
     moves: [
-      { id: 'touch', name: '灵魂触碰', cost: 25, kind: 'atk', power: 1.7, ignore: 1, desc: '直接作用于灵魂。' },
+      { id: 'touch', name: '灵魂触碰', cost: 25, kind: 'atk', power: 1.7, ignore: 1, resistCut: .12, desc: '直接作用于灵魂，无视部分伤害抗性。' },
       { id: 'multi', name: '多重魂', cost: 40, kind: 'atk', power: .95, hits: 2, ignore: 1, desc: '多道灵魂同时改写。' },
-      { id: 'body', name: '遍杀即灵体', cost: 75, kind: 'atk', power: 3.6, ignore: 1, selfDef: .2, desc: '舍弃防御的全力一击。' },
+      { id: 'body', name: '遍杀即灵体', cost: 75, kind: 'atk', power: 3.6, ignore: 1, extraDmg: .10, selfDef: .2, desc: '舍弃防御的全力一击，额外伤害 +10%。' },
       { id: 'reshape', name: '无为转变·改造', cost: 30, kind: 'heal', healBase: 40, healCtrl: 3, healEff: 2, desc: '改造自身肉体，回复生命。' },
       { id: 'domain', name: '领域展开·自闭圆顿裹', cost: 150, kind: 'domain', power: 1.8, req: 'domain', desc: '四回合必中增伤，触碰即死；结束后熔断。' }
     ]
@@ -850,7 +869,7 @@ const TECHS = {
       { id: 'pierce', name: '穿血', cost: 15, hpCost: .03, kind: 'atk', power: 2.0, lifesteal: .15, bloodStage: 1, desc: '高压血柱贯穿。' },
       { id: 'supernova', name: '超新星', cost: 30, hpCost: .06, kind: 'atk', power: 1.4, hits: 2, lifesteal: .15, bloodStage: 2, desc: '血滴引爆，两段伤害。' },
       { id: 'bloodArmor', name: '赤血操术·铠', cost: 25, kind: 'def', shield: .5, buff: { def: .15, turns: 2 }, bloodStage: 2, desc: '血液凝固成甲。' },
-      { id: 'convergence', name: '血星磊', cost: 50, hpCost: .1, kind: 'atk', power: 4.2, ignore: .2, lifesteal: .2, bloodStage: 3, desc: '全部血液压缩后的重击。' }
+      { id: 'convergence', name: '血星磊', cost: 50, hpCost: .1, kind: 'atk', power: 4.2, ignore: .2, extraDmg: .12, lifesteal: .2, bloodStage: 3, desc: '全部血液压缩后的重击，额外伤害 +12%。' }
     ]
   },
   murderLight: {
@@ -859,10 +878,10 @@ const TECHS = {
     desc: '达布拉·卡拉巴的术式：把杀意与质量赋予光本身，让光成为可站立、可贯穿、可粉碎的武器；反转后化为吞噬一切的暗。',
     passive: 'light',
     moves: [
-      { id: 'lightPillar', name: '杀意之光·光柱', cost: 24, kind: 'atk', power: 2.15, ignore: .35, crit: .06, desc: '压缩的杀意光柱，瞬间贯穿目标。' },
+      { id: 'lightPillar', name: '杀意之光·光柱', cost: 24, kind: 'atk', power: 2.15, ignore: .35, extraDmg: .06, crit: .06, desc: '压缩的杀意光柱，瞬间贯穿目标并提高额外伤害。' },
       { id: 'lightRain', name: '杀意之光·光雨', cost: 42, kind: 'atk', power: .82, hits: 4, ignore: .18, desc: '赋予光质量后洒落，四段贯穿。' },
-      { id: 'killingMass', name: '杀意赋予', cost: 34, kind: 'atk', power: 2.1, ignore: .2, stun: 1, debuff: { atk: .12, turns: 2 }, desc: '把杀意压进光里，令宿傩失衡并削弱其攻击。' },
-      { id: 'sublight', name: '亚光速', cost: 30, kind: 'atk', power: 1.15, buff: { atk: .25, turns: 2 }, dodgeDown: .15, desc: '以光速逼近后重击，并提升下一击威力。' },
+      { id: 'killingMass', name: '杀意赋予', cost: 34, kind: 'atk', power: 2.1, ignore: .2, stun: 1, resistDown: .06, resistDownTurns: 2, debuff: { atk: .12, turns: 2 }, desc: '把杀意压进光里，令宿傩失衡、攻击与伤害抗性下降。' },
+      { id: 'sublight', name: '亚光速', cost: 30, kind: 'atk', power: 1.15, buff: { atk: .25, extraDmg: .15, turns: 2 }, dodgeDown: .15, desc: '以光速逼近后重击，提升下一击攻击与额外伤害。' },
       { id: 'lightDomain', name: '领域展开·杀意光庭', cost: 150, kind: 'domain', power: 1.95, req: 'domain', desc: '四回合必中增伤；光庭内每一束光都带着杀意；结束后熔断。' }
     ]
   },
@@ -875,7 +894,7 @@ const TECHS = {
       { id: 'shards', name: '冰砾', cost: 20, kind: 'atk', power: 1.6, freeze: 1, desc: '冰锥射击，短暂冻结。' },
       { id: 'frost', name: '霜凪', cost: 35, kind: 'atk', power: 2.3, freeze: 1, desc: '寒气蔓延。' },
       { id: 'falls', name: '直瀑', cost: 55, kind: 'atk', power: 3.3, freeze: 1, desc: '冰瀑倾泻。' },
-      { id: 'absolute', name: '冰凝·极', cost: 75, kind: 'atk', power: 4.2, freeze: 2, cd: 3, desc: '绝对零度，冻结两回合。' }
+      { id: 'absolute', name: '冰凝·极', cost: 75, kind: 'atk', power: 4.2, freeze: 2, extraDmg: .15, cd: 3, desc: '绝对零度，冻结两回合并造成额外伤害。' }
     ]
   },
   projection: {
@@ -896,9 +915,9 @@ const TECHS = {
     desc: '在 7:3 处制造弱点。暴击伤害提升至 2.2 倍。',
     passive: 'ratio',
     moves: [
-      { id: 'seven3', name: '7:3', cost: 20, kind: 'atk', power: 2.0, ignore: .4, crit: .2, desc: '强制命中弱点。' },
+      { id: 'seven3', name: '7:3', cost: 20, kind: 'atk', power: 2.0, ignore: .4, resistCut: .12, crit: .2, desc: '强制命中弱点，并削开 12% 伤害抗性。' },
       { id: 'collapse', name: '瓦落瓦落', cost: 40, kind: 'atk', power: 2.9, crit: .15, desc: '连续敲击同一弱点。' },
-      { id: 'blackFlash', name: '黑闪', cost: 50, kind: 'atk', power: 3.6, crit: .35, cd: 2, desc: '咒力迟滞 0.000001 秒。' }
+      { id: 'blackFlash', name: '黑闪', cost: 50, kind: 'atk', power: 3.6, crit: .35, extraDmg: .20, resistCut: .10, cd: 2, desc: '咒力迟滞 0.000001 秒，额外伤害 +20% 并削抗。' }
     ]
   },
   cursedSpeech: {
@@ -908,9 +927,9 @@ const TECHS = {
     passive: 'recoil',
     moves: [
       { id: 'stop', name: '「不要动」', cost: 25, kind: 'atk', power: .6, stun: 1, desc: '命令对方停止行动。' },
-      { id: 'burst', name: '「爆碎」', cost: 40, kind: 'atk', power: 2.6, desc: '命令目标崩解。' },
+      { id: 'burst', name: '「爆碎」', cost: 40, kind: 'atk', power: 2.6, resistCut: .08, desc: '命令目标崩解，削减 8% 伤害抗性。' },
       { id: 'sleep', name: '「睡吧」', cost: 35, kind: 'atk', power: .4, stun: 1, debuff: { atk: .15, turns: 2 }, desc: '强制入睡并削弱。' },
-      { id: 'die', name: '「去死」', cost: 70, kind: 'atk', power: 4.6, selfDmg: .08, cd: 2, desc: '最强的命令，反噬自身。' }
+      { id: 'die', name: '「去死」', cost: 70, kind: 'atk', power: 4.6, extraDmg: .18, selfDmg: .08, cd: 2, desc: '最强的命令，额外伤害 +18%，反噬自身。' }
     ]
   },
   boogieWoogie: {
@@ -934,7 +953,7 @@ const TECHS = {
       { id: 'spear', name: '构筑·枪', cost: 20, kind: 'atk', power: 1.8, ignore: .2, desc: '瞬间成形的长枪。' },
       { id: 'shield', name: '构筑·盾', cost: 25, kind: 'def', shield: .55, desc: '咒力结晶护盾。' },
       { id: 'blade', name: '构筑·剑', cost: 40, kind: 'atk', power: 2.8, crit: .1, desc: '高密度咒力刃。' },
-      { id: 'cannon', name: '构筑·炮', cost: 60, kind: 'atk', power: 3.7, desc: '一次性重火力。' }
+      { id: 'cannon', name: '构筑·炮', cost: 60, kind: 'atk', power: 3.7, extraDmg: .10, desc: '一次性重火力，额外伤害 +10%。' }
     ]
   },
   blackBird: {
@@ -945,7 +964,7 @@ const TECHS = {
     moves: [
       { id: 'flock', name: '鸟群', cost: 15, kind: 'atk', power: .6, hits: 3, desc: '三只黑鸟轮番冲击。' },
       { id: 'dive', name: '黑鸟·突击', cost: 30, kind: 'atk', power: 2.0, sure: true, desc: '锁定目标，必然命中。' },
-      { id: 'kamikaze', name: '神风', cost: 55, kind: 'atk', power: 3.5, ignore: .3, desc: '鸟群自爆式撞击。' }
+      { id: 'kamikaze', name: '神风', cost: 55, kind: 'atk', power: 3.5, ignore: .3, extraDmg: .12, desc: '鸟群自爆式撞击，额外伤害 +12%。' }
     ]
   },
   copy: {
@@ -957,7 +976,7 @@ const TECHS = {
       { id: 'rika', name: '里香', cost: 30, kind: 'def', shield: .35, buff: { atk: .25, turns: 3 }, desc: '特级过咒怨灵显现，攻击大幅提升。' },
       { id: 'copySlash', name: '复制·斩', cost: 30, kind: 'atk', power: 2.3, desc: '复制来的斩击。' },
       { id: 'copyArt', name: '复制·术', cost: 50, kind: 'special', exec: 'copyArt', power: 2.6, desc: '随机释放一个已复制的术式。' },
-      { id: 'trueCopy', name: '真·复制', cost: 80, kind: 'special', exec: 'trueCopy', power: 3.6, cd: 2, desc: '复刻宿傩上一招，以 1.5 倍返还。' }
+      { id: 'trueCopy', name: '真·复制', cost: 80, kind: 'special', exec: 'trueCopy', power: 3.6, extraDmg: .10, cd: 2, desc: '复刻宿傩上一招，以 1.5 倍返还并提高额外伤害。' }
     ]
   },
   heavenly: {
@@ -975,6 +994,118 @@ const TECHS = {
   }
 };
 
+const DOMAIN_FX = {
+  '无量空处': {
+    title: '信息过载',
+    desc: '四回合必中增伤；展开时宿傩停滞一回合，领域内宿傩攻击 -12%。',
+    activate: { stun: 1 },
+    activateLog: '无量空处的信息洪流灌入宿傩的感知，他的四只手同时慢了半拍。',
+    turn: { aura: .9, enemyAtkDebuff: .12, log: '信息洪流持续冲刷宿傩的神经。' }
+  },
+  '伏魔御厨子': {
+    title: '斩击厨床',
+    desc: '四回合必中增伤；每回合附加 1 层流血、削减 3% 伤害抗性，领域侵蚀提高 15%。',
+    turn: { aura: 1.15, bleed: 1, resistDown: .03, log: '无形的斩击在结界里反复落下。' }
+  },
+  '嵌合暗翳庭': {
+    title: '影之掩护',
+    desc: '四回合必中增伤；展开时闪避 +12%，每回合获得 12% 减伤。',
+    activate: { evade: .12 },
+    turn: { aura: 1, shield: .12, log: '影子替你吞掉了一部分攻击。' }
+  },
+  '自闭圆顿裹': {
+    title: '触碰即死',
+    desc: '四回合必中增伤；展开时削抗 10%；宿傩生命低于 35% 时，领域侵蚀提高至 2.4 倍。',
+    activate: { resistDown: .10 },
+    turn: { aura: .85, lowHp: .35, lowAura: 2.4, log: '结界在残血处收得更紧。' }
+  },
+  '杀意光庭': {
+    title: '杀意增幅',
+    desc: '四回合必中增伤；展开时攻击 +20%、额外伤害 +15%，领域侵蚀提高 25%。',
+    activate: { atk: .2, extraDmg: .15 },
+    turn: { aura: 1.25, extraDmg: .03, log: '每一束光都带着更锋利的杀意。' }
+  },
+  '胎藏遍野': {
+    title: '咒灵群袭',
+    desc: '四回合必中增伤；展开时获得 1 只咒灵，每回合 3 段侵蚀并回复咒力。',
+    activate: { spirits: 1 },
+    turn: { aura: .62, hits: 3, ce: 8, log: '胎藏中的咒灵成群扑向宿傩。' }
+  },
+  '赤血苑囿': {
+    title: '血液回流',
+    desc: '四回合必中增伤；展开时回复 8% 生命，每回合回复 2.5% 生命。',
+    activate: { heal: .08 },
+    turn: { aura: 1, heal: .025, log: '赤血在结界里回流，修补你的伤口。' }
+  },
+  '万古冰狱': {
+    title: '绝对零度',
+    desc: '四回合必中增伤；展开时冻结宿傩 1 回合，每回合 30% 概率再次冻结。',
+    activate: { freeze: 1 },
+    turn: { aura: .8, freezeChance: .3, log: '冰狱的寒气仍在封冻宿傩的动作。' }
+  },
+  '时隙回廊': {
+    title: '帧间回廊',
+    desc: '四回合必中增伤；展开时所有冷却 -1，每回合再 -1、获得 10% 闪避并穿抗 4%。',
+    activate: { cd: 1 },
+    turn: { aura: .9, cd: 1, evade: .1, resistPen: .04, log: '时隙被拉长，你的动作快过了这一帧。' }
+  },
+  '七三裁定所': {
+    title: '七三裁定',
+    desc: '四回合必中增伤；展开时宿傩防御 -25%、伤害抗性 -12%，领域侵蚀提高 35% 并持续削抗。',
+    activate: { defDebuff: .25, resistDown: .12 },
+    turn: { aura: 1.35, resistDown: .03, log: '七三的界线在结界里被重新划定。' }
+  },
+  '万籁俱寂': {
+    title: '禁言',
+    desc: '四回合必中增伤；展开时宿傩攻击 -20%，领域内攻击再 -20%。',
+    activate: { atkDebuff: .2 },
+    turn: { aura: .75, enemyAtkDebuff: .2, log: '没有声音，宿傩的咒词被吞进寂静。' }
+  },
+  '虚位拍手': {
+    title: '拍手换位',
+    desc: '四回合必中增伤；展开时宿傩停滞一回合，每回合 20% 概率再次停滞。',
+    activate: { stun: 1 },
+    turn: { aura: .85, stunChance: .2, log: '拍手声在结界里错位，宿傩失去了目标。' }
+  },
+  '万象工房': {
+    title: '即时构筑',
+    desc: '四回合必中增伤；展开时获得 35% 减伤，每回合再获得 18% 减伤。',
+    activate: { shield: .35 },
+    turn: { aura: 1, shield: .18, log: '工房在结界里临时筑起新的掩体。' }
+  },
+  '暮鸦天幕': {
+    title: '群鸦噬日',
+    desc: '四回合必中增伤；展开时施加 2 层流血，每回合 3 段侵蚀。',
+    activate: { bleed: 2 },
+    turn: { aura: .55, hits: 3, log: '暮鸦分成三群，从不同方向啄食宿傩。' }
+  },
+  '万法归藏': {
+    title: '万法回响',
+    desc: '四回合必中增伤；展开时回复 25 点咒力，每回合回复 6 点咒力并穿抗 5%。',
+    activate: { ce: 25 },
+    turn: { aura: 1.05, ce: 6, resistPen: .05, log: '被复制的术式在藏中回响，咒力重新汇聚。' }
+  },
+  '无咒·天与牢': {
+    title: '咒力真空',
+    desc: '四回合必中增伤；展开时获得 30% 减伤，领域内宿傩攻击 -15%。',
+    activate: { shield: .3 },
+    turn: { aura: 1, shield: .15, enemyAtkDebuff: .15, log: '咒力被抽空，宿傩只能凭肉体硬撑。' }
+  }
+};
+
+const DEFAULT_DOMAIN_FX = {
+  title: '领域侵蚀',
+  desc: '四回合必中增伤；领域结束后进入术式熔断。',
+  activate: {},
+  turn: { aura: 1 }
+};
+
+function domainFxFor(run, mv) {
+  const raw = mv && typeof mv.name === 'string' ? mv.name.replace(/^领域展开·/, '') : '';
+  const key = raw || (run && run.domainName) || (run && run.techName) || '';
+  return DOMAIN_FX[key] || DEFAULT_DOMAIN_FX;
+}
+
 const UNIVERSAL = [
   { id: 'basic', name: '普通攻击', cost: 0, kind: 'atk', power: 1.0, desc: '不消耗咒力的体术攻击。' },
   { id: 'guard', name: '防御', cost: 0, kind: 'def', shield: .6, ceGain: 14, desc: '本回合伤害降低 60%，回复少量咒力。' },
@@ -991,7 +1122,7 @@ const RCT_MOVE = {
 
 const BURNOUT_FIX_MOVE = {
   id: 'burnoutFix', name: '修复熔断', cost: 20, kind: 'repair',
-  desc: '修补术式回路，将熔断压缩到 1 回合。只能在熔断中使用。'
+  desc: '修补术式回路，将熔断压缩到 1 回合；拥有「领域余响」时下一回合立刻结束熔断。只能在熔断中使用。'
 };
 
 const VOWS = [
@@ -1143,19 +1274,23 @@ const TRAITS = [
   { id: 'vanguard', name: '先手', rarity: 'common', w: 9, desc: '战斗第 1 回合造成伤害 +25%。', opening: 0.25 },
   { id: 'bleedEdge', name: '裂伤', rarity: 'common', w: 9, desc: '攻击有 30% 概率追加 1 层流血。', bleedOnHit: 0.30 },
   { id: 'lastBreath', name: '穷地', rarity: 'common', w: 8, desc: '生命低于 40% 时，防御 +20%，受到伤害 -10%。', lowDef: 0.20, lowTaken: -0.10 },
+  { id: 'keenEdge', name: '锋锐', rarity: 'common', w: 8, desc: '额外伤害 +6%。', extraDmg: 0.06 },
 
   { id: 'sureStep', name: '空间步', rarity: 'rare', w: 4, desc: '每场一次，必中攻击伤害降低 75%，并回复 10% 生命。', sureGuard: 0.75, sureHeal: 0.10 },
+  { id: 'traitBreaker', name: '破咒', rarity: 'rare', w: 4, desc: '额外伤害 +8%，无视宿傩 7% 伤害抗性。', extraDmg: 0.08, resistPen: 0.07 },
   { id: 'execution', name: '处刑', rarity: 'rare', w: 5, desc: '对生命低于 30% 的宿傩造成伤害 +25%。', execute: 0.25 },
   { id: 'bloodPact', name: '血之契', rarity: 'rare', w: 5, desc: '生命低于 50% 时攻击 +18%；每回合回复 2% 生命。', lowAtk: 0.18, regenPct: 0.02 },
   { id: 'counter', name: '反震', rarity: 'rare', w: 4, desc: '受到直接攻击时，对宿傩造成相当于你防御 80% 的反伤。', counter: 0.80 },
 
-  { id: 'domainEcho', name: '领域余响', rarity: 'legendary', w: 2, desc: '领域展开后的术式熔断减少 1 回合。', burnoutCut: 1 },
+  { id: 'domainEcho', name: '领域余响', rarity: 'legendary', w: 2, desc: '领域展开后的术式熔断减少 1 回合；修复熔断会立刻结束熔断。', burnoutCut: 1 },
   { id: 'vowEcho', name: '束缚回响', rarity: 'legendary', w: 2, desc: '每场第一次立下束缚后，回复 15% 生命，且不消耗本回合的束缚次数。', vowEcho: 1 },
   { id: 'undying', name: '不灭', rarity: 'legendary', w: 2, desc: '每场一次，致死时以 30% 生命复活，并清除流血与灼烧。', revive: 1, cleanse: 1 },
+  { id: 'riftEdge', name: '裂界', rarity: 'legendary', w: 2, desc: '额外伤害 +12%，无视宿傩 11% 伤害抗性；暴击时额外削抗 4%，持续 3 回合。', extraDmg: 0.12, resistPen: 0.11, resistBreakOnCrit: 0.04 },
 
   { id: 'reincarnator', name: '回廊行者', rarity: 'mythic', w: 1, desc: '每场一次，必中攻击伤害降低 80% 并回复 10% 生命；每场一次，致死时以 35% 生命复活。', sureGuard: 0.80, sureHeal: 0.10, revive: 1 },
-  { id: 'zenith', name: '万象归一', rarity: 'mythic', w: 1, desc: '每次暴击使本场暴击率 +2%、暴击伤害 +5%，最多叠加 5 层。', critStack: 1 },
-  { id: 'chrono', name: '时之楔', rarity: 'mythic', w: 1, desc: '每 3 回合，随机刷新一个术式的冷却。', cdRefresh: 1 }
+  { id: 'zenith', name: '万象归一', rarity: 'mythic', w: 1, desc: '每次暴击使本场暴击率 +6%、暴击伤害 +15%、伤害 +4%，最多 6 层；叠满后下一次攻击必定暴击并造成 2.2 倍伤害。', critStack: 1 },
+  { id: 'chrono', name: '时之楔', rarity: 'mythic', w: 1, desc: '术式冷却速度翻倍；使用带冷却的术式时 25% 概率不进入冷却；每 3 回合重置全部术式冷却。', cdRefresh: 1 },
+  { id: 'causality', name: '因果裁断', rarity: 'mythic', w: 1, desc: '额外伤害 +18%，无视宿傩 16% 伤害抗性；暴击时额外削抗 5%，持续 3 回合。', extraDmg: 0.18, resistPen: 0.16, resistBreakOnCrit: 0.05 }
 ];
 
 function traitVal(run, key) {
@@ -1367,6 +1502,7 @@ function makeRun(opts = {}) {
     bloodAwakened: false,
     weak: [],
     capBonus: 0,
+    mythicBoons: { hp: 0, atk: 0, dmg: 0, cost: 0, critDmg: 0, revive: 0, domainTurn: 0 },
     flags: {
       rct: false, domain: false,
       simpleDomain: false, fallingBlossom: false,
@@ -1667,6 +1803,21 @@ function eventPower(run) {
   return run.stats.ce + run.stats.ctrl + run.stats.tai + run.stats.iq * 0.2;
 }
 
+function addMythicBoon(run, key, value) {
+  run.mythicBoons = run.mythicBoons || { hp: 0, atk: 0, dmg: 0, cost: 0, critDmg: 0, revive: 0, domainTurn: 0 };
+  run.mythicBoons[key] = (run.mythicBoons[key] || 0) + value;
+}
+
+function eventDeathOrInjury(run, deathText, surviveText) {
+  if (run.lvl >= 70) {
+    const loss = rnd(4, 8);
+    run.points = Math.max(0, run.points - loss);
+    return `${surviveText} 行动点 -${loss}。`;
+  }
+  run.dead = true;
+  return deathText;
+}
+
 function advanceBlood(run, amount = 1) {
   const before = run.bloodStage || 1;
   const stage = Math.min(3, before + amount);
@@ -1758,8 +1909,7 @@ const EVENTS = [
         return [`你在死灭回游的结界里杀穿重围：${ce ? `咒力 +${ce}，` : ''}体术 +${tai}，体质 +${vit}，行动点 +4。`];
       }
       if (Math.random() < (r.cons === 'heavenly' ? 0.12 : 0.25)) {
-        r.dead = true;
-        return ['结界闭合。你没能走出来——死灭回游吞掉了你的名字。'];
+        return [eventDeathOrInjury(r, '结界闭合。你没能走出来——死灭回游吞掉了你的名字。', '结界闭合的瞬间，你以特级术师的咒力强行撕开一条缝，带着重伤走了出来。')];
       }
       r.points -= rnd(3, 7);
       return ['你在结界中重伤逃出，行动点被大幅消耗。'];
@@ -1799,8 +1949,7 @@ const EVENTS = [
         return [`你祓除了那头特级咒灵：咒力 +${ce}，体术 +${tai}，境界提升。`];
       }
       if (Math.random() < 0.2) {
-        r.dead = true;
-        return ['特级咒灵的领域比你更快一步。你没能回来。'];
+        return [eventDeathOrInjury(r, '特级咒灵的领域比你更快一步。你没能回来。', '特级咒灵的领域闭合前，你以自身咒力反向撕开结界，重伤脱身。')];
       }
       r.points -= rnd(4, 8);
       return ['讨伐失败，你被特级咒灵重创，行动点大幅流失。'];
@@ -2072,8 +2221,7 @@ const EVENTS = [
             addStat(r, 'eff', eff); addStat(r, 'ctrl', ctrl); r.points += 3;
             return [`残片没有成形，但它的结构留在了你的回路里。效率 +${eff}，操控 +${ctrl}，行动点 +3。`];
           }
-          r.dead = true;
-          return ['残片在你体内重新闭合。你被自己的领域压成了齑粉。'];
+          return [eventDeathOrInjury(r, '残片在你体内重新闭合。你被自己的领域压成了齑粉。', '残片即将闭合时，你以特级术师的领域抗性把它压回体外，重伤但活着。')];
         }
       },
       {
@@ -2212,7 +2360,7 @@ const EVENTS = [
             r.points -= rnd(4, 7);
             return ['卖家早有准备。你抢到一半就被咒具震开，行动点受损。'];
           }
-          if (Math.random() < 0.35) { r.dead = true; return ['那件咒具没有保险栓。你的身体在巷子里被自己的咒力撕开。']; }
+          if (Math.random() < 0.35) { return [eventDeathOrInjury(r, '那件咒具没有保险栓。你的身体在巷子里被自己的咒力撕开。', '咒具反噬爆发的瞬间，你以特级术师的咒力强行压住暴走，重伤脱身。')]; }
           r.points -= rnd(6, 10);
           return ['咒具反噬，你勉强保住性命，行动点几乎见底。'];
         }
@@ -2349,21 +2497,23 @@ const EVENTS = [
     options: [
       {
         id: 'step', label: '走进门里', cls: 'rainbow',
-        desc: '获得一个彩色词条「回廊行者」「万象归一」或「时之楔」。',
+        desc: '获得一个彩色词条，并留下「门后余身」：生命上限 +12%，每场额外复活 1 次。',
         run: r => {
           const t = grantTrait(r, 'reincarnator') || grantTrait(r, 'zenith') || grantTrait(r, 'chrono');
-          if (t) return [`门后的你把手按在你胸口。获得彩色词条「${t.name}」。`];
+          addMythicBoon(r, 'hp', .12); addMythicBoon(r, 'revive', 1);
+          if (t) return [`门后的你把手按在你胸口。获得彩色词条「${t.name}」；门后余身：生命上限 +12%，每场额外复活 1 次。`];
           gainXp(r, 180);
-          return ['门后的你已经没有更多东西可以给你，只留下一段很长的经验。'];
+          return ['门后的你已经没有更多词条，但留下了门后余身：生命上限 +12%，每场额外复活 1 次。'];
         }
       },
       {
         id: 'bargain', label: '和另一个自己交易', cls: 'blood',
-        desc: '60% 获得彩色词条「时之楔」；40% 被夺走一段行动点。',
+        desc: '60% 获得彩色词条「时之楔」与「时间债」：术式消耗 -10%；40% 被夺走行动点。',
         run: r => {
           if (Math.random() < 0.60) {
             const t = grantTrait(r, 'chrono');
-            return [t ? '交易达成。获得彩色词条「时之楔」。' : '另一个你摊开手：这件东西你已经有了。'];
+            addMythicBoon(r, 'cost', .10);
+            return [t ? '交易达成。获得彩色词条「时之楔」，并背负时间债：所有术式消耗 -10%。' : '另一个你摊开手：词条已经有了，但时间债仍然成立——所有术式消耗 -10%。'];
           }
           r.points -= rnd(8, 14);
           return ['另一个你拿走了一段属于你的时间。行动点大幅流失。'];
@@ -2371,11 +2521,12 @@ const EVENTS = [
       },
       {
         id: 'close', label: '把门关上', cls: 'ghost',
-        desc: '稳定获得行动点、经验与六维。',
+        desc: '稳定获得行动点、经验与六维，并留下「门之静默」：生命上限 +8%，伤害 +6%。',
         run: r => {
           r.points += 10; gainXp(r, 80);
           addStat(r, 'ce', 3); addStat(r, 'ctrl', 2);
-          return ['门合上时，你听见另一个自己轻轻笑了一声。行动点 +10，咒力 +3，操控 +2。'];
+          addMythicBoon(r, 'hp', .08); addMythicBoon(r, 'dmg', .06);
+          return ['门合上时，你听见另一个自己轻轻笑了一声。行动点 +10，咒力 +3，操控 +2；门之静默：生命上限 +8%，伤害 +6%。'];
         }
       }
     ]
@@ -2387,19 +2538,21 @@ const EVENTS = [
     options: [
       {
         id: 'weave', label: '把线织进身体', cls: 'rainbow',
-        desc: '获得彩色词条「万象归一」或「回廊行者」。',
+        desc: '获得彩色词条「万象归一」或「回廊行者」，并织入「万色回路」：生命上限 +10%，伤害 +12%。',
         run: r => {
           const t = grantTrait(r, 'zenith') || grantTrait(r, 'reincarnator');
-          return [t ? `咒线融进回路。获得彩色词条「${t.name}」。` : '咒线只是从你身体里穿过去，没有留下新的词条。'];
+          addMythicBoon(r, 'hp', .10); addMythicBoon(r, 'dmg', .12);
+          if (t) return [`咒线融进回路。获得彩色词条「${t.name}」；万色回路：生命上限 +10%，伤害 +12%。`];
+          return ['咒线没有留下新词条，但织成了万色回路：生命上限 +10%，伤害 +12%。'];
         }
       },
       {
         id: 'cut', label: '一刀斩断咒线', cls: 'blood',
-        desc: '获得大量经验与行动点；小概率被命运反噬。',
+        desc: '获得大量经验、行动点与「断线余烬」：暴击伤害 +20%；小概率被命运反噬。',
         run: r => {
           if (Math.random() < 0.80) {
-            gainXp(r, 120); r.points += 8;
-            return ['咒线断开，散成漫天光点。经验大幅增加，行动点 +8。'];
+            gainXp(r, 120); r.points += 8; addMythicBoon(r, 'critDmg', .20);
+            return ['咒线断开，散成漫天光点。经验大幅增加，行动点 +8；断线余烬：暴击伤害 +20%。'];
           }
           r.points -= rnd(6, 10);
           return ['断口喷出不属于你的记忆。你站在原地很久，行动点受损。'];
@@ -2407,10 +2560,10 @@ const EVENTS = [
       },
       {
         id: 'follow', label: '顺着线走', cls: 'ghost',
-        desc: '获得随机词条与经验；可能遇到另一段人生。',
+        desc: '获得随机词条、经验与「线外之身」：领域持续 +1 回合；可能遇到另一段人生。',
         run: r => {
-          const t = grantTrait(r); gainXp(r, 70);
-          return [t ? `线的另一端系着一个词条。获得「${t.name}」。` : '线的另一端什么也没有，只留下一段经验。'];
+          const t = grantTrait(r); gainXp(r, 70); addMythicBoon(r, 'domainTurn', 1);
+          return [t ? `线的另一端系着一个词条。获得「${t.name}」；线外之身：领域持续 +1 回合。` : '线的另一端什么也没有，只留下线外之身：领域持续 +1 回合。'];
         }
       }
     ]
@@ -2582,6 +2735,9 @@ function derived(run) {
   maxHp *= 1 + traitVal(run, 'hpPct');
   atk *= 1 + traitVal(run, 'atkPct');
   def *= 1 + traitVal(run, 'defPct');
+  const mb = run.mythicBoons || {};
+  maxHp *= 1 + (mb.hp || 0);
+  atk *= 1 + (mb.atk || 0);
   maxCe += traitVal(run, 'maxCe');
   regen += traitVal(run, 'regen');
   const rp = k => ((run.refine && run.refine[k]) || 0) / 100;
@@ -2621,12 +2777,11 @@ function awakenMove(run, kind) {
 function genericDomainMove(run) {
   const name = run.domainName || run.techName;
   const noCe = run.cons === 'heavenly';
+  const fx = DOMAIN_FX[name] || DEFAULT_DOMAIN_FX;
   return {
     id: 'aw_domain', name: `领域展开·${name}`, cost: noCe ? 0 : 150, kind: 'domain', power: 1.9,
     body: noCe,
-    desc: noCe
-      ? '以咒具与肉体强行划出结界。四回合必中增伤；领域结束后进入术式熔断。'
-      : '四回合必中增伤，并让宿傩停止一回合；领域结束后进入术式熔断。'
+    desc: `${fx.desc}${noCe ? ' 以咒具与肉体强行划出结界。' : ''}`
   };
 }
 
@@ -2662,6 +2817,12 @@ function movesOf(run) {
   }
   if (run.flags.burnoutFix) arr.push({ ...BURNOUT_FIX_MOVE, cost: run.cons === 'heavenly' ? 0 : BURNOUT_FIX_MOVE.cost });
   arr = arr.concat(UNIVERSAL.map(m => ({ ...m })));
+  arr = arr.map(m => {
+    if (m.kind !== 'domain') return m;
+    const name = String(m.name || '').replace('领域展开·', '');
+    const fx = DOMAIN_FX[name];
+    return fx ? { ...m, desc: fx.desc } : m;
+  });
   if (run.flags.rct && run.cons !== 'heavenly') arr.push({ ...RCT_MOVE });
   if (run.cons === 'heavenly') arr = arr.map(m => ({ ...m, body: true }));
   const mastery = run.techMastery || 0;
@@ -2693,6 +2854,7 @@ function effectiveCost(run, mv, extra) {
     if (run.cons === 'sixEyes') mod *= run.tech === 'limitless' ? 0.6 : 0.85;
     if (run.tech === 'limitless' && run.cons !== 'sixEyes') mod *= 1.8;
     mod *= 1 - Math.min(0.35, run.stats.eff * 0.0025);
+    mod *= 1 - Math.min(0.40, (run.mythicBoons && run.mythicBoons.cost) || 0);
     mod = Math.max(0.2, mod * (1 + traitVal(run, 'cost')));
     cost = Math.max(1, Math.round(cost * mod));
   }
@@ -2726,15 +2888,16 @@ function startDuel(run) {
       domainTurns: 0, burnout: 0, burnoutFixUsed: false, domainGuard: null,
       vowAtk: 1, vowVuln: 1, vowCrit: false, vowSure: false,
       costMod: 1, defDownPerm: 0, sealed: [], cd: {},
-      revive: (run.cons === 'vessel' ? 1 : 0) + traitVal(run, 'revive'),
+      extraDmgBuff: 0, extraDmgBuffT: 0, resistPenBuff: 0, resistPenBuffT: 0,
+      revive: (run.cons === 'vessel' ? 1 : 0) + traitVal(run, 'revive') + ((run.mythicBoons && run.mythicBoons.revive) || 0),
       spirits: run.tech === 'spiritManip' ? 3 : 0,
       rctUses: 0, shouts: 0,
-      focusShot: false, sureGuardUsed: false, vowEchoUsed: false, critStack: 0, spaceGuard: 0
+      focusShot: false, sureGuardUsed: false, vowEchoUsed: false, critStack: 0, zenithNuke: false, spaceGuard: 0
     },
     suku: {
       hp: stage1Max, maxHp: stage1Max, totalMax: sukuTotal,
       stage: 1, stage2Max: stage2Max,
-      atk: stage1Atk, def: baseDef,
+      atk: stage1Atk, def: baseDef, resist: .10, resistDown: 0, resistDownT: 0,
       stage2Atk, stage2Def: Math.round(baseDef * 1.14),
       bleed: 0, burn: 0, freeze: 0, stun: 0,
       atkDebuff: 0, atkDebuffT: 0, defDebuff: 0, defDebuffT: 0,
@@ -2749,6 +2912,7 @@ function startDuel(run) {
   pushDuel(duel, '十影宿傩站在新宿的废墟上。影子在他脚下铺开，像一片正在呼吸的海。', 'big');
   pushDuel(duel, '这一战有两具身体：先夺舍十影，再取回原身。两阶段生命独立结算。', 'gold');
   pushDuel(duel, `你的生命 ${d.maxHp}，攻击 ${d.atk}，防御 ${d.def}，咒力 ${d.maxCe}。`, 'sys');
+  pushDuel(duel, `宿傩的伤害抗性 ${Math.round(duel.suku.resist * 100)}%：额外伤害区会被抗性削减。`, 'gold');
   if (run.weak.length) {
     pushDuel(duel, `已看破 ${run.weak.length} 处弱点：对宿傩伤害 +${Math.round(weakBonus(run) * 100)}%。`, 'gold');
   }
@@ -2835,6 +2999,10 @@ function announceWorldWarning(d) {
 
 function tickSukuStatus(d) {
   const s = d.suku;
+  if (s.resistDownT > 0) {
+    s.resistDownT--;
+    if (s.resistDownT <= 0) s.resistDown = 0;
+  }
   if (s.bleed > 0) {
     const dmg = Math.round(s.maxHp * 0.015 * s.bleed);
     s.hp -= dmg;
@@ -2905,10 +3073,9 @@ function sukuTurn(d) {
   if (s.justChanged) { s.justChanged = false; endEnemyTurn(d); return; }
 
   if (p.domainTurns > 0) {
-    const aura = Math.round(s.maxHp * 0.04 * (1 + traitVal(d.run, 'domainDmg')));
-    s.hp -= aura;
+    const fx = domainFxFor(d.run, { name: `领域展开·${p.domainName || d.run.domainName}` });
+    applyDomainTurn(d, fx);
     p.domainTurns--;
-    pushDuel(d, `你的领域仍在侵蚀宿傩，造成 ${money(aura)} 点必中伤害。`, 'purple');
     checkSukuPhase(d);
     if (d.over) return;
     if (s.justChanged) { s.justChanged = false; endEnemyTurn(d); return; }
@@ -3111,14 +3278,6 @@ function beginPlayerTurn(d) {
   const regenPct = traitVal(d.run, 'regenPct');
   if (regenPct > 0) p.hp = Math.min(p.maxHp, p.hp + p.maxHp * regenPct);
   p.ce = Math.min(p.maxCe, p.ce + p.regen);
-  if (traitVal(d.run, 'cdRefresh') > 0 && d.turn % 3 === 0) {
-    const ready = Object.keys(p.cd).filter(k => p.cd[k] > 0);
-    if (ready.length) {
-      const k = pick(ready);
-      p.cd[k] = 0;
-      pushDuel(d, '时之楔转动，一道术式冷却被强行抹去。', 'rainbow');
-    }
-  }
   if (d.run.tech === 'spiritManip' && d.turn % 3 === 0 && p.spirits < 6) {
     p.spirits++;
     pushDuel(d, '一只新的咒灵被收服，加入你的队列。', 'purple');
@@ -3134,9 +3293,16 @@ function beginPlayerTurn(d) {
     checkSukuPhase(d);
     if (d.over) return;
   }
-  for (const k in p.cd) if (p.cd[k] > 0) p.cd[k]--;
+  const chrono = traitVal(d.run, 'cdRefresh') > 0;
+  for (const k in p.cd) if (p.cd[k] > 0) p.cd[k] = Math.max(0, p.cd[k] - (chrono ? 2 : 1));
+  if (chrono && d.turn % 3 === 0) {
+    for (const k in p.cd) p.cd[k] = 0;
+    pushDuel(d, '时之楔转过一圈，所有术式冷却被重置。', 'rainbow');
+  }
   if (p.atkBuffT > 0) { p.atkBuffT--; if (!p.atkBuffT) p.atkBuff = 0; }
   if (p.defBuffT > 0) { p.defBuffT--; if (!p.defBuffT) p.defBuff = 0; }
+  if (p.extraDmgBuffT > 0) { p.extraDmgBuffT--; if (!p.extraDmgBuffT) p.extraDmgBuff = 0; }
+  if (p.resistPenBuffT > 0) { p.resistPenBuffT--; if (!p.resistPenBuffT) p.resistPenBuff = 0; }
   if (p.dodgeBuff > 0) p.dodgeBuff = Math.max(0, p.dodgeBuff - 0.1);
   p.shield = 0;
   p.evade = 0;
@@ -3147,6 +3313,25 @@ function beginPlayerTurn(d) {
   if (d.over) return;
   if (s.forceIntent || !s.intent) rollIntent(d);
   announceWorldWarning(d);
+}
+
+function extraDamageState(d, mv) {
+  const run = d.run, p = d.player, s = d.suku;
+  const mb = run.mythicBoons || {};
+  const bonus = 1 + traitVal(run, 'extraDmg') + (mb.extraDmg || 0) + (p.extraDmgBuff || 0) + ((mv && mv.extraDmg) || 0);
+  const pen = traitVal(run, 'resistPen') + (mb.resistPen || 0) + (p.resistPenBuff || 0) + ((mv && mv.resistCut) || 0) + (s.resistDown || 0);
+  const resist = Math.max(-0.35, Math.min(0.85, (s.resist || 0) - pen));
+  return { bonus, resist, pen, mult: bonus * (1 - resist) };
+}
+
+function applyResistDown(d, amount, turns, source) {
+  if (!amount) return;
+  const s = d.suku, before = s.resistDown || 0;
+  s.resistDown = Math.min(0.45, before + amount);
+  const gained = s.resistDown - before;
+  if (gained <= 0.0001) return;
+  s.resistDownT = Math.max(s.resistDownT || 0, turns || 2);
+  pushDuel(d, `${source || '破抗'}：宿傩伤害抗性被削减 ${Math.round(gained * 100)}%（剩余 ${s.resistDownT} 回合）。`, 'gold');
 }
 
 function attackOnce(d, mv, hitIndex) {
@@ -3166,7 +3351,9 @@ function attackOnce(d, mv, hitIndex) {
   if (run.tech === 'construction') base *= 1 + run.stats.iq * 0.004;
   if (run.cons === 'vessel') base *= 1.15;
   base *= 1 + weakBonus(run);
+  base *= 1 + ((run.mythicBoons && run.mythicBoons.dmg) || 0);
   base *= 1 + traitVal(run, 'dmg') + traitVal(run, 'sukuDmg');
+  if (traitVal(run, 'critStack') > 0) base *= 1 + (p.critStack || 0) * 0.04;
   if (d.turn === 1) base *= 1 + traitVal(run, 'opening');
   if (s.hp <= s.maxHp * 0.30) base *= 1 + traitVal(run, 'execute');
   if (p.hp <= p.maxHp * 0.50) base *= 1 + traitVal(run, 'lowAtk');
@@ -3174,25 +3361,108 @@ function attackOnce(d, mv, hitIndex) {
   if (run.tech === 'idleTransfig' && s.hp < s.maxHp * 0.25) base *= 1.3;
   if (p.domainTurns > 0) base *= 1.36 + traitVal(run, 'domainDmg');
   if (p.vowAtk > 1) base *= p.vowAtk;
+  const zenithNuke = !!p.zenithNuke;
+  if (zenithNuke) { p.zenithNuke = false; base *= 2.2; }
   let def = s.def * (1 - s.defDebuff) * (1 - ignore);
   let dmg = base - def * 0.55;
   dmg *= rf(0.9, 1.12);
   let critChance = 0.05 + run.stats.iq * 0.0022 + (mv.crit || 0);
   if (run.tech === 'ratio') critChance += 0.08;
   if (run.tech === 'blackBird') critChance += 0.08;
-  critChance += traitVal(run, 'crit') + (p.critStack || 0) * 0.02;
+  critChance += traitVal(run, 'crit') + (p.critStack || 0) * 0.06;
   if (focus) critChance += traitVal(run, 'focusCrit');
   if (p.vowCrit) critChance = 1;
-  const crit = Math.random() < Math.min(0.9, critChance);
-  if (crit) dmg *= (run.tech === 'ratio' ? 2.2 : 1.7) + traitVal(run, 'critDmg') + (p.critStack || 0) * 0.05;
+  const crit = zenithNuke || Math.random() < Math.min(0.9, critChance);
+  if (crit) dmg *= (run.tech === 'ratio' ? 2.2 : 1.7) + traitVal(run, 'critDmg') + ((run.mythicBoons && run.mythicBoons.critDmg) || 0) + (p.critStack || 0) * 0.15;
+  const extra = extraDamageState(d, mv);
+  dmg *= extra.mult;
   dmg = Math.max(1, Math.round(dmg));
   s.hp -= dmg;
   if (crit) {
     if (traitVal(run, 'critCe') > 0) p.ce = Math.min(p.maxCe, p.ce + traitVal(run, 'critCe'));
-    if (traitVal(run, 'critStack') > 0) p.critStack = Math.min(5, (p.critStack || 0) + 1);
+    if (traitVal(run, 'critStack') > 0) {
+      const beforeStack = p.critStack || 0;
+      p.critStack = Math.min(6, beforeStack + 1);
+      if (beforeStack < 6 && p.critStack === 6) {
+        p.zenithNuke = true;
+        pushDuel(d, '万象归一·临界。六道暴击的因果收束为下一击。', 'rainbow');
+      }
+    }
+    const resistBreak = traitVal(run, 'resistBreakOnCrit');
+    if (resistBreak > 0) applyResistDown(d, resistBreak, 3, '暴击破抗');
   }
+  if (mv.resistDown) applyResistDown(d, mv.resistDown, mv.resistDownTurns || 2, `『${mv.name}』`);
+  if (zenithNuke) pushDuel(d, '万象归一收束——这一击必定暴击，伤害翻倍。', 'rainbow');
   if (traitVal(run, 'bleedOnHit') > 0 && Math.random() < traitVal(run, 'bleedOnHit')) s.bleed += 1;
   return { dmg, crit };
+}
+
+function applyDomainActivation(d, fx) {
+  const p = d.player, s = d.suku, a = fx.activate || {};
+  if (a.atk || a.def) applyBuff(p, { atk: a.atk || 0, def: a.def || 0, turns: 3 });
+  if (a.shield) p.shield = Math.max(p.shield, a.shield);
+  if (a.evade) p.evade = Math.max(p.evade, a.evade);
+  if (a.heal) p.hp = Math.min(p.maxHp, p.hp + p.maxHp * a.heal);
+  if (a.ce) p.ce = Math.min(p.maxCe, p.ce + a.ce);
+  if (a.spirits) p.spirits = Math.min(6, p.spirits + a.spirits);
+  if (a.stun) s.stun = Math.max(s.stun, a.stun);
+  if (a.freeze) s.freeze = Math.max(s.freeze, a.freeze);
+  if (a.bleed) s.bleed += a.bleed;
+  if (a.burn) s.burn += a.burn;
+  if (a.atkDebuff) {
+    s.atkDebuff = Math.max(s.atkDebuff, a.atkDebuff);
+    s.atkDebuffT = Math.max(s.atkDebuffT, 3);
+  }
+  if (a.defDebuff) {
+    s.defDebuff = Math.max(s.defDebuff, a.defDebuff);
+    s.defDebuffT = Math.max(s.defDebuffT, 3);
+  }
+  if (a.cd) for (const k in p.cd) if (p.cd[k] > 0) p.cd[k] = Math.max(0, p.cd[k] - a.cd);
+  if (a.extraDmg) { p.extraDmgBuff = Math.max(p.extraDmgBuff, a.extraDmg); p.extraDmgBuffT = Math.max(p.extraDmgBuffT, 3); }
+  if (a.resistPen) { p.resistPenBuff = Math.max(p.resistPenBuff, a.resistPen); p.resistPenBuffT = Math.max(p.resistPenBuffT, 3); }
+  if (a.resistDown) applyResistDown(d, a.resistDown, 3, `领域特性·${fx.title || '破抗'}`);
+  if (fx.activateLog) pushDuel(d, fx.activateLog, 'rainbow');
+}
+
+function applyDomainTurn(d, fx) {
+  const p = d.player, s = d.suku, t = fx.turn || {};
+  if (t.resistDown) applyResistDown(d, t.resistDown, 2, `领域侵蚀·${fx.title || '破抗'}`);
+  if (t.extraDmg) { p.extraDmgBuff += t.extraDmg; p.extraDmgBuffT = Math.max(p.extraDmgBuffT, 3); }
+  if (t.resistPen) { p.resistPenBuff += t.resistPen; p.resistPenBuffT = Math.max(p.resistPenBuffT, 3); }
+  const low = t.lowHp && s.hp <= s.maxHp * t.lowHp;
+  const mult = (low && t.lowAura ? t.lowAura : (t.aura || 1)) * (1 + traitVal(d.run, 'domainDmg'));
+  const extra = extraDamageState(d, {});
+  const hits = Math.max(1, t.hits || 1);
+  let total = 0;
+  for (let i = 0; i < hits; i++) {
+    const dmg = Math.max(1, Math.round(s.maxHp * 0.04 * mult * extra.mult));
+    s.hp -= dmg;
+    total += dmg;
+  }
+  pushDuel(d, `『${fx.title || '领域'}』仍在侵蚀宿傩，造成 ${money(total)} 点必中伤害${hits > 1 ? `（${hits} 段）` : ''}。${t.log ? ` ${t.log}` : ''}`, 'purple');
+  if (t.heal) {
+    const heal = Math.round(p.maxHp * t.heal);
+    p.hp = Math.min(p.maxHp, p.hp + heal);
+    pushDuel(d, `领域回流，你回复 ${money(heal)} 点生命。`, 'heal');
+  }
+  if (t.shield) p.shield = Math.max(p.shield, t.shield);
+  if (t.evade) p.evade = Math.max(p.evade, t.evade);
+  if (t.ce) p.ce = Math.min(p.maxCe, p.ce + t.ce);
+  if (t.bleed) s.bleed += t.bleed;
+  if (t.burn) s.burn += t.burn;
+  if (t.cd) for (const k in p.cd) if (p.cd[k] > 0) p.cd[k] = Math.max(0, p.cd[k] - t.cd);
+  if (t.enemyAtkDebuff) {
+    s.atkDebuff = Math.max(s.atkDebuff, t.enemyAtkDebuff);
+    s.atkDebuffT = Math.max(s.atkDebuffT, 2);
+  }
+  if (t.freezeChance && s.freeze <= 0 && Math.random() < t.freezeChance) {
+    s.freeze = Math.max(s.freeze, 1);
+    pushDuel(d, '冰狱的寒气再次封住宿傩的动作。', 'purple');
+  }
+  if (t.stunChance && s.stun <= 0 && Math.random() < t.stunChance) {
+    s.stun = Math.max(s.stun, 1);
+    pushDuel(d, '拍手声错位，宿傩再次失去目标。', 'purple');
+  }
 }
 
 function playerMove(d, id) {
@@ -3234,7 +3504,11 @@ function playerMove(d, id) {
     return false;
   }
   p.ce -= cost;
-  if (mv.cd) p.cd[mv.id] = Math.max(1, mv.cd + (mv.id === 'rct' ? traitVal(run, 'rctCd') : 0));
+  if (mv.cd) {
+    const chronoFree = traitVal(run, 'cdRefresh') > 0 && Math.random() < 0.25;
+    if (chronoFree) pushDuel(d, '时之楔拨动因果，这一招没有留下冷却。', 'rainbow');
+    else p.cd[mv.id] = Math.max(1, mv.cd + (mv.id === 'rct' ? traitVal(run, 'rctCd') : 0));
+  }
   if (mv.hpCost) {
     const hp = Math.round(p.maxHp * mv.hpCost);
     p.hp -= hp;
@@ -3261,9 +3535,12 @@ function playerMove(d, id) {
 
   if (mv.kind === 'repair') {
     const before = p.burnout;
-    p.burnout = 1;
+    const echo = (run.traits || []).some(t => t.id === 'domainEcho');
+    p.burnout = echo ? 0 : 1;
     p.burnoutFixUsed = true;
-    pushDuel(d, `你重接术式回路，熔断从 ${before} 回合压缩到 1 回合；下一回合仍需以体术过渡，之后才能再次使用术式。`, 'purple');
+    pushDuel(d, echo
+      ? `领域余响接住了断开的回路，熔断从 ${before} 回合直接归零。下一回合即可再次使用术式。`
+      : `你重接术式回路，熔断从 ${before} 回合压缩到 1 回合；下一回合仍需以体术过渡，之后才能再次使用术式。`, echo ? 'rainbow' : 'purple');
   } else if (mv.kind === 'counter') {
     const before = !!s.domainTurns;
     if (s.domainTurns > 0) s.domainTurns = 0;
@@ -3302,15 +3579,20 @@ function playerMove(d, id) {
     p.rctUses++;
     pushDuel(d, `反转术式。伤口逆流，回复 ${money(heal)} 点生命，流血被清除。`, 'heal');
   } else if (mv.kind === 'domain') {
-    p.domainTurns = 4 + traitVal(run, 'domainTurn');
+    const fx = domainFxFor(run, mv);
+    const domainName = run.domainName || String(mv.name || '').replace('领域展开·', '');
+    p.domainName = domainName;
+    const domExtra = (run.mythicBoons && run.mythicBoons.domainTurn) || 0;
+    p.domainTurns = 4 + traitVal(run, 'domainTurn') + domExtra;
     p.burnout = Math.max(1, 3 - traitVal(run, 'burnoutCut'));
     p.burnoutFixUsed = false;
     s.domainTurns = 0;
-    s.stun = Math.max(s.stun, 1);
+    applyDomainActivation(d, fx);
     const res = attackOnce(d, { ...mv, power: mv.power }, 0);
-    pushDuel(d, `领域展开——『${mv.name.replace('领域展开·', '')}』。`, 'big');
-    pushDuel(d, `结界内必中。宿傩受到 ${money(res.dmg)} 点伤害，并被停滞一回合；领域将持续 ${p.domainTurns} 回合。`, 'purple');
+    pushDuel(d, `领域展开——『${domainName}』${fx.title ? ` · ${fx.title}` : ''}。`, 'big');
+    pushDuel(d, `结界内必中。宿傩受到 ${money(res.dmg)} 点伤害${fx.activate && fx.activate.stun ? '，并被停滞一回合' : ''}；领域将持续 ${p.domainTurns} 回合。`, 'purple');
     pushDuel(d, `术式熔断：接下来 ${p.burnout} 回合只能使用体术与咒具。`, 'red');
+    if (fx.desc) pushDuel(d, `领域特性：${fx.desc}`, 'rainbow');
     if (mv.bleed) { s.bleed += mv.bleed; pushDuel(d, `结界里的斩击留下 ${mv.bleed} 层流血。`, 'purple'); }
     if (mv.burn) { s.burn += mv.burn; pushDuel(d, `竈火在结界内蔓延，${mv.burn} 层灼烧。`, 'purple'); }
     checkSukuPhase(d);
@@ -3403,6 +3685,8 @@ function applyBuff(p, buff) {
   if (buff.atk) { p.atkBuff += buff.atk; p.atkBuffT = Math.max(p.atkBuffT, buff.turns || 2); }
   if (buff.def) { p.defBuff += buff.def; p.defBuffT = Math.max(p.defBuffT, buff.turns || 2); }
   if (buff.dodge) p.dodgeBuff += buff.dodge;
+  if (buff.extraDmg) { p.extraDmgBuff += buff.extraDmg; p.extraDmgBuffT = Math.max(p.extraDmgBuffT, buff.turns || 2); }
+  if (buff.resistPen) { p.resistPenBuff += buff.resistPen; p.resistPenBuffT = Math.max(p.resistPenBuffT, buff.turns || 2); }
 }
 
 function enterStage2(d) {
@@ -3412,6 +3696,8 @@ function enterStage2(d) {
   s.hp = s.stage2Max;
   s.atk = s.stage2Atk;
   s.def = s.stage2Def;
+  s.resist = Math.max(s.resist || 0, 0.15);
+  s.resistDown = 0; s.resistDownT = 0;
   s.bleed = 0; s.burn = 0; s.freeze = 0; s.stun = 0;
   s.atkDebuff = 0; s.atkDebuffT = 0; s.defDebuff = 0; s.defDebuffT = 0;
   s.domainTurns = 0; s.cd = {}; s.healUsed = {};
@@ -3770,7 +4056,11 @@ function openModal(title, bodyHTML, actions) {
   }
   $('#modal').hidden = false;
 }
-function closeModal() { $('#modal').hidden = true; }
+function closeModal() {
+  $('#modal').hidden = true;
+  const box = document.querySelector('#modal .modal-box');
+  if (box) box.classList.remove('mythic');
+}
 
 /* ---------------- 首页 ---------------- */
 
@@ -3933,7 +4223,8 @@ function endlessSukuScale(wave) {
   return {
     hp: 1.55 * Math.pow(1.32, n - 1),
     atk: 1.30 * Math.pow(1.24, n - 1),
-    def: 1.18 * Math.pow(1.15, n - 1)
+    def: 1.18 * Math.pow(1.15, n - 1),
+    resist: Math.min(0.55, 0.10 + 0.035 * (n - 1))
   };
 }
 
@@ -3950,10 +4241,11 @@ function applyEndlessSukuScale(d) {
   s.stage2Atk = Math.round(s.stage2Atk * sc.atk);
   s.def = Math.round(s.def * sc.def);
   s.stage2Def = Math.round(s.stage2Def * sc.def);
+  s.resist = Math.max(s.resist || 0, sc.resist);
   d.endlessWave = wave;
   d.endlessScales = sc;
   d._endlessScaled = true;
-  pushDuel(d, `【第 ${wave} 次轮回】宿傩获得极大加成：生命 ×${sc.hp.toFixed(2)}，攻击 ×${sc.atk.toFixed(2)}，防御 ×${sc.def.toFixed(2)}。`, 'gold');
+  pushDuel(d, `【第 ${wave} 次轮回】宿傩获得极大加成：生命 ×${sc.hp.toFixed(2)}，攻击 ×${sc.atk.toFixed(2)}，防御 ×${sc.def.toFixed(2)}，伤害抗性 ${Math.round(s.resist * 100)}%。`, 'gold');
   return d;
 }
 
@@ -3979,7 +4271,7 @@ function beginEndlessCycle(wave = 1) {
   G.duel = null;
   G.duelFromSim = false;
   const sc = endlessSukuScale(r.endlessWave);
-  r.log.push({ text: `【第 ${r.endlessWave} 次轮回】像重开一局一样，从满行动点重新开始。等级、六维、词条、觉醒、术式、弱点与精炼全部保留；这一轮的宿傩生命 ×${sc.hp.toFixed(2)}、攻击 ×${sc.atk.toFixed(2)}、防御 ×${sc.def.toFixed(2)}。`, cls: 'gold' });
+  r.log.push({ text: `【第 ${r.endlessWave} 次轮回】像重开一局一样，从满行动点重新开始。等级、六维、词条、觉醒、术式、弱点与精炼全部保留；这一轮的宿傩生命 ×${sc.hp.toFixed(2)}、攻击 ×${sc.atk.toFixed(2)}、防御 ×${sc.def.toFixed(2)}、伤害抗性 ${Math.round(sc.resist * 100)}%。`, cls: 'gold' });
   setMobileTab('status');
   renderGame();
   show('game');
@@ -4090,6 +4382,16 @@ function renderGame() {
   if (r.cons === 'heavenly') flags.innerHTML += '<span class="chip red">无咒力</span>';
   if (r.cons === 'sixEyes' && r.tech === 'limitless') flags.innerHTML += '<span class="chip gold">茈 已解锁</span>';
   if (r.tech === 'copy' && r.copiedMoves.length) flags.innerHTML += `<span class="chip">复制 ${r.copiedMoves.length}</span>`;
+  const mb = r.mythicBoons || {};
+  const boonBits = [];
+  if (mb.hp) boonBits.push(`生命 +${Math.round(mb.hp * 100)}%`);
+  if (mb.atk) boonBits.push(`攻击 +${Math.round(mb.atk * 100)}%`);
+  if (mb.dmg) boonBits.push(`伤害 +${Math.round(mb.dmg * 100)}%`);
+  if (mb.cost) boonBits.push(`术式消耗 -${Math.round(mb.cost * 100)}%`);
+  if (mb.critDmg) boonBits.push(`暴击伤害 +${Math.round(mb.critDmg * 100)}%`);
+  if (mb.revive) boonBits.push(`额外免死 ${mb.revive}`);
+  if (mb.domainTurn) boonBits.push(`领域持续 +${mb.domainTurn}`);
+  if (boonBits.length) flags.innerHTML += `<span class="chip r-mythic" title="${boonBits.join(' / ')}">彩色祝福 ${boonBits.length}</span>`;
 
   $('#weak-count').textContent = `${r.weak.length} / 5`;
   $('#weak-chips').innerHTML = r.weak.length
@@ -4144,11 +4446,32 @@ function openChoiceEvent() {
   ).join('')}</div><p class="dim" style="margin:12px 0 0;font-size:11.5px">选择后立即结算，结果可能成功，也可能反噬。</p>`;
   const actions = ev.options.map(o => ({ label: o.label, cls: o.cls || 'ghost', fn: () => chooseEvent(o.id) }));
   openModal(`${mythic ? '彩色事件' : '事件'} · ${ev.name}`, body, actions);
+  const box = document.querySelector('#modal .modal-box');
+  if (box) box.classList.toggle('mythic', mythic);
+}
+
+function mythicBurst() {
+  const layer = document.createElement('div');
+  layer.className = 'mythic-burst';
+  const colors = ['#ff6b9d', '#ffd166', '#63e6be', '#7aa2ff', '#c084fc'];
+  let html = '<i class="ring"></i><i class="ring delay"></i>';
+  for (let i = 0; i < 28; i++) {
+    const angle = (i * 360 / 28 + Math.random() * 12).toFixed(1);
+    const color = colors[i % colors.length];
+    const dist = (34 + Math.random() * 22).toFixed(1);
+    html += `<b style="--a:${angle}deg;--c:${color};animation-delay:${(Math.random() * .12).toFixed(2)}s;--d:${dist}vmin"></b>`;
+  }
+  layer.innerHTML = html;
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 1250);
 }
 
 function chooseEvent(choiceId) {
   const r = G.run;
   if (!r || !r.pendingEvent) return;
+  const ev = J.EVENTS.find(e => e.id === r.pendingEvent.id);
+  const mythic = !!(ev && ev.rarity === 'mythic');
+  if (mythic) mythicBurst();
   J.resolveEventChoice(r, choiceId);
   closeModal();
   renderGame();
@@ -4192,13 +4515,11 @@ function startAuto() {
     G.auto = null;
     if (!G.autoOn) return;
     if (!G.run || G.run.phase !== 'sim') { stopAuto(); return; }
-    const before = G.run.log.length;
     advance();
     if (!G.autoOn || !G.run || G.run.phase !== 'sim') { stopAuto(); return; }
-    const delay = G.run.log.length > before ? 460 : 150;
-    G.auto = setTimeout(tick, delay);
+    G.auto = setTimeout(tick, 0);
   };
-  G.auto = setTimeout(tick, 460);
+  G.auto = setTimeout(tick, 0);
 }
 function toggleAuto() {
   if (G.autoOn) stopAuto();
@@ -4225,7 +4546,7 @@ function openDuelPrep(fromSim) {
   const weakNames = r.weak.length ? `<p class="dim">${r.weak.map(w => w.name).join(' · ')}</p>` : '';
   const endlessNote = r.endless ? (() => {
     const sc = endlessSukuScale(r.endlessWave || 1);
-    return `<p class="gold" style="margin-top:10px">第 ${r.endlessWave || 1} 次轮回的宿傩：生命 ×${sc.hp.toFixed(2)}，攻击 ×${sc.atk.toFixed(2)}，防御 ×${sc.def.toFixed(2)}。</p>`;
+    return `<p class="gold" style="margin-top:10px">第 ${r.endlessWave || 1} 次轮回的宿傩：生命 ×${sc.hp.toFixed(2)}，攻击 ×${sc.atk.toFixed(2)}，防御 ×${sc.def.toFixed(2)}，伤害抗性 ${Math.round(sc.resist * 100)}%。</p>`;
   })() : '';
   const body = `
     <p>Lv.${r.lvl} · ${b.grade}（对标 ${b.who}）</p>
@@ -4296,6 +4617,8 @@ function renderDuel() {
   $('#suku-line').innerHTML =
     `<span>攻击 <b>${Math.round(s.atk * (1 - s.atkDebuff))}</b></span>` +
     `<span>防御 <b>${Math.round(s.def)}</b></span>` +
+    `<span class="gold">抗性 <b>${Math.round((s.resist || 0) * 100)}%</b></span>` +
+    (s.resistDown ? `<span class="red">破抗 <b>-${Math.round(s.resistDown * 100)}%</b>${s.resistDownT ? `/${s.resistDownT}` : ''}</span>` : '') +
     (s.bleed ? `<span class="red">流血 <b>${s.bleed}</b></span>` : '') +
     (s.burn ? `<span class="red">灼烧 <b>${s.burn}</b></span>` : '') +
     (s.freeze ? `<span class="purple">冻结 <b>${s.freeze}</b></span>` : '') +
@@ -4324,14 +4647,20 @@ function renderDuel() {
   $('#player-ce-text').textContent = p.maxCe > 0 ? `咒力 ${Math.round(p.ce)} / ${p.maxCe}` : '无咒力';
   $('#player-name').textContent = `Lv.${r.lvl} · ${J.benchOf(r.lvl).grade}`;
   $('#player-tech').textContent = r.techName + (r.tech2 ? ' / ' + r.tech2Name : '');
+  const xz = extraDamageState(d, {});
+  const pExtra = Math.round((xz.bonus - 1) * 100);
+  const pPen = Math.round((xz.pen - (s.resistDown || 0)) * 100);
   $('#player-line').innerHTML =
     `<span>攻击 <b>${Math.round(p.atk * (1 + p.atkBuff))}</b>${p.atkBuff ? ` <span class="gold">+${Math.round(p.atkBuff * 100)}%</span>` : ''}</span>` +
     `<span>防御 <b>${Math.round(p.def * (1 + p.defBuff) - p.defDownPerm)}</b>${p.defBuff ? ` <span class="purple">+${Math.round(p.defBuff * 100)}%</span>` : ''}</span>` +
+    (pExtra ? `<span class="gold">额外伤害 <b>+${pExtra}%</b></span>` : '') +
+    (pPen ? `<span class="purple">穿抗 <b>${pPen}%</b></span>` : '') +
     (p.shield ? `<span class="green">减伤 ${Math.round(p.shield * 100)}%</span>` : '') +
     (p.evade ? `<span class="green">闪避待机</span>` : '') +
     (p.bleed ? `<span class="red">流血 <b>${p.bleed}</b></span>` : '') +
     (p.burn ? `<span class="red">灼烧 <b>${p.burn}</b></span>` : '') +
-    (p.domainTurns ? `<span class="purple">领域 <b>${p.domainTurns}</b></span>` : '') +
+    (p.domainTurns ? `<span class="purple">领域·${p.domainName || r.domainName || '展开'} <b>${p.domainTurns}</b></span>` : '') +
+    (p.critStack ? `<span class="gold">万象 <b>${p.critStack}</b>/6${p.zenithNuke ? ' · 临界' : ''}</span>` : '') +
     (p.burnout ? `<span class="red">熔断 <b>${p.burnout}</b></span>` : '') +
     (p.domainGuard ? `<span class="green">${p.domainGuard.name} <b>${p.domainGuard.turns}</b></span>` : '') +
     (p.revive ? '<span class="gold">容器免死</span>' : '') +
@@ -4451,7 +4780,7 @@ function endDuel() {
       openModal(`无尽轮回 · 第 ${wave} 次突破`,
         `<p>十影与原身都已倒下。轮回没有结束，下一次的宿傩会获得更夸张的加成。</p>
          <p class="dim" style="margin-top:10px">本轮馈赠：${reward.afterLvl > reward.beforeLvl ? `Lv.${reward.beforeLvl} → Lv.${reward.afterLvl}` : `Lv.${reward.afterLvl}`}${reward.grew.length ? '；' + reward.grew.join('，') : ''}。已有数据全部保留。</p>
-         <p class="dim" style="margin-top:8px">下一次不会直接开战：会像重开一局一样，从满行动点开始新的轮回，先修炼、遇事件，再挑战宿傩。下一次宿傩生命 ×${nextSc.hp.toFixed(2)}、攻击 ×${nextSc.atk.toFixed(2)}、防御 ×${nextSc.def.toFixed(2)}。</p>
+         <p class="dim" style="margin-top:8px">下一次不会直接开战：会像重开一局一样，从满行动点开始新的轮回，先修炼、遇事件，再挑战宿傩。下一次宿傩生命 ×${nextSc.hp.toFixed(2)}、攻击 ×${nextSc.atk.toFixed(2)}、防御 ×${nextSc.def.toFixed(2)}、伤害抗性 ${Math.round(nextSc.resist * 100)}%。</p>
          <p class="dim" style="margin-top:8px">三处弱点保留，每场可手动重创一次。</p>`,
         [
           { label: `进入第 ${nextWave} 次轮回`, cls: 'primary', fn: () => beginEndlessCycle(nextWave) },
